@@ -1,14 +1,13 @@
-package com.example.limabasics.controllers;
+package com.example.limabasics;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class limaBasicsApplication {
+public class LimaBasicsApplication {
 
     @GetMapping("/")
     public String inicio() {
-        // Devuelve el archivo index.html
         return "index";
     }
 
