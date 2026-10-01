@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Agregamos el namespace de Thymeleaf -->
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -11,16 +10,16 @@
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
 
-    <!-- Aquí inyectamos el fragmento del header -->
+    <!-- Inyectamos el fragmento del NAVBAR -->
     <div th:replace="~{fragments/header :: navbar}"></div>
 
     <main class="flex-grow">
-        <!-- SECCIÓN HERO -->
+        
+        <!-- SECCIÓN HERO (La que ya tenías) -->
         <section class="relative w-full h-[85vh] bg-gray-900 flex items-center">
-            <!-- Imagen de fondo oscura -->
             <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Lima Basics Hero" class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay">
             
-            <div class="relative z-10 px-6 md:px-16 w-full max-w-7xl mx-auto">
+            <div class="relative z-10 px-6 md:px-12 w-full max-w-7xl mx-auto">
                 <div class="flex items-center space-x-4 mb-6">
                     <div class="w-12 h-[2px] bg-white"></div>
                     <span class="text-white font-semibold tracking-[0.2em] text-sm">LIMA · PERÚ · 2026</span>
@@ -32,7 +31,7 @@
                 </h1>
                 
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-8">
-                    <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 flex items-center transition-all">
+                    <a th:href="@{/catalogo}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 flex items-center transition-all rounded-sm">
                         EXPLORAR COLECCIÓN <i class="fas fa-arrow-right ml-3"></i>
                     </a>
                     <p class="text-gray-300 text-sm max-w-xs border-l border-gray-600 pl-4">
@@ -42,11 +41,140 @@
             </div>
         </section>
 
-        <!-- Aquí puedes seguir pegando las otras secciones (Categorías, Beneficios, etc.) -->
-        
+        <!-- SECCIÓN FILOSOFÍA -->
+        <section class="max-w-7xl mx-auto px-6 md:px-12 py-24 bg-white">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <span class="text-blue-600 text-xs font-bold tracking-widest uppercase mb-4 block">Nuestra filosofía</span>
+                    <h2 class="text-4xl md:text-5xl font-black tracking-tighter leading-tight">
+                        Ropa pensada<br>para el ritmo<br><span class="text-blue-600">de Lima.</span>
+                    </h2>
+                </div>
+                <div class="space-y-6 text-gray-600">
+                    <p class="text-xl font-medium text-gray-900 leading-relaxed">
+                        Lima Basics nace de entender que la moda urbana local necesita su propia identidad. No seguimos tendencias importadas — construimos las nuestras desde el centro histórico hasta Miraflores.
+                    </p>
+                    <p class="text-sm leading-relaxed text-gray-500">
+                        Cada pieza está confeccionada con algodón pima peruano de primera calidad, diseñada para durar y adaptarse a los distintos momentos del día limeño.
+                    </p>
+                    <div class="pt-4">
+                        <a th:href="@{/catalogo}" class="inline-flex items-center font-bold text-gray-900 border-b-2 border-gray-900 pb-1 hover:text-blue-600 hover:border-blue-600 transition-colors">
+                            Ver el catálogo completo <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN CATEGORÍAS DESTACADAS -->
+        <section class="max-w-7xl mx-auto px-6 md:px-12 pb-24 bg-white">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Categoría 1 -->
+                <div class="relative group overflow-hidden bg-gray-100 aspect-[4/5] rounded-sm cursor-pointer shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Esenciales" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0f1115]/90 via-[#0f1115]/20 to-transparent opacity-80"></div>
+                    <div class="absolute bottom-0 left-0 p-8 w-full text-white">
+                        <span class="text-[10px] font-bold tracking-widest uppercase mb-2 block">Categoría</span>
+                        <h3 class="text-3xl font-black tracking-tighter mb-1">Esenciales</h3>
+                        <p class="text-sm text-gray-300 mb-4">Polos · Tees · Básicos</p>
+                        <a th:href="@{/catalogo}" class="text-blue-400 font-bold text-xs tracking-widest uppercase group-hover:text-white transition-colors">Ver todo <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+
+                <!-- Categoría 2 -->
+                <div class="relative group overflow-hidden bg-gray-100 aspect-[4/5] rounded-sm cursor-pointer shadow-sm">
+                    <span class="absolute top-4 right-4 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 uppercase tracking-wider rounded-full z-10 shadow-md">New</span>
+                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Outerwear" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0f1115]/90 via-[#0f1115]/20 to-transparent opacity-80"></div>
+                    <div class="absolute bottom-0 left-0 p-8 w-full text-white">
+                        <span class="text-[10px] font-bold tracking-widest uppercase mb-2 block">Categoría</span>
+                        <h3 class="text-3xl font-black tracking-tighter mb-1">Outerwear</h3>
+                        <p class="text-sm text-gray-300 mb-4">Chaquetas · Hoodies</p>
+                        <a th:href="@{/catalogo}" class="text-blue-400 font-bold text-xs tracking-widest uppercase group-hover:text-white transition-colors">Ver todo <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+
+                <!-- Categoría 3 -->
+                <div class="relative group overflow-hidden bg-gray-100 aspect-[4/5] rounded-sm cursor-pointer shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1517438476312-10d79c077509?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bottoms" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0f1115]/90 via-[#0f1115]/20 to-transparent opacity-80"></div>
+                    <div class="absolute bottom-0 left-0 p-8 w-full text-white">
+                        <span class="text-[10px] font-bold tracking-widest uppercase mb-2 block">Categoría</span>
+                        <h3 class="text-3xl font-black tracking-tighter mb-1">Bottoms</h3>
+                        <p class="text-sm text-gray-300 mb-4">Pantalones · Cargos · Shorts</p>
+                        <a th:href="@{/catalogo}" class="text-blue-400 font-bold text-xs tracking-widest uppercase group-hover:text-white transition-colors">Ver todo <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN BENEFICIOS -->
+        <section class="border-y border-gray-200 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 py-16">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
+                    <div class="text-center md:text-left">
+                        <i class="fas fa-leaf text-2xl mb-4 text-gray-900"></i>
+                        <h4 class="font-bold mb-2">Pima peruano</h4>
+                        <p class="text-sm text-gray-500">Algodón de origen controlado, suave y duradero.</p>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <i class="fas fa-box text-2xl mb-4 text-gray-900"></i>
+                        <h4 class="font-bold mb-2">Envío express</h4>
+                        <p class="text-sm text-gray-500">Entrega en 2-4 horas dentro de Lima metropolitana.</p>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <i class="fas fa-sync-alt text-2xl mb-4 text-gray-900"></i>
+                        <h4 class="font-bold mb-2">Cambios gratis</h4>
+                        <p class="text-sm text-gray-500">Sin costo adicional durante 30 días desde tu compra.</p>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <i class="fas fa-lock text-2xl mb-4 text-gray-900"></i>
+                        <h4 class="font-bold mb-2">Pago seguro</h4>
+                        <p class="text-sm text-gray-500">Transacciones protegidas vía PayPal.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BANNER NUEVA TEMPORADA -->
+        <section class="bg-[#0f1115] text-white py-24 px-6 md:px-12">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-8 md:mb-0 text-center md:text-left">
+                    <span class="text-blue-500 text-xs font-bold tracking-widest uppercase mb-3 block">Nueva Temporada</span>
+                    <h2 class="text-5xl md:text-6xl font-black tracking-tighter leading-none">
+                        Invierno 2026<br>ya disponible.
+                    </h2>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                    <a th:href="@{/catalogo}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-sm transition-colors text-center text-sm uppercase tracking-wider">
+                        Ir al catálogo
+                    </a>
+                    <a th:href="@{/ofertas}" class="bg-transparent border border-gray-700 hover:border-white text-white font-bold py-4 px-8 rounded-sm transition-colors text-center text-sm uppercase tracking-wider">
+                        Ver ofertas
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEWSLETTER -->
+        <section class="bg-gray-100 py-24 px-6 text-center border-b border-gray-200">
+            <div class="max-w-xl mx-auto">
+                <span class="text-blue-600 text-xs font-bold tracking-widest uppercase mb-4 block">Únete</span>
+                <h2 class="text-3xl font-black tracking-tighter mb-3">Sé el primero en enterarte</h2>
+                <p class="text-gray-500 mb-8 text-sm">Lanzamientos, descuentos exclusivos y novedades. Sin spam.</p>
+                
+                <form class="flex flex-col sm:flex-row w-full max-w-md mx-auto shadow-sm" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="tu@correo.pe" class="flex-grow border border-gray-300 px-4 py-3 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 rounded-t-sm sm:rounded-l-sm sm:rounded-tr-none text-sm" required>
+                    <button type="submit" class="bg-[#0f1115] hover:bg-black text-white font-bold py-3 px-8 transition-colors rounded-b-sm sm:rounded-r-sm sm:rounded-bl-none text-sm">
+                        Suscribirse
+                    </button>
+                </form>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Aquí inyectamos el fragmento del FOOTER -->
+    <!-- Inyectamos el fragmento del FOOTER -->
     <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
