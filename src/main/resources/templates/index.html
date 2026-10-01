@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- Agregamos el namespace de Thymeleaf -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lima Basics | Inicio</title>
+    <!-- Tailwind CSS (CDN para desarrollo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Aquí inyectamos el fragmento del NAVBAR -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="flex-grow">
+        <!-- SECCIÓN HERO -->
+        <section class="relative w-full h-[85vh] bg-gray-900 flex items-center">
+            <!-- Imagen de fondo oscura -->
+            <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Lima Basics Hero" class="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay">
+            
+            <div class="relative z-10 px-6 md:px-16 w-full max-w-7xl mx-auto">
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="w-12 h-[2px] bg-white"></div>
+                    <span class="text-white font-semibold tracking-[0.2em] text-sm">LIMA · PERÚ · 2026</span>
+                </div>
+                
+                <h1 class="text-white font-black uppercase leading-[0.85] tracking-tighter mb-8 text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[10rem]">
+                    <span class="block text-blue-600">LO BÁSICO,</span>
+                    <span class="block">ELEVADO.</span>
+                </h1>
+                
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-8">
+                    <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 flex items-center transition-all">
+                        EXPLORAR COLECCIÓN <i class="fas fa-arrow-right ml-3"></i>
+                    </a>
+                    <p class="text-gray-300 text-sm max-w-xs border-l border-gray-600 pl-4">
+                        Algodón pima peruano · Diseño contemporáneo · Hecho para Lima
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Aquí puedes seguir pegando las otras secciones (Categorías, Beneficios, etc.) -->
+        
+    </main>
+
+    <!-- Aquí inyectamos el fragmento del FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

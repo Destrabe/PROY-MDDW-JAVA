@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lima Basics | Sobre Nosotros</title>
+    <!-- Tailwind CSS (CDN para desarrollo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Fragmento del NAVBAR -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="flex-grow">
+        
+        <!-- HERO SECTION (Fondo oscuro) -->
+        <section class="bg-[#0f1115] text-white py-20 px-6 md:px-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-sm text-gray-400 mb-6 font-medium">
+                    <a th:href="@{/}" class="hover:text-white transition-colors">Inicio</a> <span class="mx-2">></span> Sobre Nosotros
+                </div>
+                
+                <span class="text-blue-500 text-xs font-bold tracking-widest uppercase mb-6 block">LIMA, PERÚ · EST. 2021</span>
+                
+                <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-tight max-w-4xl mb-8">
+                    Ropa hecha para <span class="text-blue-600">el ritmo</span> de Lima.
+                </h1>
+                
+                <p class="text-xl text-gray-400 max-w-2xl font-light leading-relaxed">
+                    Nació de una pregunta simple: ¿por qué en Lima es tan difícil encontrar ropa de calidad sin pagar precios de importación?
+                </p>
+            </div>
+        </section>
+
+        <!-- NUESTRA HISTORIA -->
+        <section class="max-w-7xl mx-auto px-6 md:px-12 py-20">
+            <span class="text-blue-600 text-xs font-bold tracking-widest uppercase mb-8 block">NUESTRA HISTORIA</span>
+            
+            <div class="flex flex-col lg:flex-row gap-16">
+                <!-- Texto historia -->
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-black tracking-tighter mb-8 leading-tight">
+                        Empezamos con tres prendas y una mesa en Barranco.
+                    </h2>
+                    
+                    <div class="space-y-6 text-gray-600 leading-relaxed">
+                        <p>
+                            En 2021, dos amigos hartos de la ropa "básica" que no duraba más de tres lavadas decidieron hacerlo diferente. Sin inversores, sin local, con proveedores locales y mucho ensayo y error.
+                        </p>
+                        <p>
+                            Hoy Lima Basics viste a más de 500 personas en toda la ciudad. Seguimos trabajando con los mismos talleres de Gamarra con los que empezamos — solo que ahora les podemos hacer pedidos más grandes.
+                        </p>
+                        <p>
+                            Lo que no ha cambiado: cada pieza pasa por nuestras manos antes de llegar a las tuyas.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Cuadrícula de estadísticas -->
+                <div class="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-white p-8 border border-gray-100 shadow-sm rounded-sm">
+                        <span class="block text-4xl font-black mb-2">2021</span>
+                        <span class="block font-bold text-sm mb-1">Año de fundación</span>
+                        <span class="text-xs text-gray-500">Barranco, Lima</span>
+                    </div>
+                    <div class="bg-white p-8 border border-gray-100 shadow-sm rounded-sm">
+                        <span class="block text-4xl font-black mb-2">500+</span>
+                        <span class="block font-bold text-sm mb-1">Clientes activos</span>
+                        <span class="text-xs text-gray-500">En toda la ciudad</span>
+                    </div>
+                    <div class="bg-white p-8 border border-gray-100 shadow-sm rounded-sm">
+                        <span class="block text-4xl font-black mb-2">100%</span>
+                        <span class="block font-bold text-sm mb-1">Talleres locales</span>
+                        <span class="text-xs text-gray-500">Gamarra y Ate</span>
+                    </div>
+                    <div class="bg-white p-8 border border-gray-100 shadow-sm rounded-sm">
+                        <span class="block text-4xl font-black mb-2">48h</span>
+                        <span class="block font-bold text-sm mb-1">Envío express</span>
+                        <span class="text-xs text-gray-500">En Lima Metropolitana</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LO QUE NOS MUEVE -->
+        <section class="bg-white py-20 px-6 md:px-12 border-t border-gray-100">
+            <div class="max-w-7xl mx-auto">
+                <span class="text-gray-400 text-xs font-bold tracking-widest uppercase mb-12 block">LO QUE NOS MUEVE</span>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Valor 1 -->
+                    <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-3">Calidad sin excusas</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Usamos telas que sobreviven el clima de Lima — el frío garúa de julio y el calor de enero. Sin atajos.</p>
+                    </div>
+
+                    <!-- Valor 2 -->
+                    <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-3">Producción local</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">El 100% de nuestras prendas se confecciona en Lima. Apoyamos talleres independientes de Gamarra y Ate.</p>
+                    </div>
+
+                    <!-- Valor 3 -->
+                    <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-3">Diseño intencional</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Nada está de más. Cada bolsillo, costuras, proporción tiene una razón. Lo básico, pero pensado.</p>
+                    </div>
+
+                    <!-- Valor 4 -->
+                    <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-3">Precio justo</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Sin intermediarios que inflen el precio. Del taller a tu puerta, con un margen que nos permite seguir.</p>
+                    </div>
+
+                    <!-- Valor 5 -->
+                    <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-3">Comunidad primero</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">Nuestros mejores diseños nacen de conversaciones con clientes en el feed, en la tienda, en la calle.</p>
+                    </div>
+
+                    <!-- Valor 6 -->
+                    <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
+                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-3">Devoluciones sin drama</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed">30 días para cambios sin preguntas. Si no te quedó bien, lo arreglamos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EQUIPO -->
+        <section class="max-w-7xl mx-auto px-6 md:px-12 py-20">
+            <span class="text-gray-400 text-xs font-bold tracking-widest uppercase mb-12 block">EL EQUIPO</span>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Miembro 1 -->
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        MA
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Marco Asca</h4>
+                        <p class="text-gray-500 text-sm">Co-fundador & Diseño</p>
+                    </div>
+                </div>
+
+                <!-- Miembro 2 -->
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-[#10b981] text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        JC
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Jean Cruz</h4>
+                        <p class="text-gray-500 text-sm">Co-fundador & Operaciones</p>
+                    </div>
+                </div>
+
+                <!-- Miembro 3 -->
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full bg-gray-800 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
+                        FP
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg">Fernando Palacios</h4>
+                        <p class="text-gray-500 text-sm">Producción & Calidad</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA FINAL -->
+        <section class="bg-[#0f1115] text-white py-24 px-6 text-center">
+            <span class="text-blue-500 text-xs font-bold tracking-widest uppercase mb-4 block">¿LISTO?</span>
+            <h2 class="text-4xl md:text-5xl font-black tracking-tighter mb-10">Conoce la colección.</h2>
+            <a th:href="@{/catalogo}" class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 transition-colors rounded-sm">
+                VER CATÁLOGO <i class="fas fa-arrow-right ml-3"></i>
+            </a>
+        </section>
+
+    </main>
+
+    <!-- Fragmento del FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

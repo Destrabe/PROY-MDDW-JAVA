@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lima Basics | Ofertas</title>
+    <!-- Tailwind CSS (CDN para desarrollo) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Fragmento del NAVBAR -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="flex-grow">
+        
+        <!-- HEADER DE OFERTAS (Fondo Oscuro) -->
+        <section class="bg-[#0f1115] text-white py-16 px-6 md:px-12 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end relative z-10">
+                
+                <!-- Títulos -->
+                <div class="mb-8 md:mb-0">
+                    <div class="text-sm text-gray-400 mb-6 font-medium">
+                        <a th:href="@{/}" class="hover:text-white transition-colors">Inicio</a> <span class="mx-2">></span> Ofertas
+                    </div>
+                    <span class="text-blue-500 text-xs font-bold tracking-widest uppercase mb-4 block">Tiempo Limitado</span>
+                    <h1 class="text-6xl sm:text-7xl md:text-8xl font-black tracking-tighter leading-none">
+                        Ofertas
+                        <span class="block text-blue-600">hasta 25% off</span>
+                    </h1>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="flex space-x-12 pb-4">
+                    <div class="text-center md:text-right">
+                        <span class="block text-4xl font-black">2</span>
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Productos en oferta</span>
+                    </div>
+                    <div class="text-center md:text-right border-l border-gray-800 pl-12">
+                        <span class="block text-4xl font-black">25%</span>
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Descuento máximo</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Elemento decorativo de fondo (líneas sutiles) -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #ffffff 0, #ffffff 1px, transparent 0, transparent 50%); background-size: 60px 60px;"></div>
+        </section>
+
+        <!-- CINTA DE ANUNCIOS (Marquee style) -->
+        <div class="bg-blue-600 text-white py-2 px-6 overflow-hidden flex whitespace-nowrap">
+            <div class="font-bold text-xs uppercase tracking-widest flex items-center space-x-8 animate-[pulse_3s_ease-in-out_infinite]">
+                <span>· OFERTA ESPECIAL</span>
+                <span>· STOCK LIMITADO</span>
+                <span>· ENVÍO GRATIS EN LIMA</span>
+                <span>· OFERTA ESPECIAL</span>
+                <span>· STOCK LIMITADO</span>
+                <span>· ENVÍO GRATIS EN LIMA</span>
+                <span>· OFERTA ESPECIAL</span>
+                <span>· STOCK LIMITADO</span>
+                <span>· ENVÍO GRATIS EN LIMA</span>
+                <span>· OFERTA ESPECIAL</span>
+            </div>
+        </div>
+
+        <!-- GRILLA DE PRODUCTOS EN OFERTA -->
+        <section class="max-w-7xl mx-auto px-6 md:px-12 py-16">
+            
+            <!-- Barra superior del grid -->
+            <div class="flex justify-between items-center mb-10 pb-4 border-b border-gray-200">
+                <p class="text-lg"><span class="font-bold">2</span> productos en oferta</p>
+                <div class="flex items-center text-blue-600 bg-blue-50 px-4 py-2 rounded-full text-sm font-medium">
+                    <i class="far fa-clock mr-2"></i> Oferta por tiempo limitado
+                </div>
+            </div>
+
+            <!-- Productos (Usamos grid para alinear a la izquierda como en el diseño) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">
+                
+                <!-- Producto 1 (Polo) -->
+                <div class="group cursor-pointer">
+                    <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
+                        <span class="absolute top-3 left-3 bg-[#10b981] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Nuevo</span>
+                        <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Polo Lima Oversize" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Polos</p>
+                    <h3 class="font-bold text-lg leading-tight mb-1">Polo Lima Oversize</h3>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="font-black text-lg text-red-600">S/ 89</span>
+                        <span class="text-gray-400 line-through text-sm">S/ 119</span>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <div class="w-4 h-4 rounded-full bg-white border border-gray-300"></div>
+                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
+                        <div class="w-4 h-4 rounded-full bg-[#ddbea9] border border-gray-300"></div>
+                    </div>
+                </div>
+
+                <!-- Producto 2 (Chaqueta) -->
+                <div class="group cursor-pointer">
+                    <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
+                        <span class="absolute top-3 left-3 bg-[#10b981] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Nuevo</span>
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chaqueta Miraflores" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Chaquetas</p>
+                    <h3 class="font-bold text-lg leading-tight mb-1">Chaqueta Miraflores</h3>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="font-black text-lg text-red-600">S/ 229</span>
+                        <span class="text-gray-400 line-through text-sm">S/ 279</span>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
+                        <div class="w-4 h-4 rounded-full bg-[#6b705c] border border-gray-300"></div>
+                        <div class="w-4 h-4 rounded-full bg-[#1b263b] border border-gray-300"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE NEWSLETTER -->
+        <section class="bg-white py-20 px-6 mt-8">
+            <div class="max-w-xl mx-auto text-center">
+                <span class="text-blue-600 text-xs font-bold tracking-widest uppercase mb-4 block">Sé el primero</span>
+                <h2 class="text-3xl md:text-4xl font-black tracking-tighter mb-4">Recibe ofertas antes que nadie</h2>
+                <p class="text-gray-500 mb-8">Suscríbete y te avisamos cuando haya descuentos nuevos.</p>
+                
+                <form class="flex flex-col sm:flex-row gap-4" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="tu@correo.pe" class="flex-grow border border-gray-300 px-4 py-3 rounded focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600" required>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded transition-colors whitespace-nowrap">
+                        SUSCRIBIRSE
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Fragmento del FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>
