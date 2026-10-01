@@ -1,87 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
-    <nav th:fragment="header" class="bg-white py-4 px-6 lg:px-12 flex flex-col lg:flex-row justify-between items-center border-b border-gray-200 sticky top-0 z-50">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
-            <symbol id="user" viewBox="0 0 15 15">
-                <path d="M3 13V13.5H4V13H3ZM11 13V13.5H12V13H11ZM4 13V12.4999H3V13H4ZM6.5 10H8.5V9H6.5V10ZM11 12.4999V13H12V12.4999H11ZM8.5 10C9.88074 10 11 11.1192 11 12.4999H12C12 10.5668 10.433 9 8.5 9V10ZM4 12.4999C4 11.1192 5.11926 10 6.5 10V9C4.56703 9 3 10.5668 3 12.4999H4ZM7.5 3C6.11929 3 5 4.11929 5 5.5H6C6 4.67157 6.67157 4 7.5 4V3ZM10 5.5C10 4.11929 8.88071 3 7.5 3V4C8.32843 4 9 4.67157 9 5.5H10ZM7.5 8C8.88071 8 10 6.88071 10 5.5H9C9 6.32843 8.32843 7 7.5 7V8ZM7.5 7C6.67157 7 6 6.32843 6 5.5H5C5 6.88071 6.11929 8 7.5 8V7ZM7.5 14C3.91015 14 1 11.0899 1 7.5H0C0 11.6421 3.35786 15 7.5 15V14ZM14 7.5C14 11.0899 11.0899 14 7.5 14V15C11.6421 15 15 11.6421 15 7.5H14ZM7.5 1C11.0899 1 14 3.91015 14 7.5H15C15 3.35786 11.6421 0 7.5 0V1ZM7.5 0C3.35786 0 0 3.35786 0 7.5H1C1 3.91015 3.91015 1 7.5 1V0Z" fill="currentColor"></path>
-            </symbol>
-            <symbol id="cart" viewBox="0 0 24 24" fill="none">
-                <path d="M6.29977 5H21L19 12H7.37671M20 16H8L6 3H3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-            </symbol>
-            <symbol id="search" viewBox="0 0 24 24" fill="none">
-                <g stroke-width="0"></g>
-                <g stroke-linecap="round" stroke-linejoin="round"></g>
-                <g>
-                    <path d="M10 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm-8 6a8 8 0 1 1 14.32 4.906l5.387 5.387a1 1 0 0 1-1.414 1.414l-5.387-5.387A8 8 0 0 1 2 10z" fill="currentColor"></path>
-                </g>
-            </symbol>
-            <symbol id="menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 6H20M4 12H20M4 18H20"></path>
-            </symbol>
-            <symbol id="close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 18L18 6M6 6l12 12"></path>
-            </symbol>
-        </svg>
+  <body>
+    <nav
+      th:fragment="header"
+      class="bg-white py-4 px-6 lg:px-12 flex flex-col lg:flex-row justify-between items-center border-b border-gray-200 sticky top-0 z-50"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+        <symbol id="user" viewBox="0 0 15 15">
+          <path
+            d="M3 13V13.5H4V13H3ZM11 13V13.5H12V13H11ZM4 13V12.4999H3V13H4ZM6.5 10H8.5V9H6.5V10ZM11 12.4999V13H12V12.4999H11ZM8.5 10C9.88074 10 11 11.1192 11 12.4999H12C12 10.5668 10.433 9 8.5 9V10ZM4 12.4999C4 11.1192 5.11926 10 6.5 10V9C4.56703 9 3 10.5668 3 12.4999H4ZM7.5 3C6.11929 3 5 4.11929 5 5.5H6C6 4.67157 6.67157 4 7.5 4V3ZM10 5.5C10 4.11929 8.88071 3 7.5 3V4C8.32843 4 9 4.67157 9 5.5H10ZM7.5 8C8.88071 8 10 6.88071 10 5.5H9C9 6.32843 8.32843 7 7.5 7V8ZM7.5 7C6.67157 7 6 6.32843 6 5.5H5C5 6.88071 6.11929 8 7.5 8V7ZM7.5 14C3.91015 14 1 11.0899 1 7.5H0C0 11.6421 3.35786 15 7.5 15V14ZM14 7.5C14 11.0899 11.0899 14 7.5 14V15C11.6421 15 15 11.6421 15 7.5H14ZM7.5 1C11.0899 1 14 3.91015 14 7.5H15C15 3.35786 11.6421 0 7.5 0V1ZM7.5 0C3.35786 0 0 3.35786 0 7.5H1C1 3.91015 3.91015 1 7.5 1V0Z"
+            fill="currentColor"
+          ></path>
+        </symbol>
+        <symbol id="cart" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M6.29977 5H21L19 12H7.37671M20 16H8L6 3H3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </symbol>
+        <symbol id="search" viewBox="0 0 24 24" fill="none">
+          <g stroke-width="0"></g>
+          <g stroke-linecap="round" stroke-linejoin="round"></g>
+          <g>
+            <path
+              d="M10 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm-8 6a8 8 0 1 1 14.32 4.906l5.387 5.387a1 1 0 0 1-1.414 1.414l-5.387-5.387A8 8 0 0 1 2 10z"
+              fill="currentColor"
+            ></path>
+          </g>
+        </symbol>
+        <symbol
+          id="menu"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M4 6H20M4 12H20M4 18H20"></path>
+        </symbol>
+        <symbol
+          id="close"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M6 18L18 6M6 6l12 12"></path>
+        </symbol>
+      </svg>
 
-        <div class="flex justify-between items-center w-full">
-            
-            <div class="flex items-center space-x-6 lg:space-x-12">
-                <div class="text-2xl font-black tracking-tighter text-black">
-                    <a th:href="@{/}">LIMA BASICS</a>
-                </div>
-                
-                <div class="hidden lg:flex space-x-6 xl:space-x-8 font-medium text-sm mt-1">
-                    <a th:href="@{/}" class="text-black border-b-2 border-black pb-1">Inicio</a>
-                    <a th:href="@{/catalog}" class="text-slate-500 hover:text-black transition-colors">Catálogo</a>
-                    <a th:href="@{/offers}" class="text-slate-500 hover:text-black transition-colors">Ofertas</a>
-                    <a th:href="@{/about}" class="text-slate-500 hover:text-black transition-colors">Sobre Nosotros</a>
-                    <a th:href="@{/contacto}" class="text-slate-500 hover:text-black transition-colors">Contacto</a>
-                </div>
-            </div>
+      <div class="flex justify-between items-center w-full">
+        <div class="flex items-center space-x-6 lg:space-x-12">
+          <div class="text-2xl font-black tracking-tighter text-black">
+            <a th:href="@{/}">LIMA BASICS</a>
+          </div>
 
-            <div class="flex space-x-5 items-center text-slate-400">
-                <button aria-label="Buscar" class="hover:text-black transition-colors">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24"><use href="#search"></use></svg>
-                </button>
-                
-                <button aria-label="Carrito" class="hover:text-black transition-colors">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24"><use href="#cart"></use></svg>
-                </button>
-                
-                <a th:href="@{/login}" aria-label="Usuario" class="hidden lg:block hover:text-black transition-colors">
-                    <svg class="w-[18px] h-[18px]" viewBox="0 0 15 15"><use href="#user"></use></svg>
-                </a>
-
-                <button onclick="toggleMenu()" aria-label="Menú" class="lg:hidden hover:text-black transition-colors ml-2">
-                    <svg id="icon-menu" class="w-6 h-6 block" viewBox="0 0 24 24"><use href="#menu"></use></svg>
-                    <svg id="icon-close" class="w-6 h-6 hidden" viewBox="0 0 24 24"><use href="#close"></use></svg>
-                </button>
-            </div>
+          <div
+            class="hidden lg:flex space-x-6 xl:space-x-8 font-medium text-sm mt-1"
+          >
+            <a th:href="@{/}" class="text-black border-b-2 border-black pb-1"
+              >Inicio</a
+            >
+            <a
+              th:href="@{/catalog}"
+              class="text-slate-500 hover:text-black transition-colors"
+              >Catálogo</a
+            >
+            <a
+              th:href="@{/offers}"
+              class="text-slate-500 hover:text-black transition-colors"
+              >Ofertas</a
+            >
+            <a
+              th:href="@{/about}"
+              class="text-slate-500 hover:text-black transition-colors"
+              >Sobre Nosotros</a
+            >
+            <a
+              th:href="@{/contact}"
+              class="text-slate-500 hover:text-black transition-colors"
+              >Contacto</a
+            >
+          </div>
         </div>
 
-        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white shadow-lg lg:hidden border-t border-gray-100">
-            <div class="flex flex-col px-6 pb-4">
-                <a th:href="@{/}" class="py-4 text-sm text-gray-600 border-b border-gray-100">Inicio</a>
-                <a th:href="@{/catalog}" class="py-4 text-sm text-gray-600 border-b border-gray-100">Catálogo</a>
-                <a th:href="@{/offers}" class="py-4 text-sm text-gray-600 border-b border-gray-100">Ofertas</a>
-                <a th:href="@{/about}" class="py-4 text-sm text-gray-600 border-b border-gray-100">Sobre Nosotros</a>
-                <a th:href="@{/contacto}" class="py-4 text-sm text-gray-600 border-b border-gray-100">Contacto</a>
-                <a th:href="@{/login}" class="py-4 text-sm text-gray-600 font-medium">Iniciar sesión / Registrarse</a>
-            </div>
-        </div>
+        <div class="flex space-x-5 items-center text-slate-400">
+          <button
+            aria-label="Buscar"
+            class="hover:text-black transition-colors"
+          >
+            <svg class="w-5 h-5" viewBox="0 0 24 24">
+              <use href="#search"></use>
+            </svg>
+          </button>
 
-        <script>
-            function toggleMenu() {
-                document.getElementById('mobile-menu').classList.toggle('hidden');
-                document.getElementById('icon-menu').classList.toggle('hidden');
-                document.getElementById('icon-menu').classList.toggle('block');
-                document.getElementById('icon-close').classList.toggle('hidden');
-                document.getElementById('icon-close').classList.toggle('block');
-            }
-        </script>
-        
+          <button
+            aria-label="Carrito"
+            class="hover:text-black transition-colors"
+          >
+            <svg class="w-5 h-5" viewBox="0 0 24 24">
+              <use href="#cart"></use>
+            </svg>
+          </button>
+
+          <a
+            th:href="@{/login}"
+            aria-label="Usuario"
+            class="hidden lg:block hover:text-black transition-colors"
+          >
+            <svg class="w-[18px] h-[18px]" viewBox="0 0 15 15">
+              <use href="#user"></use>
+            </svg>
+          </a>
+
+          <button
+            onclick="toggleMenu()"
+            aria-label="Menú"
+            class="lg:hidden hover:text-black transition-colors ml-2"
+          >
+            <svg id="icon-menu" class="w-6 h-6 block" viewBox="0 0 24 24">
+              <use href="#menu"></use>
+            </svg>
+            <svg id="icon-close" class="w-6 h-6 hidden" viewBox="0 0 24 24">
+              <use href="#close"></use>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="mobile-menu"
+        class="hidden absolute top-full left-0 w-full bg-white shadow-lg lg:hidden border-t border-gray-100"
+      >
+        <div class="flex flex-col px-6 pb-4">
+          <a
+            th:href="@{/}"
+            class="py-4 text-sm text-gray-600 border-b border-gray-100"
+            >Inicio</a
+          >
+          <a
+            th:href="@{/catalog}"
+            class="py-4 text-sm text-gray-600 border-b border-gray-100"
+            >Catálogo</a
+          >
+          <a
+            th:href="@{/offers}"
+            class="py-4 text-sm text-gray-600 border-b border-gray-100"
+            >Ofertas</a
+          >
+          <a
+            th:href="@{/about}"
+            class="py-4 text-sm text-gray-600 border-b border-gray-100"
+            >Sobre Nosotros</a
+          >
+          <a
+            th:href="@{/contacto}"
+            class="py-4 text-sm text-gray-600 border-b border-gray-100"
+            >Contacto</a
+          >
+          <a th:href="@{/login}" class="py-4 text-sm text-gray-600 font-medium"
+            >Iniciar sesión / Registrarse</a
+          >
+        </div>
+      </div>
+
+      <script>
+        function toggleMenu() {
+          document.getElementById("mobile-menu").classList.toggle("hidden");
+          document.getElementById("icon-menu").classList.toggle("hidden");
+          document.getElementById("icon-menu").classList.toggle("block");
+          document.getElementById("icon-close").classList.toggle("hidden");
+          document.getElementById("icon-close").classList.toggle("block");
+        }
+      </script>
     </nav>
-</body>
+  </body>
 </html>
