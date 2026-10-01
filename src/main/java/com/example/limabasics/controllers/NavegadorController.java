@@ -1,4 +1,4 @@
-package com.example.demo.controllers;
+package com.example.limabasics.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
