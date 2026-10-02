@@ -13,11 +13,6 @@ public class NavegadorController {
     public String inicio() {
         return "index";
     }
-    
-    @GetMapping("/catalog")
-    public String catalog() {
-        return "catalog"; 
-    }
 
     @GetMapping("/offers")
     public String offers() {

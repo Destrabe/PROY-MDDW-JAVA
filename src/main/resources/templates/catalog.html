@@ -15,7 +15,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 pb-6 border-b border-gray-200">
             <div>
                 <h1 class="text-4xl font-black tracking-tighter">Catálogo</h1>
-                <p class="text-gray-500 mt-2">8 productos encontrados</p>
+                <p class="text-gray-500 mt-2" th:text="${productos.size()} + ' productos encontrados'"></p>
             </div>
             <div class="mt-4 md:mt-0 w-full md:w-auto">
                 <select class="w-full md:w-48 border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white">
@@ -79,112 +79,23 @@
             </aside>
 
             <div class="flex-grow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
-        
-                <div class="group cursor-pointer">
+                <div class="group cursor-pointer" th:each="producto : ${productos}">
                     <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
-                        <span class="absolute top-3 left-3 bg-[#10b981] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Nuevo</span>
-                        <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Polo Lima Oversize" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span th:if="${producto.etiqueta != null}" 
+                              th:class="'absolute top-3 left-3 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10 ' + ${producto.claseEtiqueta}"
+                              th:text="${producto.etiqueta}"></span>
+                        <img th:src="${producto.imagen}" th:alt="${producto.nombre}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Polos</p>
-                    <h3 class="font-bold text-lg leading-tight mb-1">Polo Lima Oversize</h3>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1" th:text="${producto.categoria}"></p>
+                    <h3 class="font-bold text-lg leading-tight mb-1" th:text="${producto.nombre}"></h3>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="font-black text-lg">S/ 89</span>
-                        <span class="text-gray-400 line-through text-sm">S/ 119</span>
+                        <span class="font-black text-lg" th:text="'S/ ' + ${producto.precio}"></span>
+                        <span th:if="${producto.precioAnterior != null}" class="text-gray-400 line-through text-sm" th:text="'S/ ' + ${producto.precioAnterior}"></span>
                     </div>
-                    <div class="flex gap-1.5">
-                        <div class="w-4 h-4 rounded-full bg-white border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-[#ddbea9] border border-gray-300"></div>
+                    <div class="flex gap-1.5" th:if="${producto.colores != null}">
+                        <div th:each="color : ${producto.colores}" th:class="'w-4 h-4 rounded-full border border-gray-300 ' + ${color}"></div>
                     </div>
                 </div>
-
-                <div class="group cursor-pointer">
-                    <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
-                        <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Más vendido</span>
-                        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Hoodie Oversize Cyberpunk" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Hoodies</p>
-                    <h3 class="font-bold text-lg leading-tight mb-1">Hoodie Oversize Cyberpunk</h3>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="font-black text-lg">S/ 149</span>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <div class="w-4 h-4 rounded-full bg-gray-400 border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-white border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
-                    </div>
-                </div>
-
-                <div class="group cursor-pointer">
-                    <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
-                        <img src="https://images.unsplash.com/photo-1517438476312-10d79c077509?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Pantalon Cargo y2k" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Pantalones</p>
-                    <h3 class="font-bold text-lg leading-tight mb-1">Pantalon Cargo y2k</h3>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="font-black text-lg">S/ 129</span>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-[#8b7355] border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-gray-500 border border-gray-300"></div>
-                    </div>
-                </div>
-
-                <div class="group cursor-pointer">
-                    <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
-                        <div class="absolute top-3 left-3 right-3 flex justify-between z-10">
-                            <span class="bg-[#1f2937] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm">Últimas unidades</span>
-                            <span class="bg-white text-gray-900 text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm shadow">Solo 3 left</span>
-                        </div>
-                        <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cargo Lima Relaxed" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Chaquetas</p>
-                    <h3 class="font-bold text-lg leading-tight mb-1">Chaqueta Cuero Relaxed</h3>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="font-black text-lg">S/ 179</span>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <div class="w-4 h-4 rounded-full bg-[#6b705c] border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-gray-200 border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
-                    </div>
-                </div>
-
-                <div class="group cursor-pointer">
-                    <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
-                        <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Más vendido</span>
-                        <img src="https://images.unsplash.com/photo-1578681994506-b8f463449011?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Polo Streetwear Oversize" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Polos</p>
-                    <h3 class="font-bold text-lg leading-tight mb-1">Polo Streetwear Oversize</h3>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="font-black text-lg">S/ 79</span>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <div class="w-4 h-4 rounded-full bg-white border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
-                    </div>
-                </div>
-
-                <div class="group cursor-pointer">
-                    <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
-                        <span class="absolute top-3 left-3 bg-[#10b981] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Nuevo</span>
-                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chaqueta Miraflores" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Chaquetas</p>
-                    <h3 class="font-bold text-lg leading-tight mb-1">Chaqueta Miraflores</h3>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="font-black text-lg">S/ 229</span>
-                        <span class="text-gray-400 line-through text-sm">S/ 279</span>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-[#6b705c] border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-[#1b263b] border border-gray-300"></div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </main>
