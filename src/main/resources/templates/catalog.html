@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lima Basics | Catálogo</title>
-    <!-- Tailwind CSS (CDN para desarrollo) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -13,8 +12,6 @@
     <div th:replace="~{fragments/header :: header}"></div>
 
     <main class="flex-grow max-w-7xl mx-auto px-6 md:px-12 w-full py-10">
-        
-        <!-- Cabecera del Catálogo -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 pb-6 border-b border-gray-200">
             <div>
                 <h1 class="text-4xl font-black tracking-tighter">Catálogo</h1>
@@ -31,9 +28,7 @@
         </div>
 
         <div class="flex flex-col lg:flex-row gap-10">
-            <!-- SIDEBAR - Filtros -->
             <aside class="w-full lg:w-64 flex-shrink-0">
-                <!-- Categoría -->
                 <div class="mb-8">
                     <h3 class="font-bold mb-4 uppercase tracking-wider text-sm">Categoría</h3>
                     <ul class="space-y-1">
@@ -46,7 +41,6 @@
                     </ul>
                 </div>
 
-                <!-- Talla -->
                 <div class="mb-8">
                     <h3 class="font-bold mb-4 uppercase tracking-wider text-sm">Talla</h3>
                     <div class="grid grid-cols-3 gap-2">
@@ -59,7 +53,6 @@
                     </div>
                 </div>
 
-                <!-- Color -->
                 <div class="mb-8">
                     <h3 class="font-bold mb-4 uppercase tracking-wider text-sm">Color</h3>
                     <div class="flex flex-wrap gap-3">
@@ -72,7 +65,6 @@
                     </div>
                 </div>
 
-                <!-- Precio -->
                 <div class="mb-8">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-bold uppercase tracking-wider text-sm">Precio Máximo:</h3>
@@ -86,10 +78,8 @@
                 </div>
             </aside>
 
-            <!-- GRILLA DE PRODUCTOS -->
             <div class="flex-grow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
-                
-                <!-- Producto 1 -->
+        
                 <div class="group cursor-pointer">
                     <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
                         <span class="absolute top-3 left-3 bg-[#10b981] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Nuevo</span>
@@ -108,7 +98,6 @@
                     </div>
                 </div>
 
-                <!-- Producto 2 -->
                 <div class="group cursor-pointer">
                     <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
                         <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Más vendido</span>
@@ -126,7 +115,6 @@
                     </div>
                 </div>
 
-                <!-- Producto 3 -->
                 <div class="group cursor-pointer">
                     <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
                         <img src="https://images.unsplash.com/photo-1517438476312-10d79c077509?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Pantalon Cargo y2k" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -143,7 +131,6 @@
                     </div>
                 </div>
 
-                <!-- Producto 4 -->
                 <div class="group cursor-pointer">
                     <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
                         <div class="absolute top-3 left-3 right-3 flex justify-between z-10">
@@ -164,7 +151,6 @@
                     </div>
                 </div>
 
-                <!-- Producto 5 -->
                 <div class="group cursor-pointer">
                     <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
                         <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Más vendido</span>
@@ -181,7 +167,6 @@
                     </div>
                 </div>
 
-                <!-- Producto 6 -->
                 <div class="group cursor-pointer">
                     <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
                         <span class="absolute top-3 left-3 bg-[#10b981] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Nuevo</span>
@@ -204,7 +189,6 @@
         </div>
     </main>
 
-    <!-- Fragmento del FOOTER -->
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

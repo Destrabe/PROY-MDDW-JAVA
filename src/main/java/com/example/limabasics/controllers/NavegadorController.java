@@ -11,28 +11,28 @@ public class NavegadorController {
 
     @GetMapping("/")
     public String inicio() {
-        return "index"; // Apunta a index.html
+        return "index";
     }
     
     @GetMapping("/catalog")
     public String catalog() {
-        return "catalog"; // Apunta a catalog.html
+        return "catalog"; 
     }
 
     @GetMapping("/offers")
     public String offers() {
-        return "offers"; // Apunta a offers.html
+        return "offers"; 
     }
 
     @GetMapping("/about")
     public String about() {
-        return "about"; // Apunta a about.html
+        return "about"; 
     }
 
     @GetMapping("/contact")
     public String contact(Model model) {
         String[] tiendas = {"Lima Centro", "San Miguel", "SJL"};
         model.addAttribute("sedes", tiendas);
-        return "contact"; // Apunta a contact.html
+        return "contact"; 
     }
 }

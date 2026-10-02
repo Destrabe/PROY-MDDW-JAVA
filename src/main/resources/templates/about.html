@@ -4,18 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lima Basics | Sobre Nosotros</title>
-    <!-- Tailwind CSS (CDN para desarrollo) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
-
-    <!-- Fragmento del NAVBAR -->
     <div th:replace="~{fragments/header :: header}"></div>
 
     <main class="flex-grow">
-        
-        <!-- HERO SECTION (Fondo oscuro) -->
         <section class="bg-[#0f1115] text-white py-20 px-6 md:px-12">
             <div class="max-w-7xl mx-auto">
                 <div class="text-sm text-gray-400 mb-6 font-medium">
@@ -34,12 +29,10 @@
             </div>
         </section>
 
-        <!-- NUESTRA HISTORIA -->
         <section class="max-w-7xl mx-auto px-6 md:px-12 py-20">
             <span class="text-blue-600 text-xs font-bold tracking-widest uppercase mb-8 block">NUESTRA HISTORIA</span>
             
             <div class="flex flex-col lg:flex-row gap-16">
-                <!-- Texto historia -->
                 <div class="lg:w-1/2">
                     <h2 class="text-3xl md:text-4xl font-black tracking-tighter mb-8 leading-tight">
                         Empezamos con tres prendas y una mesa en Barranco.
@@ -58,7 +51,6 @@
                     </div>
                 </div>
 
-                <!-- Cuadrícula de estadísticas -->
                 <div class="lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="bg-white p-8 border border-gray-100 shadow-sm rounded-sm">
                         <span class="block text-4xl font-black mb-2">2021</span>
@@ -84,13 +76,11 @@
             </div>
         </section>
 
-        <!-- LO QUE NOS MUEVE -->
         <section class="bg-white py-20 px-6 md:px-12 border-t border-gray-100">
             <div class="max-w-7xl mx-auto">
                 <span class="text-gray-400 text-xs font-bold tracking-widest uppercase mb-12 block">LO QUE NOS MUEVE</span>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Valor 1 -->
                     <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
                         <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
                             <i class="fas fa-shield-halved"></i>
@@ -99,7 +89,6 @@
                         <p class="text-gray-500 text-sm leading-relaxed">Usamos telas que sobreviven el clima de Lima — el frío garúa de julio y el calor de enero. Sin atajos.</p>
                     </div>
 
-                    <!-- Valor 2 -->
                     <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
                         <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
                             <i class="fas fa-users-cog"></i>
@@ -108,7 +97,6 @@
                         <p class="text-gray-500 text-sm leading-relaxed">El 100% de nuestras prendas se confecciona en Lima. Apoyamos talleres independientes de Gamarra y Ate.</p>
                     </div>
 
-                    <!-- Valor 3 -->
                     <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
                         <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
                             <i class="fas fa-cube"></i>
@@ -117,7 +105,6 @@
                         <p class="text-gray-500 text-sm leading-relaxed">Nada está de más. Cada bolsillo, costuras, proporción tiene una razón. Lo básico, pero pensado.</p>
                     </div>
 
-                    <!-- Valor 4 -->
                     <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
                         <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
                             <i class="fas fa-tags"></i>
@@ -126,7 +113,6 @@
                         <p class="text-gray-500 text-sm leading-relaxed">Sin intermediarios que inflen el precio. Del taller a tu puerta, con un margen que nos permite seguir.</p>
                     </div>
 
-                    <!-- Valor 5 -->
                     <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
                         <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
                             <i class="far fa-heart"></i>
@@ -135,7 +121,6 @@
                         <p class="text-gray-500 text-sm leading-relaxed">Nuestros mejores diseños nacen de conversaciones con clientes en el feed, en la tienda, en la calle.</p>
                     </div>
 
-                    <!-- Valor 6 -->
                     <div class="p-8 border border-gray-100 rounded-sm hover:shadow-md transition-shadow">
                         <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-6">
                             <i class="fas fa-sync-alt"></i>
@@ -147,12 +132,10 @@
             </div>
         </section>
 
-        <!-- EQUIPO -->
         <section class="max-w-7xl mx-auto px-6 md:px-12 py-20">
             <span class="text-gray-400 text-xs font-bold tracking-widest uppercase mb-12 block">EL EQUIPO</span>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Miembro 1 -->
                 <div class="flex items-center gap-4">
                     <div class="w-14 h-14 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
                         MA
@@ -163,7 +146,6 @@
                     </div>
                 </div>
 
-                <!-- Miembro 2 -->
                 <div class="flex items-center gap-4">
                     <div class="w-14 h-14 rounded-full bg-[#10b981] text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
                         JC
@@ -174,7 +156,6 @@
                     </div>
                 </div>
 
-                <!-- Miembro 3 -->
                 <div class="flex items-center gap-4">
                     <div class="w-14 h-14 rounded-full bg-gray-800 text-white font-bold flex items-center justify-center text-xl flex-shrink-0">
                         FP
@@ -187,7 +168,6 @@
             </div>
         </section>
 
-        <!-- CTA FINAL -->
         <section class="bg-[#0f1115] text-white py-24 px-6 text-center">
             <span class="text-blue-500 text-xs font-bold tracking-widest uppercase mb-4 block">¿LISTO?</span>
             <h2 class="text-4xl md:text-5xl font-black tracking-tighter mb-10">Conoce la colección.</h2>
@@ -198,7 +178,6 @@
 
     </main>
 
-    <!-- Fragmento del FOOTER -->
     <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>

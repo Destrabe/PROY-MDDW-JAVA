@@ -81,7 +81,6 @@
                 document.getElementById('icon-close').classList.toggle('block');
             }
 
-            // --- LÓGICA DE LOS MODALES ---
             function openLoginModal() {
                 document.getElementById('login-modal').classList.remove('hidden');
             }
@@ -94,19 +93,16 @@
                 document.getElementById('register-modal').classList.add('hidden');
             }
 
-            // Alternar de Login a Registro
             function switchToRegister() {
                 document.getElementById('login-modal').classList.add('hidden');
                 document.getElementById('register-modal').classList.remove('hidden');
             }
 
-            // Alternar de Registro a Login
             function switchToLogin() {
                 document.getElementById('register-modal').classList.add('hidden');
                 document.getElementById('login-modal').classList.remove('hidden');
             }
 
-            // Lógica automática para resaltar la vista activa en el menú
             document.addEventListener('DOMContentLoaded', () => {
                 const currentPath = window.location.pathname; 
                 
@@ -129,7 +125,6 @@
                 });
             });
         </script>
-        
     </nav>
 </body>
 </html>
