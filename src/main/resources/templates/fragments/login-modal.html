@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Fragmento exclusivo del Login -->
+    <div th:fragment="login-modal" id="login-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-[2px] px-4 transition-opacity">
+        <div class="bg-white rounded-2xl w-full max-w-[400px] p-8 relative shadow-2xl">
+            
+            <button onclick="closeLoginModal()" class="absolute top-5 right-5 text-gray-400 hover:text-black transition-colors" aria-label="Cerrar modal">
+                <svg class="w-6 h-6" viewBox="0 0 24 24"><use href="#close"></use></svg>
+            </button>
+            
+            <p class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-1">Bienvenido</p>
+            <h2 class="text-3xl font-black tracking-tight mb-6">Inicia sesión</h2>
+            
+            <form action="#" method="POST" class="space-y-5">
+                <div>
+                    <label for="email" class="block text-sm font-bold text-gray-900 mb-2">Correo electrónico</label>
+                    <input type="email" id="email" placeholder="tu@correo.pe" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="password" class="block text-sm font-bold text-gray-900">Contraseña</label>
+                        <a href="#" class="text-xs text-gray-500 hover:text-blue-600 transition-colors">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <input type="password" id="password" placeholder="••••••••" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm tracking-widest focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg mt-2 transition-colors">
+                    ENTRAR
+                </button>
+            </form>
+            
+            <p class="text-center text-sm text-gray-600 mt-6 pt-2">
+                ¿No tienes cuenta? <button type="button" onclick="switchToRegister()" class="text-black font-bold hover:underline">Regístrate gratis</button>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

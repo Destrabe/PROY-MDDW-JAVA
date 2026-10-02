@@ -35,9 +35,4 @@ public class NavegadorController {
         model.addAttribute("sedes", tiendas);
         return "contact"; // Apunta a contact.html
     }
-
-    @GetMapping("/login")
-    public String login() {
-        return "login"; // Apunta a login.html
-    }
 }

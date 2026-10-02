@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-    <nav th:fragment="header" class="bg-white py-4 px-6 lg:px-12 flex flex-col lg:flex-row justify-between items-center border-b border-gray-200 sticky top-0 z-50">
-        
+    <nav th:fragment="header" class="bg-white py-4 px-6 lg:px-12 flex flex-col lg:flex-row justify-between items-center border-b border-gray-200 sticky top-0 z-50">  
         <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
             <symbol id="user" viewBox="0 0 15 15">
                 <path d="M3 13V13.5H4V13H3ZM11 13V13.5H12V13H11ZM4 13V12.4999H3V13H4ZM6.5 10H8.5V9H6.5V10ZM11 12.4999V13H12V12.4999H11ZM8.5 10C9.88074 10 11 11.1192 11 12.4999H12C12 10.5668 10.433 9 8.5 9V10ZM4 12.4999C4 11.1192 5.11926 10 6.5 10V9C4.56703 9 3 10.5668 3 12.4999H4ZM7.5 3C6.11929 3 5 4.11929 5 5.5H6C6 4.67157 6.67157 4 7.5 4V3ZM10 5.5C10 4.11929 8.88071 3 7.5 3V4C8.32843 4 9 4.67157 9 5.5H10ZM7.5 8C8.88071 8 10 6.88071 10 5.5H9C9 6.32843 8.32843 7 7.5 7V8ZM7.5 7C6.67157 7 6 6.32843 6 5.5H5C5 6.88071 6.11929 8 7.5 8V7ZM7.5 14C3.91015 14 1 11.0899 1 7.5H0C0 11.6421 3.35786 15 7.5 15V14ZM14 7.5C14 11.0899 11.0899 14 7.5 14V15C11.6421 15 15 11.6421 15 7.5H14ZM7.5 1C11.0899 1 14 3.91015 14 7.5H15C15 3.35786 11.6421 0 7.5 0V1ZM7.5 0C3.35786 0 0 3.35786 0 7.5H1C1 3.91015 3.91015 1 7.5 1V0Z" fill="currentColor"></path>
@@ -26,13 +25,10 @@
         </svg>
 
         <div class="flex justify-between items-center w-full">
-            
             <div class="flex items-center space-x-6 lg:space-x-12">
                 <div class="text-2xl font-black tracking-tighter text-black">
                     <a th:href="@{/}">LIMA BASICS</a>
                 </div>
-                
-                <!-- Agregamos el id 'desktop-menu' para manejarlo con JS -->
                 <div id="desktop-menu" class="hidden lg:flex space-x-6 xl:space-x-8 font-medium text-sm mt-1">
                     <a th:href="@{/}" class="text-slate-500 hover:text-black transition-colors">Inicio</a>
                     <a th:href="@{/catalog}" class="text-slate-500 hover:text-black transition-colors">Catálogo</a>
@@ -51,9 +47,9 @@
                     <svg class="w-5 h-5" viewBox="0 0 24 24"><use href="#cart"></use></svg>
                 </button>
                 
-                <a th:href="@{/login}" aria-label="Usuario" class="hidden lg:block hover:text-black transition-colors">
+                <button onclick="openLoginModal()" aria-label="Usuario" class="hidden lg:block hover:text-black transition-colors">
                     <svg class="w-[18px] h-[18px]" viewBox="0 0 15 15"><use href="#user"></use></svg>
-                </a>
+                </button>
 
                 <button onclick="toggleMenu()" aria-label="Menú" class="lg:hidden hover:text-black transition-colors ml-2">
                     <svg id="icon-menu" class="w-6 h-6 block" viewBox="0 0 24 24"><use href="#menu"></use></svg>
@@ -69,12 +65,14 @@
                 <a th:href="@{/offers}" class="mobile-link py-4 text-sm text-gray-600 border-b border-gray-100">Ofertas</a>
                 <a th:href="@{/about}" class="mobile-link py-4 text-sm text-gray-600 border-b border-gray-100">Sobre Nosotros</a>
                 <a th:href="@{/contact}" class="mobile-link py-4 text-sm text-gray-600 border-b border-gray-100">Contacto</a>
-                <a th:href="@{/login}" class="py-4 text-sm text-gray-600 font-medium mt-2">Iniciar sesión / Registrarse</a>
+                <button onclick="openLoginModal(); toggleMenu()" class="py-4 text-sm text-gray-600 font-medium mt-2 text-left w-full">Iniciar sesión / Registrarse</button>
             </div>
         </div>
 
+        <div th:replace="~{fragments/login-modal :: login-modal}"></div>
+        <div th:replace="~{fragments/register-modal :: register-modal}"></div>
+
         <script>
-            // Lógica para abrir/cerrar el menú en móviles
             function toggleMenu() {
                 document.getElementById('mobile-menu').classList.toggle('hidden');
                 document.getElementById('icon-menu').classList.toggle('hidden');
@@ -83,22 +81,44 @@
                 document.getElementById('icon-close').classList.toggle('block');
             }
 
+            // --- LÓGICA DE LOS MODALES ---
+            function openLoginModal() {
+                document.getElementById('login-modal').classList.remove('hidden');
+            }
+
+            function closeLoginModal() {
+                document.getElementById('login-modal').classList.add('hidden');
+            }
+
+            function closeRegisterModal() {
+                document.getElementById('register-modal').classList.add('hidden');
+            }
+
+            // Alternar de Login a Registro
+            function switchToRegister() {
+                document.getElementById('login-modal').classList.add('hidden');
+                document.getElementById('register-modal').classList.remove('hidden');
+            }
+
+            // Alternar de Registro a Login
+            function switchToLogin() {
+                document.getElementById('register-modal').classList.add('hidden');
+                document.getElementById('login-modal').classList.remove('hidden');
+            }
+
             // Lógica automática para resaltar la vista activa en el menú
             document.addEventListener('DOMContentLoaded', () => {
-                const currentPath = window.location.pathname; // Captura la URL actual (ej: /catalog)
+                const currentPath = window.location.pathname; 
                 
-                // 1. Resaltar en el menú de computadora (Barrita negra)
                 const desktopLinks = document.querySelectorAll('#desktop-menu a');
                 desktopLinks.forEach(link => {
-                    // Compara si el link del menú coincide con la página actual
                     if (link.getAttribute('href') === currentPath) {
-                        link.className = "text-black border-b-2 border-black pb-1"; // Activo
+                        link.className = "text-black border-b-2 border-black pb-1"; 
                     } else {
-                        link.className = "text-slate-500 hover:text-black transition-colors"; // Inactivo
+                        link.className = "text-slate-500 hover:text-black transition-colors"; 
                     }
                 });
 
-                // 2. Resaltar en el menú de celular (Texto en negrita)
                 const mobileLinks = document.querySelectorAll('.mobile-link');
                 mobileLinks.forEach(link => {
                     if (link.getAttribute('href') === currentPath) {

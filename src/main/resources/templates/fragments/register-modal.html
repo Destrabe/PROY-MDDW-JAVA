@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Fragmento exclusivo del Registro -->
+    <div th:fragment="register-modal" id="register-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-[2px] px-4 transition-opacity">
+        <div class="bg-white rounded-2xl w-full max-w-[400px] p-8 relative shadow-2xl">
+            
+            <button onclick="closeRegisterModal()" class="absolute top-5 right-5 text-gray-400 hover:text-black transition-colors" aria-label="Cerrar modal">
+                <svg class="w-6 h-6" viewBox="0 0 24 24"><use href="#close"></use></svg>
+            </button>
+            
+            <p class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-1">Crear cuenta</p>
+            <h2 class="text-3xl font-black tracking-tight mb-6">Regístrate</h2>
+            
+            <form action="#" method="POST" class="space-y-4">
+                <div>
+                    <label for="reg-name" class="block text-sm font-bold text-gray-900 mb-1.5">Nombre completo</label>
+                    <input type="text" id="reg-name" placeholder="Ana García" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
+                </div>
+                <div>
+                    <label for="reg-email" class="block text-sm font-bold text-gray-900 mb-1.5">Correo electrónico</label>
+                    <input type="email" id="reg-email" placeholder="ana@correo.pe" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
+                </div>
+                <div>
+                    <label for="reg-password" class="block text-sm font-bold text-gray-900 mb-1.5">Contraseña</label>
+                    <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
+                </div>
+                
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg mt-4 transition-colors">
+                    CREAR CUENTA
+                </button>
+            </form>
+            
+            <p class="text-center text-sm text-gray-600 mt-6 pt-2">
+                ¿Ya tienes cuenta? <button type="button" onclick="switchToLogin()" class="text-black font-bold hover:underline">Inicia sesión</button>
+            </p>
+        </div>
+    </div>
+</body>
+</html>s
