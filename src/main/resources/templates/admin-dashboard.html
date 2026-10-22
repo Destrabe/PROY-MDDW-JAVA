@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lima Basics | Panel de Administración</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Header del sitio -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="flex-grow max-w-7xl mx-auto px-6 md:px-12 py-10 w-full">
+
+        <!-- Cabecera y Resumen -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <span class="text-blue-600 text-xs font-bold tracking-widest uppercase block mb-1">GESTIÓN INTERNA</span>
+                <h1 class="text-3xl md:text-4xl font-black tracking-tighter">Dashboard Admin</h1>
+            </div>
+
+            <!-- Selector de Pestañas (Productos / Usuarios) -->
+            <div class="inline-flex bg-gray-200 p-1 rounded-xl">
+                <button id="btn-tab-productos" onclick="cambiarTab('productos')"
+                        class="px-5 py-2.5 rounded-lg text-sm font-bold transition-all">
+                    <i class="fas fa-box-open mr-2"></i>Productos (<span th:text="${productos.size()}">0</span>)
+                </button>
+                <button id="btn-tab-usuarios" onclick="cambiarTab('usuarios')"
+                        class="px-5 py-2.5 rounded-lg text-sm font-bold transition-all">
+                    <i class="fas fa-users mr-2"></i>Usuarios (<span th:text="${usuarios.size()}">0</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== SECCIÓN 1: PRODUCTOS (CRUD COMPLETO) ==================== -->
+        <section id="sec-productos" class="space-y-6">
+            <div class="flex justify-between items-center bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <div>
+                    <h2 class="font-bold text-lg">Inventario de Productos</h2>
+                    <p class="text-xs text-gray-500">Agrega, consulta, actualiza o elimina prendas del catálogo en tiempo real.</p>
+                </div>
+                <button onclick="abrirModalCrearProducto()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-5 py-2.5 rounded-lg transition-colors flex items-center shadow-sm">
+                    <i class="fas fa-plus mr-2"></i> Nuevo Producto
+                </button>
+            </div>
+
+            <!-- Tabla de Productos -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-200 bg-gray-50 text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                            <th class="p-4">ID</th>
+                            <th class="p-4">Producto</th>
+                            <th class="p-4">Categoría</th>
+                            <th class="p-4">Precio</th>
+                            <th class="p-4">Etiqueta</th>
+                            <th class="p-4">Colores</th>
+                            <th class="p-4 text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm">
+                        <tr th:each="p : ${productos}" class="hover:bg-gray-50 transition-colors">
+                            <td class="p-4 font-mono text-xs text-gray-400" th:text="'#' + ${p.id}"></td>
+                            <td class="p-4">
+                                <div class="flex items-center space-x-3">
+                                    <img th:src="${p.imagen}" th:alt="${p.nombre}" class="w-11 h-14 object-cover rounded border border-gray-200 flex-shrink-0">
+                                    <span class="font-bold text-gray-900" th:text="${p.nombre}"></span>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-md text-xs font-medium" th:text="${p.categoria}"></span>
+                            </td>
+                            <td class="p-4">
+                                <span class="font-black text-gray-900" th:text="'S/ ' + ${p.precio}"></span>
+                                <span th:if="${p.precioAnterior != null}" class="text-xs text-gray-400 line-through ml-1" th:text="'S/ ' + ${p.precioAnterior}"></span>
+                            </td>
+                            <td class="p-4">
+                                <span th:if="${p.etiqueta != null}"
+                                      th:class="'text-white text-[10px] font-bold px-2.5 py-1 uppercase rounded-sm ' + ${p.claseEtiqueta}"
+                                      th:text="${p.etiqueta}"></span>
+                                <span th:if="${p.etiqueta == null}" class="text-xs text-gray-400 italic">Sin etiqueta</span>
+                            </td>
+                            <td class="p-4">
+                                <div class="flex gap-1.5">
+                                    <span th:each="c : ${p.colores}" th:class="'w-4 h-4 rounded-full border border-gray-300 ' + ${c}"></span>
+                                </div>
+                            </td>
+                            <td class="p-4 text-right space-x-2 whitespace-nowrap">
+                                <button type="button"
+                                        th:data-id="${p.id}"
+                                        th:data-nombre="${p.nombre}"
+                                        th:data-categoria="${p.categoria}"
+                                        th:data-precio="${p.precio}"
+                                        th:data-precio-anterior="${p.precioAnterior}"
+                                        th:data-etiqueta="${p.etiqueta}"
+                                        th:data-colores="${p.coloresStr}"
+                                        th:data-imagen="${p.imagen}"
+                                        onclick="abrirModalEditarProducto(this)"
+                                        class="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors">
+                                    <i class="fas fa-pen mr-1"></i> Editar
+                                </button>
+
+                                <form th:action="@{/admin/productos/eliminar}" method="post" class="inline"
+                                      onsubmit="return confirm('¿Seguro que deseas eliminar este producto?');">
+                                    <input type="hidden" name="id" th:value="${p.id}">
+                                    <button type="submit" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-bold transition-colors">
+                                        <i class="fas fa-trash mr-1"></i> Borrar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ==================== SECCIÓN 2: USUARIOS (VER, EDITAR, ELIMINAR) ==================== -->
+        <section id="sec-usuarios" class="space-y-6 hidden">
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex justify-between items-center">
+                <div>
+                    <h2 class="font-bold text-lg">Usuarios Registrados</h2>
+                    <p class="text-xs text-gray-500">Visualiza las cuentas registradas, modifica sus datos/roles o da de baja usuarios.</p>
+                </div>
+                <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg font-medium">
+                    El registro de nuevas cuentas se realiza desde el formulario público.
+                </span>
+            </div>
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-200 bg-gray-50 text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                            <th class="p-4">ID</th>
+                            <th class="p-4">Usuario</th>
+                            <th class="p-4">Correo Electrónico</th>
+                            <th class="p-4">Rol</th>
+                            <th class="p-4 text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm">
+                        <tr th:each="u : ${usuarios}" class="hover:bg-gray-50 transition-colors">
+                            <td class="p-4 font-mono text-xs text-gray-400" th:text="'#' + ${u.id}"></td>
+                            <td class="p-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-9 h-9 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
+                                        <span th:text="${u.nombre != null and !u.nombre.isEmpty() ? #strings.substring(u.nombre,0,1).toUpperCase() : 'U'}">U</span>
+                                    </div>
+                                    <span class="font-bold text-gray-900" th:text="${u.nombre}"></span>
+                                </div>
+                            </td>
+                            <td class="p-4 text-gray-600" th:text="${u.email}"></td>
+                            <td class="p-4">
+                                <span th:if="${u.rol == 'ADMIN'}" class="px-2.5 py-1 bg-blue-100 text-blue-700 font-bold text-xs rounded-full">ADMIN</span>
+                                <span th:if="${u.rol != 'ADMIN'}" class="px-2.5 py-1 bg-gray-100 text-gray-700 font-medium text-xs rounded-full" th:text="${u.rol}">USER</span>
+                            </td>
+                            <td class="p-4 text-right space-x-2 whitespace-nowrap">
+                                <button type="button"
+                                        th:data-id="${u.id}"
+                                        th:data-nombre="${u.nombre}"
+                                        th:data-email="${u.email}"
+                                        th:data-rol="${u.rol}"
+                                        onclick="abrirModalEditarUsuario(this)"
+                                        class="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors">
+                                    <i class="fas fa-user-pen mr-1"></i> Editar
+                                </button>
+
+                                <form th:if="${session.usuarioId != u.id}" th:action="@{/admin/usuarios/eliminar}" method="post" class="inline"
+                                      onsubmit="return confirm('¿Seguro que deseas eliminar esta cuenta de usuario?');">
+                                    <input type="hidden" name="id" th:value="${u.id}">
+                                    <button type="submit" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-bold transition-colors">
+                                        <i class="fas fa-trash mr-1"></i> Eliminar
+                                    </button>
+                                </form>
+                                <span th:if="${session.usuarioId == u.id}" class="text-xs text-gray-400 italic px-2">Sesión actual</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== MODAL: CREAR / EDITAR PRODUCTO ==================== -->
+    <div id="modal-producto" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-[2px] px-4">
+        <div class="bg-white rounded-2xl w-full max-w-lg p-7 relative shadow-2xl">
+            <button onclick="cerrarModalProducto()" class="absolute top-5 right-5 text-gray-400 hover:text-black">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+
+            <h3 id="modal-producto-titulo" class="text-2xl font-black tracking-tight mb-5">Nuevo Producto</h3>
+
+            <form id="form-producto" th:action="@{/admin/productos/crear}" method="post" class="space-y-4">
+                <input type="hidden" id="prod-id" name="id">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Nombre *</label>
+                        <input type="text" id="prod-nombre" name="nombre" required placeholder="Polo Lima Oversize"
+                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Categoría *</label>
+                        <select id="prod-categoria" name="categoria"
+                                class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:border-blue-600">
+                            <option value="Polos">Polos</option>
+                            <option value="Hoodies">Hoodies</option>
+                            <option value="Pantalones">Pantalones</option>
+                            <option value="Chaquetas">Chaquetas</option>
+                            <option value="Shorts">Shorts</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Precio Actual (S/) *</label>
+                        <input type="number" id="prod-precio" name="precio" required placeholder="89"
+                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Precio Anterior (Oferta)</label>
+                        <input type="number" id="prod-precio-ant" name="precioAnterior" placeholder="Vacío si no está en oferta"
+                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-600">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Etiqueta</label>
+                        <select id="prod-etiqueta" name="etiqueta"
+                                class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:border-blue-600">
+                            <option value="">Sin etiqueta</option>
+                            <option value="Nuevo">Nuevo (Verde)</option>
+                            <option value="Más vendido">Más vendido (Azul)</option>
+                            <option value="Últimas unidades">Últimas unidades (Oscuro)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Colores (Tailwind)</label>
+                        <input type="text" id="prod-colores" name="coloresStr" placeholder="bg-white,bg-black"
+                               class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-600">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-1">URL de Imagen *</label>
+                    <input type="url" id="prod-imagen" name="imagen" required placeholder="https://images.unsplash.com/..."
+                           class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-600">
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3">
+                    <button type="button" onclick="cerrarModalProducto()" class="px-5 py-2.5 rounded-lg border border-gray-300 text-sm font-bold text-gray-700 hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-colors">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: EDITAR USUARIO ==================== -->
+    <div id="modal-usuario" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-[2px] px-4">
+        <div class="bg-white rounded-2xl w-full max-w-md p-7 relative shadow-2xl">
+            <button onclick="cerrarModalUsuario()" class="absolute top-5 right-5 text-gray-400 hover:text-black">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+
+            <h3 class="text-2xl font-black tracking-tight mb-5">Editar Usuario</h3>
+
+            <form th:action="@{/admin/usuarios/actualizar}" method="post" class="space-y-4">
+                <input type="hidden" id="user-id" name="id">
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Nombre Completo *</label>
+                    <input type="text" id="user-nombre" name="nombre" required
+                           class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Correo Electrónico *</label>
+                    <input type="email" id="user-email" name="email" required
+                           class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Rol del Usuario *</label>
+                    <select id="user-rol" name="rol"
+                            class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:border-blue-600">
+                        <option value="USER">USER (Cliente)</option>
+                        <option value="ADMIN">ADMIN (Administrador)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-1">Nueva Contraseña (Opcional)</label>
+                    <input type="password" name="password" placeholder="Dejar en blanco para mantener la actual"
+                           class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-600">
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3">
+                    <button type="button" onclick="cerrarModalUsuario()" class="px-5 py-2.5 rounded-lg border border-gray-300 text-sm font-bold text-gray-700 hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold transition-colors">
+                        Actualizar Usuario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const initialTab = /*[[${activeTab}]]*/ 'productos';
+
+        function cambiarTab(tab) {
+            const secProd = document.getElementById('sec-productos');
+            const secUser = document.getElementById('sec-usuarios');
+            const btnProd = document.getElementById('btn-tab-productos');
+            const btnUser = document.getElementById('btn-tab-usuarios');
+
+            if (tab === 'usuarios') {
+                secProd.classList.add('hidden');
+                secUser.classList.remove('hidden');
+                btnUser.className = "px-5 py-2.5 rounded-lg text-sm font-bold bg-white text-blue-600 shadow-sm transition-all";
+                btnProd.className = "px-5 py-2.5 rounded-lg text-sm font-bold text-gray-600 hover:text-gray-900 transition-all";
+            } else {
+                secUser.classList.add('hidden');
+                secProd.classList.remove('hidden');
+                btnProd.className = "px-5 py-2.5 rounded-lg text-sm font-bold bg-white text-blue-600 shadow-sm transition-all";
+                btnUser.className = "px-5 py-2.5 rounded-lg text-sm font-bold text-gray-600 hover:text-gray-900 transition-all";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cambiarTab(initialTab);
+        });
+
+        // Lógica de Modal Producto (Crear y Editar)
+        function abrirModalCrearProducto() {
+            document.getElementById('modal-producto-titulo').textContent = 'Nuevo Producto';
+            const form = document.getElementById('form-producto');
+            form.action = '/admin/productos/crear';
+            form.reset();
+            document.getElementById('prod-id').value = '';
+            document.getElementById('prod-colores').value = 'bg-white,bg-black';
+            document.getElementById('modal-producto').classList.remove('hidden');
+        }
+
+        function abrirModalEditarProducto(btn) {
+            document.getElementById('modal-producto-titulo').textContent = 'Editar Producto #' + btn.dataset.id;
+            const form = document.getElementById('form-producto');
+            form.action = '/admin/productos/actualizar';
+
+            document.getElementById('prod-id').value = btn.dataset.id || '';
+            document.getElementById('prod-nombre').value = btn.dataset.nombre || '';
+            document.getElementById('prod-categoria').value = btn.dataset.categoria || 'Polos';
+            document.getElementById('prod-precio').value = btn.dataset.precio || '';
+            document.getElementById('prod-precio-ant').value = btn.dataset.precioAnterior || '';
+            document.getElementById('prod-etiqueta').value = btn.dataset.etiqueta || '';
+            document.getElementById('prod-colores').value = btn.dataset.colores || 'bg-white,bg-black';
+            document.getElementById('prod-imagen').value = btn.dataset.imagen || '';
+
+            document.getElementById('modal-producto').classList.remove('hidden');
+        }
+
+        function cerrarModalProducto() {
+            document.getElementById('modal-producto').classList.add('hidden');
+        }
+
+        // Lógica de Modal Usuario (Editar)
+        function abrirModalEditarUsuario(btn) {
+            document.getElementById('user-id').value = btn.dataset.id || '';
+            document.getElementById('user-nombre').value = btn.dataset.nombre || '';
+            document.getElementById('user-email').value = btn.dataset.email || '';
+            document.getElementById('user-rol').value = btn.dataset.rol || 'USER';
+            document.getElementById('modal-usuario').classList.remove('hidden');
+        }
+
+        function cerrarModalUsuario() {
+            document.getElementById('modal-usuario').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

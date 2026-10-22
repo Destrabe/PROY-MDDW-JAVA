@@ -9,21 +9,29 @@
             </button>
             
             <p class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-1">Bienvenido</p>
-            <h2 class="text-3xl font-black tracking-tight mb-6">Inicia sesión</h2>
+            <h2 class="text-3xl font-black tracking-tight mb-4">Inicia sesión</h2>
+
+            <!-- CONTENEDOR DE ERROR DINÁMICO (Sin recargar) -->
+            <div id="login-error-box" class="hidden mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-start space-x-2.5 text-red-600">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span id="login-error-text" class="text-xs font-bold leading-relaxed"></span>
+            </div>
             
-            <form action="/login" method="POST" class="space-y-5">
+            <form id="form-login-ajax" class="space-y-5">
                 <div>
-                    <label for="email" class="block text-sm font-bold text-gray-900 mb-2">Correo electrónico</label>
-                    <input type="email" id="email" name="email" placeholder="tu@correo.pe" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
+                    <label for="login-email" class="block text-sm font-bold text-gray-900 mb-2">Correo electrónico</label>
+                    <input type="email" id="login-email" name="email" placeholder="tu@correo.pe" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
                 </div>
                 <div>
                     <div class="flex justify-between items-center mb-2">
-                        <label for="password" class="block text-sm font-bold text-gray-900">Contraseña</label>
+                        <label for="login-password" class="block text-sm font-bold text-gray-900">Contraseña</label>
                         <a href="#" class="text-xs text-gray-500 hover:text-blue-600 transition-colors">¿Olvidaste tu contraseña?</a>
                     </div>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm tracking-widest focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
+                    <input type="password" id="login-password" name="password" placeholder="••••••••" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm tracking-widest focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg mt-2 transition-colors">
+                <button type="submit" id="btn-login-submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg mt-2 transition-colors">
                     ENTRAR
                 </button>
             </form>
@@ -32,6 +40,47 @@
                 ¿No tienes cuenta? <button type="button" onclick="switchToRegister()" class="text-black font-bold hover:underline">Regístrate gratis</button>
             </p>
         </div>
+
+        <script>
+            document.getElementById('form-login-ajax').addEventListener('submit', async function(e) {
+                e.preventDefault(); // EVITA LA RECARGA DE LA PÁGINA
+                
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                const errorBox = document.getElementById('login-error-box');
+                const errorText = document.getElementById('login-error-text');
+                const submitBtn = document.getElementById('btn-login-submit');
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'VERIFICANDO...';
+
+                try {
+                    const response = await fetch('/login-ajax', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Si es exitoso, recargamos la página para actualizar el header con la sesión activa
+                        window.location.reload();
+                    } else {
+                        // Si hay error, mostramos el mensaje rojo SIN cerrar el modal ni recargar
+                        errorText.textContent = data.message;
+                        errorBox.classList.remove('hidden');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'ENTRAR';
+                    }
+                } catch (err) {
+                    errorText.textContent = 'Ocurrió un error de conexión. Inténtalo de nuevo.';
+                    errorBox.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'ENTRAR';
+                }
+            });
+        </script>
     </div>
 </body>
 </html>

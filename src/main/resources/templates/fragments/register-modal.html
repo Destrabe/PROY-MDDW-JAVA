@@ -9,9 +9,17 @@
             </button>
             
             <p class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-1">Crear cuenta</p>
-            <h2 class="text-3xl font-black tracking-tight mb-6">Regístrate</h2>   
+            <h2 class="text-3xl font-black tracking-tight mb-4">Regístrate</h2>   
+
+            <!-- CONTENEDOR DE ERROR EN REGISTRO -->
+            <div id="register-error-box" class="hidden mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-start space-x-2.5 text-red-600">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span id="register-error-text" class="text-xs font-bold leading-relaxed"></span>
+            </div>
             
-            <form action="/registro" method="POST" class="space-y-4">
+            <form id="form-register-ajax" class="space-y-4">
                 <div>
                     <label for="reg-name" class="block text-sm font-bold text-gray-900 mb-1.5">Nombre completo</label>
                     <input type="text" id="reg-name" name="nombre" placeholder="Ana García" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
@@ -22,10 +30,10 @@
                 </div>
                 <div>
                     <label for="reg-password" class="block text-sm font-bold text-gray-900 mb-1.5">Contraseña</label>
-                    <input type="password" id="reg-password" name="password" placeholder="Mínimo 6 caracteres" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
+                    <input type="password" id="reg-password" name="password" placeholder="Mínimo 6 caracteres" minlength="6" required class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-colors">
                 </div>
                 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg mt-4 transition-colors">
+                <button type="submit" id="btn-register-submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg mt-4 transition-colors">
                     CREAR CUENTA
                 </button>
             </form>  
@@ -34,6 +42,46 @@
                 ¿Ya tienes cuenta? <button type="button" onclick="switchToLogin()" class="text-black font-bold hover:underline">Inicia sesión</button>
             </p>
         </div>
+
+        <script>
+            document.getElementById('form-register-ajax').addEventListener('submit', async function(e) {
+                e.preventDefault(); // EVITA LA RECARGA DE LA PÁGINA
+
+                const nombre = document.getElementById('reg-name').value;
+                const email = document.getElementById('reg-email').value;
+                const password = document.getElementById('reg-password').value;
+                const errorBox = document.getElementById('register-error-box');
+                const errorText = document.getElementById('register-error-text');
+                const submitBtn = document.getElementById('btn-register-submit');
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'CREANDO CUENTA...';
+
+                try {
+                    const response = await fetch('/registro-ajax', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `nombre=${encodeURIComponent(nombre)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        errorText.textContent = data.message;
+                        errorBox.classList.remove('hidden');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'CREAR CUENTA';
+                    }
+                } catch (err) {
+                    errorText.textContent = 'Ocurrió un error de conexión. Inténtalo de nuevo.';
+                    errorBox.classList.remove('hidden');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'CREAR CUENTA';
+                }
+            });
+        </script>
     </div>
 </body>
 </html>

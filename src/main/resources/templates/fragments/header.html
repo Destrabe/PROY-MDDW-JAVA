@@ -22,10 +22,14 @@
                     <svg class="w-[22px] h-[22px]" viewBox="0 0 24 24"><use href="/img/sprite.svg#search"></use></svg>
                 </button>
                 
-                <button aria-label="Carrito" class="hover:text-black transition-colors mt-1">
+                <a th:href="@{/carrito}" aria-label="Carrito" class="relative hover:text-black transition-colors mt-1">
                     <svg class="w-[22px] h-[22px]" viewBox="0 0 24 24"><use href="/img/sprite.svg#cart"></use></svg>
-                </button>
-                
+                    <span th:if="${session.carritoCantidad != null and session.carritoCantidad > 0}"
+                        th:text="${session.carritoCantidad}"
+                        class="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    </span>
+                </a>
+                                
                 <button th:if="${session.usuarioId == null}" onclick="openLoginModal()" aria-label="Usuario" class="hidden lg:block hover:text-black transition-colors mt-1">
                     <svg class="w-5 h-5" viewBox="0 0 15 15"><use href="/img/sprite.svg#user"></use></svg>
                 </button>
@@ -130,7 +134,7 @@
             <div th:replace="~{fragments/register-modal :: register-modal}"></div>
         </div>
 
-        <script>
+        <script th:inline="javascript">
             function toggleUserDropdown() {
                 const dropdown = document.getElementById('user-dropdown');
                 if (dropdown) dropdown.classList.toggle('hidden');
@@ -207,6 +211,38 @@
                     }
                 });
             });
+            document.addEventListener('DOMContentLoaded', () => {
+                    const currentPath = window.location.pathname; 
+                    
+                    const desktopLinks = document.querySelectorAll('#desktop-menu a');
+                    desktopLinks.forEach(link => {
+                        if (link.getAttribute('href') === currentPath) {
+                            link.className = "text-black border-b-2 border-black pb-1"; 
+                        } else {
+                            link.className = "text-slate-500 hover:text-black transition-colors"; 
+                        }
+                    });
+
+                    const mobileLinks = document.querySelectorAll('.mobile-link');
+                    mobileLinks.forEach(link => {
+                        if (link.getAttribute('href') === currentPath) {
+                            link.className = "mobile-link py-2.5 text-sm text-black font-bold border-b border-gray-50 flex items-center justify-between";
+                        } else {
+                            link.className = "mobile-link py-2.5 text-sm text-gray-600 border-b border-gray-50 flex items-center justify-between";
+                        }
+                    });
+
+                    // --- MANTENER EL MODAL ABIERTO SI HAY ERROR DE LOGIN O REGISTRO ---
+                    const debeAbrirLogin = /*[[${openLogin}]]*/ false;
+                    const debeAbrirRegistro = /*[[${openRegister}]]*/ false;
+
+                    if (debeAbrirLogin) {
+                        openLoginModal();
+                    } else if (debeAbrirRegistro) {
+                        const regModal = document.getElementById('register-modal');
+                        if (regModal) regModal.classList.remove('hidden');
+                    }
+                });
         </script>
     </nav>
 </body>

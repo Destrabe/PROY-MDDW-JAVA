@@ -14,16 +14,12 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Usuario registrarUsuario(String nombre, String email, String password) {
-        Usuario nuevoUsuario = new Usuario(nombre, email, password, "USER");
-        return usuarioRepository.save(nuevoUsuario);
+    public Optional<Usuario> buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email.trim());
     }
 
-    public Usuario validarLogin(String email, String password) {
-        Optional<Usuario> usuarioEncontrado = usuarioRepository.findByEmail(email);
-        if (usuarioEncontrado.isPresent() && usuarioEncontrado.get().getPassword().equals(password)) {
-            return usuarioEncontrado.get(); 
-        }
-        return null;
+    public Usuario registrarUsuario(String nombre, String email, String password) {
+        Usuario nuevoUsuario = new Usuario(nombre.trim(), email.trim(), password, "USER");
+        return usuarioRepository.save(nuevoUsuario);
     }
 }
