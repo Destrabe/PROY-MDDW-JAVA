@@ -22,7 +22,7 @@
                     <svg class="w-[22px] h-[22px]" viewBox="0 0 24 24"><use href="/img/sprite.svg#search"></use></svg>
                 </button>
                 
-                <a th:href="@{/carrito}" aria-label="Carrito" class="relative hover:text-black transition-colors mt-1">
+                <a th:href="@{/cart}" aria-label="Carrito" class="relative hover:text-black transition-colors mt-1">
                     <svg class="w-[22px] h-[22px]" viewBox="0 0 24 24"><use href="/img/sprite.svg#cart"></use></svg>
                     <span th:if="${session.carritoCantidad != null and session.carritoCantidad > 0}"
                         th:text="${session.carritoCantidad}"
