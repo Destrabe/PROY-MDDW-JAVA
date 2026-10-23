@@ -21,12 +21,10 @@ public class AdminController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Validación auxiliar de rol ADMIN
     private boolean esAdmin(HttpSession session) {
         return "ADMIN".equals(session.getAttribute("usuarioRol"));
     }
 
-    // Helper para asignar automáticamente el color de la etiqueta según el texto
     private String obtenerClaseEtiqueta(String etiqueta) {
         if (etiqueta == null || etiqueta.isBlank()) return null;
         return switch (etiqueta.trim()) {
@@ -37,7 +35,6 @@ public class AdminController {
         };
     }
 
-    // 1. VISTA PRINCIPAL DEL DASHBOARD (Leer Productos y Usuarios)
     @GetMapping("/dashboard")
     public String dashboard(
             @RequestParam(defaultValue = "productos") String tab,
@@ -54,9 +51,6 @@ public class AdminController {
         return "admin-dashboard";
     }
 
-    // ==================== CRUD DE PRODUCTOS ====================
-
-    // 2. CREAR PRODUCTO
     @PostMapping("/productos/crear")
     public String crearProducto(
             @RequestParam String nombre,
@@ -87,7 +81,6 @@ public class AdminController {
         return "redirect:/admin/dashboard?tab=productos";
     }
 
-    // 3. ACTUALIZAR PRODUCTO
     @PostMapping("/productos/actualizar")
     public String actualizarProducto(
             @RequestParam Long id,
@@ -118,7 +111,6 @@ public class AdminController {
         return "redirect:/admin/dashboard?tab=productos";
     }
 
-    // 4. ELIMINAR PRODUCTO
     @PostMapping("/productos/eliminar")
     public String eliminarProducto(@RequestParam Long id, HttpSession session) {
         if (!esAdmin(session)) return "redirect:/";
@@ -126,9 +118,6 @@ public class AdminController {
         return "redirect:/admin/dashboard?tab=productos";
     }
 
-    // ==================== RUD DE USUARIOS (Ver, Editar, Eliminar) ====================
-
-    // 5. ACTUALIZAR USUARIO
     @PostMapping("/usuarios/actualizar")
     public String actualizarUsuario(
             @RequestParam Long id,
@@ -145,13 +134,11 @@ public class AdminController {
             u.setNombre(nombre);
             u.setEmail(email);
             u.setRol(rol);
-            // Si el admin escribe una nueva contraseña, se actualiza; si lo deja vacío, conserva la actual
             if (password != null && !password.isBlank()) {
                 u.setPassword(password);
             }
             usuarioRepository.save(u);
 
-            // Si el admin se editó a sí mismo, actualizamos los datos de su sesión en vivo
             Long idSesion = (Long) session.getAttribute("usuarioId");
             if (idSesion != null && idSesion.equals(u.getId())) {
                 session.setAttribute("usuarioNombre", u.getNombre());
@@ -162,13 +149,11 @@ public class AdminController {
         return "redirect:/admin/dashboard?tab=usuarios";
     }
 
-    // 6. ELIMINAR USUARIO
     @PostMapping("/usuarios/eliminar")
     public String eliminarUsuario(@RequestParam Long id, HttpSession session) {
         if (!esAdmin(session)) return "redirect:/";
 
         Long idSesion = (Long) session.getAttribute("usuarioId");
-        // Evitamos que el administrador borre su propia cuenta activa por accidente
         if (idSesion == null || !idSesion.equals(id)) {
             usuarioRepository.deleteById(id);
         }

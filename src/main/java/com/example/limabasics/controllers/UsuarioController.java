@@ -22,7 +22,6 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    // ==================== LOGIN AJAX (Sin recargar) ====================
     @PostMapping("/login-ajax")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> procesarLoginAjax(
@@ -46,7 +45,6 @@ public class UsuarioController {
             return ResponseEntity.ok(response);
         }
 
-        // Guardar sesión
         session.setAttribute("usuarioId", usuario.getId());
         session.setAttribute("usuarioNombre", usuario.getNombre());
         session.setAttribute("usuarioEmail", usuario.getEmail());
@@ -56,7 +54,6 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
-    // ==================== REGISTRO AJAX (Sin recargar) ====================
     @PostMapping("/registro-ajax")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> procesarRegistroAjax(
