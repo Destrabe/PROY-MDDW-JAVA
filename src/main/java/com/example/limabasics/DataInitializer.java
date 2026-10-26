@@ -33,7 +33,8 @@ public class DataInitializer implements CommandLineRunner {
             ));
         }
 
-        if (usuarioRepository.findByEmail("admin@limabasics.pe").isEmpty()) {
+
+        if (usuarioRepository.findByEmailIgnoreCase("admin@limabasics.pe").isEmpty()) {
             usuarioRepository.save(new Usuario("Marco Admin", "admin@limabasics.pe", "admin123", "ADMIN"));
         }
     }
