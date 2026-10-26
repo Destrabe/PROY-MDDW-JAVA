@@ -1,5 +1,6 @@
 package com.example.limabasics.api;
 
+import com.example.limabasics.dto.UsuarioDTO; 
 import com.example.limabasics.entities.Usuario;
 import com.example.limabasics.services.UsuarioService;
 import jakarta.servlet.http.HttpSession;
@@ -53,5 +54,18 @@ public class ApiAuthController {
         response.put("rol", usuario.getRol());
         
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/perfil/{id}")
+    public ResponseEntity<UsuarioDTO> obtenerPerfil(@PathVariable Long id) {
+        Optional<Usuario> usuarioOpt = usuarioService.buscarPorId(id);
+        
+        if (usuarioOpt.isPresent()) {
+            Usuario usuarioReal = usuarioOpt.get();
+            UsuarioDTO usuarioSeguro = UsuarioDTO.desdeEntidad(usuarioReal);
+            return ResponseEntity.ok(usuarioSeguro);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

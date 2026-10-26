@@ -18,6 +18,10 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email.trim());
     }
 
+    public Optional<Usuario> buscarPorId(Long id) {
+        return usuarioRepository.findById(id);
+    }
+
     public Usuario registrarUsuario(String nombre, String email, String password) {
         Usuario nuevoUsuario = new Usuario(nombre.trim(), email.trim(), password, "USER");
         return usuarioRepository.save(nuevoUsuario);
