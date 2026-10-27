@@ -1,8 +1,10 @@
 package com.example.limabasics.controllers;
 
 import com.example.limabasics.entities.CarritoItem;
+import com.example.limabasics.entities.Pedido;
 import com.example.limabasics.entities.Producto;
 import com.example.limabasics.repositories.CarritoItemRepository;
+import com.example.limabasics.repositories.PedidoRepository;
 import com.example.limabasics.repositories.ProductoRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,10 +23,14 @@ public class CarritoController {
 
     private final ProductoRepository productoRepository;
     private final CarritoItemRepository carritoItemRepository;
+    private final PedidoRepository pedidoRepository;
 
-    public CarritoController(ProductoRepository productoRepository, CarritoItemRepository carritoItemRepository) {
+    public CarritoController(ProductoRepository productoRepository,
+                               CarritoItemRepository carritoItemRepository,
+                               PedidoRepository pedidoRepository) {
         this.productoRepository = productoRepository;
         this.carritoItemRepository = carritoItemRepository;
+        this.pedidoRepository = pedidoRepository;
     }
 
     public void sincronizarContadoresSesion(HttpSession session) {
@@ -39,6 +45,26 @@ public class CarritoController {
         int totalPrecio = items.stream().mapToInt(CarritoItem::getSubtotal).sum();
         session.setAttribute("carritoCantidad", totalItems);
         session.setAttribute("carritoTotal", totalPrecio);
+    }
+
+    // Convertimos la clase CSS al nombre real del color para guardarlo en la orden
+    private String nombrarColor(String claseColor) {
+        if (claseColor == null) return "Clásico";
+        switch (claseColor.trim().toLowerCase()) {
+            case "bg-white": return "Blanco";
+            case "bg-black": return "Negro";
+            case "bg-gray-200": return "Gris Claro";
+            case "bg-gray-400": return "Gris";
+            case "bg-gray-500": return "Gris Oscuro";
+            case "bg-red-500": 
+            case "bg-[#ff0000]": return "Rojo";
+            case "bg-[#8b7355]": return "Marrón";
+            case "bg-[#6b705c]": return "Verde Kaki";
+            case "bg-[#1b263b]": return "Azul Marino";
+            case "bg-[#ddbea9]": return "Beige";
+            case "bg-[#fbff00]": return "Amarillo";
+            default: return "Clásico";
+        }
     }
 
     private void guardarOActualizarItem(Long usuarioId, Producto producto, String color, String talla) {
@@ -90,15 +116,52 @@ public class CarritoController {
     public Map<String, Object> procesarCompra(HttpSession session) {
         Map<String, Object> response = new HashMap<>();
         Long usuarioId = (Long) session.getAttribute("usuarioId");
+        
         if (usuarioId != null) {
             List<CarritoItem> items = carritoItemRepository.findByUsuarioId(usuarioId);
-            carritoItemRepository.deleteAll(items);
-            sincronizarContadoresSesion(session);
-            response.put("success", true);
+            if (!items.isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+                double subtotalItems = 0;
+                
+                // Formato para Figma: ImagenUrl|Nombre|Talla|Color|Cantidad|Precio
+                for (CarritoItem item : items) {
+                    sb.append(item.getProducto().getImagen()).append("|")
+                      .append(item.getProducto().getNombre()).append("|")
+                      .append(item.getTalla()).append("|")
+                      .append(nombrarColor(item.getColor())).append("|")
+                      .append(item.getCantidad()).append("|")
+                      .append(String.format(java.util.Locale.US, "%.2f", (double)item.getSubtotal())).append(";");
+                    subtotalItems += item.getSubtotal();
+                }
+
+                double totalFinal = subtotalItems + 8.0;
+
+                Pedido nuevoPedido = new Pedido(usuarioId, sb.toString(), totalFinal);
+                pedidoRepository.save(nuevoPedido);
+
+                carritoItemRepository.deleteAll(items);
+                sincronizarContadoresSesion(session);
+                
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+            }
         } else {
             response.put("success", false);
         }
         return response;
+    }
+
+    @GetMapping("/pedidos")
+    public String verMisPedidos(HttpSession session, Model model) {
+        Long usuarioId = (Long) session.getAttribute("usuarioId");
+        if (usuarioId == null) {
+            return "redirect:/";
+        }
+        List<Pedido> pedidos = pedidoRepository.findByUsuarioIdOrderByFechaCreacionDesc(usuarioId);
+        model.addAttribute("pedidos", pedidos);
+        sincronizarContadoresSesion(session);
+        return "orders";
     }
 
     @PostMapping("/cart/agregar")

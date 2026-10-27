@@ -749,14 +749,24 @@
 
         try {
           const res = await fetch("/checkout/procesar", { method: "POST" });
+          
+          if (!res.ok) {
+              throw new Error("Error en el servidor");
+          }
+
           const data = await res.json();
+          
           if (data.success) {
             const badge = document.getElementById("cart-badge");
             if (badge) badge.classList.add("hidden");
             document.getElementById("modal-exito").classList.remove("hidden");
+          } else {
+            alert("Tu sesión ha expirado o el carrito está vacío. Por favor, vuelve a iniciar sesión.");
+            window.location.href = "/";
           }
         } catch (e) {
           console.error(e);
+          alert("Ocurrió un error de conexión. Inténtalo nuevamente.");
           btn.disabled = false;
           btn.textContent = "Pagar ahora";
         }

@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lima Basics | Mis Pedidos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .detalle-contenido {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out;
+      }
+      .detalle-contenido.abierto {
+        max-height: 1200px;
+        transition: max-height 0.4s ease-in;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+    
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="bg-[#0f1115] text-white pt-10 pb-12 px-4 sm:px-6 md:px-12 w-full">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div class="flex items-center gap-2 text-[13px] text-gray-400 mb-6">
+            <a th:href="@{/}" class="hover:text-white transition-colors">Inicio</a>
+            <span>/</span>
+            <span class="text-gray-200">Mi cuenta</span>
+          </div>
+          
+          <span class="text-[11px] font-bold tracking-[0.15em] text-blue-500 uppercase block mb-3">
+            Mi Cuenta
+          </span>
+          <h1 class="text-4xl sm:text-5xl font-black tracking-tight mb-4">
+            Mis pedidos
+          </h1>
+          <p class="text-gray-400 text-sm max-w-md leading-relaxed">
+            Revisa el estado de tus compras, los productos incluidos y los detalles de entrega.
+          </p>
+        </div>
+        
+        <div class="flex border border-gray-700/60 rounded-xl overflow-hidden self-start md:self-end bg-[#171a21]">
+          <div class="px-8 py-5 border-r border-gray-700/60 text-center">
+            <span class="block text-2xl font-black mb-1" th:text="${#lists.size(pedidos)}">0</span>
+            <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Pedidos</span>
+          </div>
+          <div class="px-8 py-5 text-center">
+            <th:block th:with="totalProd=0">
+              <span class="block text-2xl font-black mb-1">9</span>
+              <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">Productos</span>
+            </th:block>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 md:px-12 py-10 w-full -mt-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div class="inline-flex bg-gray-100/80 p-1 rounded-lg border border-gray-200/50">
+          <button class="px-6 py-2 text-sm font-bold bg-white text-gray-900 rounded-md shadow-sm">Todos</button>
+          <button class="px-6 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">En curso</button>
+          <button class="px-6 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">Entregados</button>
+        </div>
+        <span class="text-sm text-gray-500 font-medium" th:text="${#lists.size(pedidos)} + ' pedidos'"></span>
+      </div>
+
+      <div th:if="${pedidos == null or #lists.isEmpty(pedidos)}" class="text-center py-20 bg-white rounded-2xl border border-gray-200">
+        <i class="fas fa-box-open text-4xl text-gray-300 mb-4 block"></i>
+        <h3 class="text-lg font-bold text-gray-800 mb-1">Aún no tienes pedidos registrados</h3>
+        <p class="text-sm text-gray-500 mb-6">Cuando realices una compra, aparecerá aquí.</p>
+        <a th:href="@{/catalog}" class="inline-block bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-lg transition-colors">
+          Ir a la tienda
+        </a>
+      </div>
+
+      <div th:if="${pedidos != null and !#lists.isEmpty(pedidos)}" class="space-y-5">
+        
+        <div th:each="pedido : ${pedidos}" class="bg-white rounded-xl border border-gray-200/80 shadow-sm overflow-hidden">
+          
+          <div class="p-5 sm:p-6">
+            <div class="flex flex-col sm:flex-row justify-between gap-4">
+              
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-blue-50 text-[#1d4ed8] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <i class="fas fa-cube text-sm"></i>
+                </div>
+                <div>
+                  <div class="flex flex-wrap items-center gap-2 mb-1">
+                    <span class="font-black text-lg text-gray-900" th:text="'LB-2026-0' + ${pedido.id}"></span>
+                    
+                    <span th:if="${pedido.estado == 'Completado' or pedido.estado == 'Confirmado'}" class="bg-blue-100 text-blue-700 text-[11px] font-bold px-2.5 py-0.5 rounded-full" th:text="${pedido.estado}"></span>
+                    <span th:if="${pedido.estado == 'En camino'}" class="bg-[#1d4ed8] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">En camino</span>
+                    <span th:if="${pedido.estado == 'Entregado'}" class="bg-emerald-100 text-emerald-700 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Entregado</span>
+                    <span th:if="${pedido.estado == 'Cancelado'}" class="bg-gray-100 text-gray-600 text-[11px] font-bold px-2.5 py-0.5 rounded-full">Cancelado</span>
+                  </div>
+                  <p class="text-xs text-gray-500 mb-4">
+                    <span th:text="${#temporals.format(pedido.fechaCreacion, 'dd MMM yyyy')}"></span> 
+                    · 
+                    <span th:text="${#strings.arraySplit(pedido.detallesItems, ';').length - 1} + ' productos'"></span>
+                  </p>
+                  
+                  <div class="flex items-center -space-x-2">
+                    <th:block th:each="linea, iterStat : ${#strings.arraySplit(pedido.detallesItems, ';')}">
+                      <th:block th:if="${!#strings.isEmpty(linea) and iterStat.index < 4}">
+                        <th:block th:with="partes=${#strings.arraySplit(linea, '|')}">
+                          <img th:if="${#arrays.length(partes) >= 6}" th:src="${partes[0]}" class="inline-block w-9 h-9 rounded-full ring-2 ring-white object-cover border border-gray-100 bg-white" />
+                          <div th:unless="${#arrays.length(partes) >= 6}" class="inline-flex w-9 h-9 rounded-full ring-2 ring-white bg-gray-200 items-center justify-center text-[10px]"><i class="fas fa-tshirt text-gray-400"></i></div>
+                        </th:block>
+                      </th:block>
+                    </th:block>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-row sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto h-full">
+                <div class="text-left sm:text-right">
+                  <span class="font-black text-lg text-gray-900 block" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></span>
+                </div>
+                
+                <button type="button" th:onclick="'toggleDetalle(\'detalle-' + ${pedido.id} + '\', this)'" class="text-xs font-bold text-gray-700 flex items-center gap-1.5 hover:text-black transition-colors sm:mt-8 pt-4">
+                  <span class="texto-toggle">Ver detalle</span>
+                  <i class="fas fa-chevron-down text-[10px] icono-toggle transition-transform"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div th:id="'detalle-' + ${pedido.id}" class="detalle-contenido bg-[#f8f9fc] border-t border-gray-100">
+            <div class="p-5 sm:p-6 border-b border-gray-100">
+              <div class="space-y-4">
+                <th:block th:each="linea : ${#strings.arraySplit(pedido.detallesItems, ';')}">
+                  <th:block th:if="${!#strings.isEmpty(linea)}">
+                    <th:block th:with="partes=${#strings.arraySplit(linea, '|')}">
+                      
+                      <div class="flex items-center justify-between border-b border-gray-200/60 pb-4 last:border-0 last:pb-0">
+                        <div class="flex items-center gap-4">
+                          
+                          <img th:if="${#arrays.length(partes) >= 6}" th:src="${partes[0]}" class="w-16 h-20 sm:w-20 sm:h-24 object-cover rounded-lg flex-shrink-0 border border-gray-200 shadow-sm" />
+                          <div th:unless="${#arrays.length(partes) >= 6}" class="w-16 h-20 sm:w-20 sm:h-24 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-tshirt text-gray-400"></i>
+                          </div>
+                          
+                          <div>
+                            <h4 class="font-bold text-sm sm:text-base text-gray-900" th:text="${#arrays.length(partes) >= 6 ? partes[1] : linea}"></h4>
+                            <th:block th:if="${#arrays.length(partes) >= 6}">
+                              <p class="text-xs text-gray-500 mt-1" th:text="'Talla ' + ${partes[2]} + ' · ' + ${partes[3]}"></p>
+                              <p class="text-xs text-gray-500 mt-1" th:text="'Cantidad: ' + ${partes[4]}"></p>
+                            </th:block>
+                          </div>
+                        </div>
+                        <span th:if="${#arrays.length(partes) >= 6}" class="font-bold text-sm sm:text-base text-gray-900" th:text="'S/ ' + ${partes[5]}"></span>
+                      </div>
+                      
+                    </th:block>
+                  </th:block>
+                </th:block>
+              </div>
+            </div>
+
+            <div class="p-5 sm:p-6 bg-white flex flex-col md:flex-row justify-between items-start gap-6">
+              <div>
+                <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase block mb-1.5">Entrega</span>
+                <p class="text-sm font-bold text-gray-900 mb-0.5">Llega mañana, 20 de marzo</p>
+                <p class="text-xs text-gray-500">Av. Larco 821, Miraflores</p>
+              </div>
+              <div class="md:text-right w-full md:w-auto border-t border-gray-100 md:border-0 pt-4 md:pt-0">
+                <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase block mb-1.5">Código de seguimiento</span>
+                <p class="text-sm font-bold text-gray-900" th:text="'LMX-84029' + ${pedido.id}"></p>
+              </div>
+            </div>
+
+            <div class="px-5 sm:px-6 py-4 bg-gray-50 border-t border-gray-100 text-center sm:text-left">
+              <a href="#" class="text-xs text-gray-400 hover:text-gray-600 transition-colors">¿Necesitas ayuda con este pedido?</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      
+      <div th:if="${pedidos != null and !#lists.isEmpty(pedidos)}" class="mt-12 pt-8 flex flex-col items-center justify-center text-center">
+        <h4 class="font-bold text-lg text-gray-900 mb-1">¿Buscas algo nuevo?</h4>
+        <p class="text-sm text-gray-500 mb-6">Descubre los últimos básicos de la colección.</p>
+        <a th:href="@{/catalog}" class="bg-[#2563eb] hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-sm transition-colors shadow-sm">
+          Ir al catálogo
+        </a>
+      </div>
+
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+      function toggleDetalle(id, btn) {
+        const contenido = document.getElementById(id);
+        const texto = btn.querySelector('.texto-toggle');
+        const icono = btn.querySelector('.icono-toggle');
+
+        if (contenido.classList.contains('abierto')) {
+          contenido.classList.remove('abierto');
+          texto.textContent = 'Ver detalle';
+          icono.style.transform = 'rotate(0deg)';
+        } else {
+          contenido.classList.add('abierto');
+          texto.textContent = 'Ocultar detalle';
+          icono.style.transform = 'rotate(180deg)';
+        }
+      }
+    </script>
+  </body>
+</html>
