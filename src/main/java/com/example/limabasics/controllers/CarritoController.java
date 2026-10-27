@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/carrito")
+@RequestMapping("/cart")
 public class CarritoController {
 
     private final ProductoRepository productoRepository;
@@ -87,6 +87,6 @@ public class CarritoController {
         List<ItemCarrito> carrito = obtenerCarrito(session);
         carrito.removeIf(item -> item.getProducto().getId().equals(productoId));
         actualizarContadores(session, carrito);
-        return "redirect:/carrito";
+        return "redirect:/cart";
     }
 }
