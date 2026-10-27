@@ -1,130 +1,671 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lima Basics | Ofertas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
-
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen"
+  >
     <div th:replace="~{fragments/header :: header}"></div>
 
     <main class="flex-grow">
-        
-        <section class="bg-[#0f1115] text-white py-16 px-6 md:px-12 relative overflow-hidden">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end relative z-10">
-                
-                <div class="mb-8 md:mb-0">
-                    <div class="text-sm text-gray-400 mb-6 font-medium">
-                        <a th:href="@{/}" class="hover:text-white transition-colors">Inicio</a> <span class="mx-2">></span> Ofertas
-                    </div>
-                    <span class="text-blue-500 text-xs font-bold tracking-widest uppercase mb-4 block">Tiempo Limitado</span>
-                    <h1 class="text-6xl sm:text-7xl md:text-8xl font-black tracking-tighter leading-none">
-                        Ofertas
-                        <span class="block text-blue-600">hasta 25% off</span>
-                    </h1>
-                </div>
-
-                <div class="flex space-x-12 pb-4">
-                    <div class="text-center md:text-right">
-                        <span class="block text-4xl font-black">2</span>
-                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Productos en oferta</span>
-                    </div>
-                    <div class="text-center md:text-right border-l border-gray-800 pl-12">
-                        <span class="block text-4xl font-black">25%</span>
-                        <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Descuento máximo</span>
-                    </div>
-                </div>
+      <section
+        class="bg-[#0f1115] text-white py-16 px-6 md:px-12 relative overflow-hidden"
+      >
+        <div
+          class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end relative z-10"
+        >
+          <div class="mb-8 md:mb-0">
+            <div class="text-sm text-gray-400 mb-6 font-medium">
+              <a th:href="@{/}" class="hover:text-white transition-colors"
+                >Inicio</a
+              >
+              <span class="mx-2">></span> Ofertas
             </div>
-            
-            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #ffffff 0, #ffffff 1px, transparent 0, transparent 50%); background-size: 60px 60px;"></div>
-        </section>
+            <span
+              class="text-blue-500 text-xs font-bold tracking-widest uppercase mb-4 block"
+              >Tiempo Limitado</span
+            >
+            <h1
+              class="text-6xl sm:text-7xl md:text-8xl font-black tracking-tighter leading-none"
+            >
+              Ofertas
+              <span class="block text-blue-600">especiales</span>
+            </h1>
+          </div>
 
-        <div class="bg-blue-600 text-white py-2 px-6 overflow-hidden flex whitespace-nowrap">
-            <div class="font-bold text-xs uppercase tracking-widest flex items-center space-x-8 animate-[pulse_3s_ease-in-out_infinite]">
-                <span>· OFERTA ESPECIAL</span>
-                <span>· STOCK LIMITADO</span>
-                <span>· ENVÍO GRATIS EN LIMA</span>
-                <span>· OFERTA ESPECIAL</span>
-                <span>· STOCK LIMITADO</span>
-                <span>· ENVÍO GRATIS EN LIMA</span>
-                <span>· OFERTA ESPECIAL</span>
-                <span>· STOCK LIMITADO</span>
-                <span>· ENVÍO GRATIS EN LIMA</span>
-                <span>· OFERTA ESPECIAL</span>
+          <div class="flex space-x-12 pb-4">
+            <div class="text-center md:text-right">
+              <span
+                class="block text-4xl font-black"
+                th:text="${ofertas != null ? ofertas.size() : 0}"
+                >0</span
+              >
+              <span
+                class="text-[10px] uppercase tracking-widest text-gray-400 font-bold"
+                >Productos en oferta</span
+              >
             </div>
+            <div
+              class="text-center md:text-right border-l border-gray-800 pl-12"
+            >
+              <span class="block text-4xl font-black">OFF</span>
+              <span
+                class="text-[10px] uppercase tracking-widest text-gray-400 font-bold"
+                >Descuentos activos</span
+              >
+            </div>
+          </div>
         </div>
 
-        <section class="max-w-7xl mx-auto px-6 md:px-12 py-16">
-            
-            <div class="flex justify-between items-center mb-10 pb-4 border-b border-gray-200">
-                <p class="text-lg"><span class="font-bold">2</span> productos en oferta</p>
-                <div class="flex items-center text-blue-600 bg-blue-50 px-4 py-2 rounded-full text-sm font-medium">
-                    <i class="far fa-clock mr-2"></i> Oferta por tiempo limitado
-                </div>
+        <div
+          class="absolute inset-0 opacity-10 pointer-events-none"
+          style="
+            background-image: repeating-linear-gradient(
+              45deg,
+              #ffffff 0,
+              #ffffff 1px,
+              transparent 0,
+              transparent 50%
+            );
+            background-size: 60px 60px;
+          "
+        ></div>
+      </section>
+
+      <div
+        class="bg-blue-600 text-white py-2 px-6 overflow-hidden flex whitespace-nowrap"
+      >
+        <div
+          class="font-bold text-xs uppercase tracking-widest flex items-center space-x-8 animate-[pulse_3s_ease-in-out_infinite]"
+        >
+          <span>· OFERTA ESPECIAL</span>
+          <span>· STOCK LIMITADO</span>
+          <span>· ENVÍO GRATIS EN LIMA</span>
+          <span>· OFERTA ESPECIAL</span>
+          <span>· STOCK LIMITADO</span>
+          <span>· ENVÍO GRATIS EN LIMA</span>
+          <span>· OFERTA ESPECIAL</span>
+          <span>· STOCK LIMITADO</span>
+          <span>· ENVÍO GRATIS EN LIMA</span>
+          <span>· OFERTA ESPECIAL</span>
+        </div>
+      </div>
+
+      <section class="max-w-7xl mx-auto px-6 md:px-12 py-16">
+        <div
+          class="flex justify-between items-center mb-10 pb-4 border-b border-gray-200"
+        >
+          <p class="text-lg">
+            <span
+              class="font-bold"
+              th:text="${ofertas != null ? ofertas.size() : 0}"
+              >0</span
+            >
+            productos en oferta
+          </p>
+          <div
+            class="flex items-center text-blue-600 bg-blue-50 px-4 py-2 rounded-full text-sm font-medium"
+          >
+            <i class="far fa-clock mr-2"></i> Oferta por tiempo limitado
+          </div>
+        </div>
+
+        <div
+          th:if="${ofertas == null or #lists.isEmpty(ofertas)}"
+          class="text-center py-20 px-4 bg-white rounded-2xl border border-gray-200"
+        >
+          <i class="fas fa-tag text-3xl text-gray-300 mb-3 block"></i>
+          <h3 class="text-lg font-bold text-gray-900 mb-1">
+            No hay ofertas activas en este momento
+          </h3>
+          <p class="text-sm text-gray-500 mb-5">
+            Explora nuestro catálogo completo para ver todas las prendas
+            disponibles.
+          </p>
+          <a
+            th:href="@{/catalog}"
+            class="inline-block bg-gray-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-lg transition-colors"
+          >
+            Ir al catálogo
+          </a>
+        </div>
+
+        <div
+          th:if="${ofertas != null and !#lists.isEmpty(ofertas)}"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10"
+        >
+          <div
+            class="producto-card group cursor-pointer"
+            th:each="producto : ${ofertas}"
+          >
+            <div
+              class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded"
+            >
+              <span
+                th:if="${producto.etiqueta != null and !producto.etiqueta.isEmpty()}"
+                th:class="'absolute top-3 left-3 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10 ' + ${producto.claseEtiqueta}"
+                th:text="${producto.etiqueta}"
+              ></span>
+
+              <img
+                th:src="${producto.imagen}"
+                th:alt="${producto.nombre}"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+
+              <div
+                class="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4"
+              >
+                <button
+                  type="button"
+                  th:data-id="${producto.id}"
+                  th:data-nombre="${producto.nombre}"
+                  th:data-categoria="${producto.categoria}"
+                  th:data-precio="${producto.precio}"
+                  th:data-precio-anterior="${producto.precioAnterior}"
+                  th:data-imagen="${producto.imagen}"
+                  th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
+                  onclick="abrirModalInteres(this)"
+                  class="w-full bg-white/95 hover:bg-black hover:text-white text-gray-900 font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <span>agregar al carrito</span>
+                  <i class="fas fa-arrow-right text-[11px]"></i>
+                </button>
+              </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">
-                
-                <div class="group cursor-pointer">
-                    <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
-                        <span class="absolute top-3 left-3 bg-[#10b981] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Nuevo</span>
-                        <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Polo Lima Oversize" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Polos</p>
-                    <h3 class="font-bold text-lg leading-tight mb-1">Polo Lima Oversize</h3>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="font-black text-lg text-red-600">S/ 89</span>
-                        <span class="text-gray-400 line-through text-sm">S/ 119</span>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <div class="w-4 h-4 rounded-full bg-white border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-[#ddbea9] border border-gray-300"></div>
-                    </div>
-                </div>
-
-                <div class="group cursor-pointer">
-                    <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
-                        <span class="absolute top-3 left-3 bg-[#10b981] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10">Nuevo</span>
-                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chaqueta Miraflores" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Chaquetas</p>
-                    <h3 class="font-bold text-lg leading-tight mb-1">Chaqueta Miraflores</h3>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="font-black text-lg text-red-600">S/ 229</span>
-                        <span class="text-gray-400 line-through text-sm">S/ 279</span>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <div class="w-4 h-4 rounded-full bg-black border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-[#6b705c] border border-gray-300"></div>
-                        <div class="w-4 h-4 rounded-full bg-[#1b263b] border border-gray-300"></div>
-                    </div>
-                </div>
-
+            <p
+              class="text-xs text-gray-500 uppercase tracking-widest mb-1"
+              th:text="${producto.categoria}"
+            ></p>
+            <h3
+              class="font-bold text-lg leading-tight mb-1"
+              th:text="${producto.nombre}"
+            ></h3>
+            <div class="flex items-center gap-2 mb-2">
+              <span
+                class="font-black text-lg text-red-600"
+                th:text="'S/ ' + ${producto.precio}"
+              ></span>
+              <span
+                th:if="${producto.precioAnterior != null}"
+                class="text-gray-400 line-through text-sm"
+                th:text="'S/ ' + ${producto.precioAnterior}"
+              ></span>
             </div>
-        </section>
-
-        <section class="bg-white py-20 px-6 mt-8">
-            <div class="max-w-xl mx-auto text-center">
-                <span class="text-blue-600 text-xs font-bold tracking-widest uppercase mb-4 block">Sé el primero</span>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tighter mb-4">Recibe ofertas antes que nadie</h2>
-                <p class="text-gray-500 mb-8">Suscríbete y te avisamos cuando haya descuentos nuevos.</p>
-                
-                <form class="flex flex-col sm:flex-row gap-4" onsubmit="event.preventDefault();">
-                    <input type="email" placeholder="tu@correo.pe" class="flex-grow border border-gray-300 px-4 py-3 rounded focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600" required>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded transition-colors whitespace-nowrap">
-                        SUSCRIBIRSE
-                    </button>
-                </form>
+            <div class="flex gap-1.5" th:if="${producto.colores != null}">
+              <div
+                th:each="color : ${producto.colores}"
+                th:class="'w-4 h-4 rounded-full border border-gray-300 ' + ${color}"
+              ></div>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
+      <section class="bg-white py-20 px-6 mt-8">
+        <div class="max-w-xl mx-auto text-center">
+          <span
+            class="text-blue-600 text-xs font-bold tracking-widest uppercase mb-4 block"
+            >Sé el primero</span
+          >
+          <h2 class="text-3xl md:text-4xl font-black tracking-tighter mb-4">
+            Recibe ofertas antes que nadie
+          </h2>
+          <p class="text-gray-500 mb-8">
+            Suscríbete y te avisamos cuando haya descuentos nuevos.
+          </p>
+
+          <form
+            class="flex flex-col sm:flex-row gap-4"
+            onsubmit="event.preventDefault();"
+          >
+            <input
+              type="email"
+              placeholder="tu@correo.pe"
+              class="flex-grow border border-gray-300 px-4 py-3 rounded focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+              required
+            />
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded transition-colors whitespace-nowrap"
+            >
+              SUSCRIBIRSE
+            </button>
+          </form>
+        </div>
+      </section>
     </main>
+
+    <div
+      id="modal-interes"
+      class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4"
+    >
+      <div
+        class="bg-white rounded-2xl w-full max-w-md overflow-hidden relative shadow-2xl"
+      >
+        <button
+          type="button"
+          onclick="cerrarModalInteres()"
+          class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 hover:bg-gray-100 text-gray-500 hover:text-black flex items-center justify-center z-10 transition-colors"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+
+        <form
+          id="form-agregar-carrito"
+          th:action="@{/cart/agregar-ajax}"
+          method="post"
+          class="p-6"
+          onsubmit="agregarAlCarritoSinRecargar(event)"
+        >
+          <input type="hidden" id="modal-prod-id" name="productoId" />
+          <input
+            type="hidden"
+            id="modal-color-seleccionado"
+            name="color"
+            required
+          />
+          <input
+            type="hidden"
+            id="modal-talla-seleccionada"
+            name="talla"
+            value="M"
+          />
+
+          <div class="flex gap-4 items-center pb-5 border-b border-gray-100">
+            <img
+              id="modal-prod-img"
+              src=""
+              alt="Producto"
+              class="w-20 h-24 object-cover rounded-lg border border-gray-200 flex-shrink-0 bg-gray-100"
+            />
+            <div>
+              <span
+                id="modal-prod-cat"
+                class="text-[11px] font-bold uppercase tracking-widest text-blue-600 block mb-0.5"
+              ></span>
+              <h3
+                id="modal-prod-nombre"
+                class="text-xl font-black tracking-tight text-gray-900 leading-snug"
+              ></h3>
+              <div class="flex items-center gap-2 mt-1">
+                <span
+                  id="modal-prod-precio"
+                  class="font-black text-lg text-red-600"
+                ></span>
+                <span
+                  id="modal-prod-precio-ant"
+                  class="text-gray-400 line-through text-sm hidden"
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="py-5 border-b border-gray-100">
+            <div class="flex justify-between items-center mb-3">
+              <label
+                class="block text-xs font-bold uppercase tracking-wider text-gray-700"
+                >Escoge el color de la prenda</label
+              >
+              <span
+                id="modal-color-etiqueta"
+                class="text-xs font-mono text-gray-500"
+              ></span>
+            </div>
+            <div
+              id="modal-colores-contenedor"
+              class="flex flex-wrap gap-3"
+            ></div>
+          </div>
+
+          <div class="py-4">
+            <label
+              class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2.5"
+              >Talla</label
+            >
+            <div class="grid grid-cols-6 gap-2" id="modal-tallas-contenedor">
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('XS', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                XS
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('S', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                S
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('M', this)"
+                class="talla-btn border-2 border-gray-900 bg-gray-900 text-white py-2 text-xs font-bold rounded transition-colors"
+              >
+                M
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('L', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                L
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('XL', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                XL
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('2XL', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                2XL
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-3">
+            <button
+              th:if="${session.usuarioId != null}"
+              type="submit"
+              id="btn-submit-carrito"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              <span>Agregar al carrito</span>
+            </button>
+
+            <div th:if="${session.usuarioId == null}" class="space-y-2.5">
+              <p class="text-xs text-center text-gray-500">
+                Debes iniciar sesión para agregar prendas a tu carrito.
+              </p>
+              <button
+                type="button"
+                onclick="irALoginDesdeModal()"
+                class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+              >
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Iniciar sesión para comprar</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="toast-carrito"
+      class="fixed bottom-6 right-6 z-[110] hidden transform translate-y-4 opacity-0 transition-all duration-300 bg-gray-900 text-white px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3"
+    >
+      <div
+        class="w-7 h-7 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0"
+      >
+        <i class="fas fa-check text-sm"></i>
+      </div>
+      <div>
+        <p class="text-sm font-bold leading-tight">¡Agregado al carrito!</p>
+        <p id="toast-detalle" class="text-xs text-gray-400 mt-0.5"></p>
+      </div>
+      <a
+        th:href="@{/cart}"
+        class="ml-3 text-xs font-bold text-blue-400 hover:text-blue-300 underline uppercase tracking-wider"
+      >
+        Ver carrito
+      </a>
+    </div>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 
-</body>
+    <script>
+      let toastTimeout = null;
+
+      function claseTailwindAColorCSS(clase) {
+        const limpia = (clase || "").trim().toLowerCase();
+
+        const colores = {
+          "bg-white": { hex: "#FFFFFF", nombre: "Blanco" },
+          "bg-black": { hex: "#000000", nombre: "Negro" },
+          "bg-gray-200": { hex: "#E5E7EB", nombre: "Gris Claro" },
+          "bg-gray-400": { hex: "#9CA3AF", nombre: "Gris" },
+          "bg-gray-500": { hex: "#6B7280", nombre: "Gris Oscuro" },
+          "bg-red-500": { hex: "#EF4444", nombre: "Rojo" },
+          "bg-[#ff0000]": { hex: "#FF0000", nombre: "Rojo" },
+          "bg-[#8b7355]": { hex: "#8B7355", nombre: "Marrón" },
+          "bg-[#6b705c]": { hex: "#6B705C", nombre: "Verde Oliva" },
+          "bg-[#1b263b]": { hex: "#1B263B", nombre: "Azul Marino" },
+          "bg-[#fbff00]": { hex: "#FBFF00", nombre: "Amarillo" },
+        };
+
+        if (colores[limpia]) {
+          return {
+            hex: colores[limpia].hex,
+            nombre: colores[limpia].nombre,
+            clave: clase,
+          };
+        }
+
+        const match = limpia.match(/bg-\[(#[0-9a-f]{3,6})\]/);
+        if (match) {
+          const hexUpper = match[1].toUpperCase();
+          return { hex: hexUpper, nombre: "Color " + hexUpper, clave: clase };
+        }
+
+        if (limpia.startsWith("#")) {
+          return {
+            hex: limpia.toUpperCase(),
+            nombre: "Color " + limpia.toUpperCase(),
+            clave: clase,
+          };
+        }
+
+        return { hex: "#000000", nombre: clase, clave: clase };
+      }
+
+      function abrirModalInteres(btn) {
+        const id = btn.dataset.id;
+        const nombre = btn.dataset.nombre;
+        const categoria = btn.dataset.categoria;
+        const precio = btn.dataset.precio;
+        const precioAnt = btn.dataset.precioAnterior;
+        const imagen = btn.dataset.imagen;
+        const coloresRaw = btn.dataset.colores || "bg-black";
+
+        document.getElementById("modal-prod-id").value = id;
+        document.getElementById("modal-prod-nombre").textContent = nombre;
+        document.getElementById("modal-prod-cat").textContent = categoria;
+        document.getElementById("modal-prod-precio").textContent =
+          "S/ " + precio;
+        document.getElementById("modal-prod-img").src = imagen;
+
+        const precioAntEl = document.getElementById("modal-prod-precio-ant");
+        if (precioAnt && precioAnt !== "null" && precioAnt !== "") {
+          precioAntEl.textContent = "S/ " + precioAnt;
+          precioAntEl.classList.remove("hidden");
+        } else {
+          precioAntEl.classList.add("hidden");
+        }
+
+        const contenedorColores = document.getElementById(
+          "modal-colores-contenedor",
+        );
+        contenedorColores.innerHTML = "";
+
+        const listaColores = coloresRaw
+          .split(",")
+          .map((c) => c.trim())
+          .filter((c) => c !== "");
+        if (listaColores.length === 0) listaColores.push("bg-black");
+
+        listaColores.forEach((claseColor, index) => {
+          const infoColor = claseTailwindAColorCSS(claseColor);
+          const botonColor = document.createElement("button");
+          botonColor.type = "button";
+          botonColor.className = `color-option w-9 h-9 rounded-full border border-gray-300 transition-all flex items-center justify-center focus:outline-none ${claseColor}`;
+          botonColor.style.backgroundColor = infoColor.hex;
+          botonColor.title = infoColor.nombre;
+          botonColor.onclick = () =>
+            seleccionarColorModal(claseColor, infoColor.nombre, botonColor);
+
+          contenedorColores.appendChild(botonColor);
+
+          if (index === 0) {
+            seleccionarColorModal(claseColor, infoColor.nombre, botonColor);
+          }
+        });
+
+        document
+          .querySelectorAll("#modal-tallas-contenedor .talla-btn")
+          .forEach((b) => {
+            if (b.textContent.trim() === "M") {
+              seleccionarTallaModal("M", b);
+            }
+          });
+
+        document.getElementById("modal-interes").classList.remove("hidden");
+      }
+
+      function seleccionarColorModal(valorColor, etiquetaNombre, btnElemento) {
+        document.getElementById("modal-color-seleccionado").value = valorColor;
+        document.getElementById("modal-color-etiqueta").textContent =
+          etiquetaNombre;
+
+        document
+          .querySelectorAll("#modal-colores-contenedor .color-option")
+          .forEach((b) => {
+            b.classList.remove(
+              "ring-2",
+              "ring-offset-2",
+              "ring-blue-600",
+              "scale-110",
+            );
+          });
+
+        btnElemento.classList.add(
+          "ring-2",
+          "ring-offset-2",
+          "ring-blue-600",
+          "scale-110",
+        );
+      }
+
+      function seleccionarTallaModal(talla, btnElemento) {
+        document.getElementById("modal-talla-seleccionada").value = talla;
+        document
+          .querySelectorAll("#modal-tallas-contenedor .talla-btn")
+          .forEach((b) => {
+            b.className =
+              "talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors";
+          });
+        btnElemento.className =
+          "talla-btn border-2 border-gray-900 bg-gray-900 text-white py-2 text-xs font-bold rounded transition-colors";
+      }
+
+      function cerrarModalInteres() {
+        document.getElementById("modal-interes").classList.add("hidden");
+      }
+
+      function irALoginDesdeModal() {
+        cerrarModalInteres();
+        if (typeof openLoginModal === "function") {
+          openLoginModal();
+        }
+      }
+
+      async function agregarAlCarritoSinRecargar(event) {
+        event.preventDefault();
+
+        const form = document.getElementById("form-agregar-carrito");
+        const btnSubmit = document.getElementById("btn-submit-carrito");
+        const formData = new FormData(form);
+        const nombreProd =
+          document.getElementById("modal-prod-nombre").textContent;
+        const tallaElegida = document.getElementById(
+          "modal-talla-seleccionada",
+        ).value;
+
+        if (btnSubmit) btnSubmit.disabled = true;
+
+        try {
+          const response = await fetch("/cart/agregar-ajax", {
+            method: "POST",
+            body: new URLSearchParams(formData),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            actualizarBurbujaHeader(data.carritoCantidad);
+            cerrarModalInteres();
+            mostrarToast(`${nombreProd} (Talla ${tallaElegida})`);
+          }
+        } catch (error) {
+          console.error("Error al agregar al carrito:", error);
+        } finally {
+          if (btnSubmit) btnSubmit.disabled = false;
+        }
+      }
+
+      function actualizarBurbujaHeader(cantidad) {
+        let badge =
+          document.getElementById("cart-badge") ||
+          document.querySelector('a[aria-label="Carrito"] span');
+
+        if (!badge) {
+          const linkCarrito = document.querySelector('a[aria-label="Carrito"]');
+          if (linkCarrito) {
+            badge = document.createElement("span");
+            badge.id = "cart-badge";
+            badge.className =
+              "absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center";
+            linkCarrito.appendChild(badge);
+          }
+        }
+
+        if (badge) {
+          badge.textContent = cantidad;
+          if (cantidad > 0) {
+            badge.classList.remove("hidden");
+            badge.classList.add("flex");
+          }
+        }
+      }
+
+      function mostrarToast(textoDetalle) {
+        const toast = document.getElementById("toast-carrito");
+        document.getElementById("toast-detalle").textContent = textoDetalle;
+
+        toast.classList.remove("hidden");
+        setTimeout(() => {
+          toast.classList.remove("translate-y-4", "opacity-0");
+        }, 10);
+
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.add("translate-y-4", "opacity-0");
+          setTimeout(() => toast.classList.add("hidden"), 300);
+        }, 3000);
+      }
+
+      document
+        .getElementById("modal-interes")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            cerrarModalInteres();
+          }
+        });
+    </script>
+  </body>
 </html>
