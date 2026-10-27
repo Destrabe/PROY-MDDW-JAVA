@@ -1,14 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lima Basics | Catálogo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-white text-gray-900 font-sans antialiased flex flex-col min-h-screen">
-
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-white text-gray-900 font-sans antialiased flex flex-col min-h-screen"
+  >
     <div th:replace="~{fragments/header :: header}"></div>
 
     <main class="flex-grow max-w-7xl mx-auto px-6 md:px-12 w-full py-10">
@@ -79,6 +83,20 @@
                     <div id="filtro-colores-contenedor" class="flex flex-wrap gap-3">
                     </div>
                 </div>
+          <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-bold uppercase tracking-wider text-sm">Color</h3>
+              <span
+                id="etiqueta-color-activo"
+                class="text-xs font-mono text-gray-500"
+                >Todos</span
+              >
+            </div>
+            <div
+              id="filtro-colores-contenedor"
+              class="flex flex-wrap gap-3"
+            ></div>
+          </div>
 
                 <!-- Precio Máximo -->
                 <div class="mb-8">
@@ -133,6 +151,58 @@
                                 </button>
                             </div>
                         </div>
+        <div class="flex-grow">
+          <div
+            id="grid-productos"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10"
+          >
+            <div
+              class="producto-card group cursor-pointer"
+              th:each="producto, iterStat : ${productos}"
+              th:data-index="${iterStat.index}"
+              th:data-id="${producto.id}"
+              th:data-nombre="${producto.nombre}"
+              th:data-categoria="${producto.categoria}"
+              th:data-precio="${producto.precio}"
+              th:data-etiqueta="${producto.etiqueta != null ? producto.etiqueta : ''}"
+              th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
+              th:data-tallas="'XS,S,M,L,XL,2XL'"
+            >
+              <div
+                class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded"
+              >
+                <span
+                  th:if="${producto.etiqueta != null and !producto.etiqueta.isEmpty()}"
+                  th:class="'absolute top-3 left-3 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10 ' + ${producto.claseEtiqueta}"
+                  th:text="${producto.etiqueta}"
+                ></span>
+
+                <img
+                  th:src="${producto.imagen}"
+                  th:alt="${producto.nombre}"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+
+                <div
+                  class="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4"
+                >
+                  <button
+                    type="button"
+                    th:data-id="${producto.id}"
+                    th:data-nombre="${producto.nombre}"
+                    th:data-categoria="${producto.categoria}"
+                    th:data-precio="${producto.precio}"
+                    th:data-precio-anterior="${producto.precioAnterior}"
+                    th:data-imagen="${producto.imagen}"
+                    th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
+                    onclick="abrirModalInteres(this)"
+                    class="w-full bg-white/95 hover:bg-black hover:text-white text-gray-900 font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    <span>agregar al carrito</span>
+                    <i class="fas fa-arrow-right text-[11px]"></i>
+                  </button>
+                </div>
+              </div>
 
                         <p class="text-xs text-gray-500 uppercase tracking-widest mb-1" th:text="${producto.categoria}"></p>
                         <h3 class="font-bold text-lg leading-tight mb-1" th:text="${producto.nombre}"></h3>
@@ -159,12 +229,20 @@
         </div>
     </main>
 
-    <!-- MODAL DE SELECCIÓN DE COLOR Y CARRITO -->
-    <div id="modal-interes" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4">
-        <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden relative shadow-2xl">
-            <button type="button" onclick="cerrarModalInteres()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 hover:bg-gray-100 text-gray-500 hover:text-black flex items-center justify-center z-10 transition-colors">
-                <i class="fas fa-times"></i>
-            </button>
+    <div
+      id="modal-interes"
+      class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4"
+    >
+      <div
+        class="bg-white rounded-2xl w-full max-w-md overflow-hidden relative shadow-2xl"
+      >
+        <button
+          type="button"
+          onclick="cerrarModalInteres()"
+          class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 hover:bg-gray-100 text-gray-500 hover:text-black flex items-center justify-center z-10 transition-colors"
+        >
+          <i class="fas fa-times"></i>
+        </button>
 
             <form id="form-agregar-carrito" onsubmit="agregarAlCarritoSinRecargar(event)" class="p-6">
                 <input type="hidden" id="modal-prod-id" name="productoId">
@@ -213,6 +291,15 @@
                         <i class="fas fa-shopping-cart"></i>
                         <span>Agregar al carrito</span>
                     </button>
+          <div class="pt-3">
+            <button
+              th:if="${session.usuarioId != null}"
+              type="submit"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              <span>Agregar al carrito</span>
+            </button>
 
                     <div th:if="${session.usuarioId == null}" class="space-y-2.5">
                         <p class="text-xs text-center text-gray-500">Debes iniciar sesión para agregar prendas a tu carrito.</p>
@@ -270,6 +357,47 @@
             }
             return { hex: '#000000', nombre: limpia, clave: limpia };
         }
+      function claseTailwindAColorCSS(clase) {
+        const limpia = (clase || "").trim().toLowerCase();
+
+        const colores = {
+          "bg-white": { hex: "#FFFFFF", nombre: "Blanco" },
+          "bg-black": { hex: "#000000", nombre: "Negro" },
+          "bg-gray-200": { hex: "#E5E7EB", nombre: "Gris Claro" },
+          "bg-gray-400": { hex: "#9CA3AF", nombre: "Gris" },
+          "bg-gray-500": { hex: "#6B7280", nombre: "Gris Oscuro" },
+          "bg-red-500": { hex: "#EF4444", nombre: "Rojo" },
+          "bg-[#ff0000]": { hex: "#FF0000", nombre: "Rojo" },
+          "bg-[#8b7355]": { hex: "#8B7355", nombre: "Marrón" },
+          "bg-[#6b705c]": { hex: "#6B705C", nombre: "Verde Oliva" },
+          "bg-[#1b263b]": { hex: "#1B263B", nombre: "Azul Marino" },
+          "bg-[#fbff00]": { hex: "#FBFF00", nombre: "Amarillo" },
+        };
+
+        if (colores[limpia]) {
+          return {
+            hex: colores[limpia].hex,
+            nombre: colores[limpia].nombre,
+            clave: clase,
+          };
+        }
+
+        const match = limpia.match(/bg-\[(#[0-9a-f]{3,6})\]/);
+        if (match) {
+          const hexUpper = match[1].toUpperCase();
+          return { hex: hexUpper, nombre: "Color " + hexUpper, clave: clase };
+        }
+
+        if (limpia.startsWith("#")) {
+          return {
+            hex: limpia.toUpperCase(),
+            nombre: "Color " + limpia.toUpperCase(),
+            clave: clase,
+          };
+        }
+
+        return { hex: "#000000", nombre: clase, clave: clase };
+      }
 
         document.addEventListener('DOMContentLoaded', () => {
             const tarjetas = Array.from(document.querySelectorAll('.producto-card'));
@@ -289,6 +417,14 @@
                 });
             });
 
+        const sliderPrecio = document.getElementById("rango-precio");
+        sliderPrecio.max = maxPrecioDetectado;
+        sliderPrecio.value = maxPrecioDetectado;
+        estadoFiltros.precioMax = maxPrecioDetectado;
+        document.getElementById("precio-max-valor").textContent =
+          "S/ " + maxPrecioDetectado;
+        document.getElementById("precio-tope-label").textContent =
+          "S/ " + maxPrecioDetectado;
             const sliderPrecio = document.getElementById('rango-precio');
             sliderPrecio.max = maxPrecioDetectado;
             sliderPrecio.value = maxPrecioDetectado;
@@ -296,34 +432,43 @@
             document.getElementById('precio-max-valor').textContent = 'S/ ' + maxPrecioDetectado;
             document.getElementById('precio-tope-label').textContent = 'S/ ' + maxPrecioDetectado;
 
+        const contenedorColoresFiltro = document.getElementById(
+          "filtro-colores-contenedor",
+        );
+        contenedorColoresFiltro.innerHTML = "";
             const contenedorColoresFiltro = document.getElementById('filtro-colores-contenedor');
             contenedorColoresFiltro.innerHTML = '';
 
-            mapaColores.forEach(info => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.dataset.hex = info.hex;
-                btn.title = info.nombre;
-                btn.style.backgroundColor = info.hex;
-                btn.className = 'color-filtro-btn w-8 h-8 rounded-full border border-gray-300 transition-all focus:outline-none hover:scale-105';
-                btn.onclick = () => filtrarColor(info.hex, info.nombre, btn);
-                contenedorColoresFiltro.appendChild(btn);
-            });
+        mapaColores.forEach((info) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.dataset.hex = info.hex;
+          btn.title = info.nombre;
+          btn.style.backgroundColor = info.hex;
+          btn.className =
+            "color-filtro-btn w-8 h-8 rounded-full border border-gray-300 transition-all focus:outline-none hover:scale-105";
+          btn.onclick = () => filtrarColor(info.hex, info.nombre, btn);
+          contenedorColoresFiltro.appendChild(btn);
         });
+      });
 
-        function filtrarCategoria(categoria, btnElemento) {
-            estadoFiltros.categoria = categoria;
+      function filtrarCategoria(categoria, btnElemento) {
+        estadoFiltros.categoria = categoria;
 
-            document.querySelectorAll('#lista-categorias .cat-btn').forEach(btn => {
-                btn.className = 'cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors';
-            });
-            btnElemento.className = 'cat-btn w-full text-left block bg-gray-900 text-white px-4 py-2.5 rounded text-sm font-medium transition-colors';
+        document
+          .querySelectorAll("#lista-categorias .cat-btn")
+          .forEach((btn) => {
+            btn.className =
+              "cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors";
+          });
+        btnElemento.className =
+          "cat-btn w-full text-left block bg-gray-900 text-white px-4 py-2.5 rounded text-sm font-medium transition-colors";
 
-            aplicarFiltrosYOrden();
-        }
+        aplicarFiltrosYOrden();
+      }
 
-        function filtrarTalla(talla, btnElemento) {
-            const etiquetaTalla = document.getElementById('etiqueta-talla-activa');
+      function filtrarTalla(talla, btnElemento) {
+        const etiquetaTalla = document.getElementById("etiqueta-talla-activa");
 
             if (estadoFiltros.talla === talla) {
                 estadoFiltros.talla = null;
@@ -342,12 +487,19 @@
                 }
             });
 
-            aplicarFiltrosYOrden();
+        aplicarFiltrosYOrden();
+      }
+
+      function filtrarColor(hex, nombre, btnElemento) {
+        const etiquetaColor = document.getElementById("etiqueta-color-activo");
+
+        if (estadoFiltros.color === hex) {
+          estadoFiltros.color = null;
+          etiquetaColor.textContent = "Todos";
+        } else {
+          estadoFiltros.color = hex;
+          etiquetaColor.textContent = nombre;
         }
-
-        function filtrarColor(hex, nombre, btnElemento) {
-            const etiquetaColor = document.getElementById('etiqueta-color-activo');
-
             if (estadoFiltros.color === hex) {
                 estadoFiltros.color = null;
                 etiquetaColor.textContent = 'Todos';
@@ -364,37 +516,44 @@
                 }
             });
 
-            aplicarFiltrosYOrden();
-        }
+        aplicarFiltrosYOrden();
+      }
 
-        function actualizarPrecioMaximo(valor) {
-            estadoFiltros.precioMax = parseFloat(valor);
-            document.getElementById('precio-max-valor').textContent = 'S/ ' + valor;
-            aplicarFiltrosYOrden();
-        }
+      function actualizarPrecioMaximo(valor) {
+        estadoFiltros.precioMax = parseFloat(valor);
+        document.getElementById("precio-max-valor").textContent = "S/ " + valor;
+        aplicarFiltrosYOrden();
+      }
 
-        function aplicarFiltrosYOrden() {
-            const grid = document.getElementById('grid-productos');
-            const tarjetas = Array.from(grid.querySelectorAll('.producto-card'));
-            const ordenSeleccionado = document.getElementById('select-orden').value;
-            estadoFiltros.orden = ordenSeleccionado;
+      function aplicarFiltrosYOrden() {
+        const grid = document.getElementById("grid-productos");
+        const tarjetas = Array.from(grid.querySelectorAll(".producto-card"));
+        const ordenSeleccionado = document.getElementById("select-orden").value;
+        estadoFiltros.orden = ordenSeleccionado;
 
-            let visibles = 0;
+        let visibles = 0;
 
-            tarjetas.forEach(card => {
-                const catProd = (card.dataset.categoria || '').trim().toLowerCase();
-                const precioProd = parseFloat(card.dataset.precio) || 0;
-                const tallasProd = (card.dataset.tallas || '').split(',').map(t => t.trim());
-                const coloresHexProd = (card.dataset.colores || '')
-                    .split(',')
-                    .map(c => c.trim())
-                    .filter(c => c !== '')
-                    .map(c => claseTailwindAColorCSS(c).hex);
+        tarjetas.forEach((card) => {
+          const catProd = (card.dataset.categoria || "").trim().toLowerCase();
+          const precioProd = parseFloat(card.dataset.precio) || 0;
+          const tallasProd = (card.dataset.tallas || "")
+            .split(",")
+            .map((t) => t.trim());
+          const coloresHexProd = (card.dataset.colores || "")
+            .split(",")
+            .map((c) => c.trim())
+            .filter((c) => c !== "")
+            .map((c) => claseTailwindAColorCSS(c).hex);
 
-                const cumpleCategoria = estadoFiltros.categoria === 'Todos' || catProd === estadoFiltros.categoria.toLowerCase();
-                const cumplePrecio = precioProd <= estadoFiltros.precioMax;
-                const cumpleTalla = !estadoFiltros.talla || tallasProd.includes(estadoFiltros.talla);
-                const cumpleColor = !estadoFiltros.color || coloresHexProd.includes(estadoFiltros.color);
+          const cumpleCategoria =
+            estadoFiltros.categoria === "Todos" ||
+            catProd === estadoFiltros.categoria.toLowerCase();
+          const cumplePrecio = precioProd <= estadoFiltros.precioMax;
+          const cumpleTalla =
+            !estadoFiltros.talla || tallasProd.includes(estadoFiltros.talla);
+          const cumpleColor =
+            !estadoFiltros.color ||
+            coloresHexProd.includes(estadoFiltros.color);
 
                 if (cumpleCategoria && cumplePrecio && cumpleTalla && cumpleColor) {
                     card.classList.remove('hidden');
@@ -404,6 +563,17 @@
                 }
             });
 
+        tarjetas.sort((a, b) => {
+          const precioA = parseFloat(a.dataset.precio) || 0;
+          const precioB = parseFloat(b.dataset.precio) || 0;
+          const indexA = parseInt(a.dataset.index) || 0;
+          const indexB = parseInt(b.dataset.index) || 0;
+          const idA = parseInt(a.dataset.id) || 0;
+          const idB = parseInt(b.dataset.id) || 0;
+          const esNuevoA =
+            (a.dataset.etiqueta || "").toLowerCase() === "nuevo" ? 1 : 0;
+          const esNuevoB =
+            (b.dataset.etiqueta || "").toLowerCase() === "nuevo" ? 1 : 0;
             tarjetas.sort((a, b) => {
                 const precioA = parseFloat(a.dataset.precio) || 0;
                 const precioB = parseFloat(b.dataset.precio) || 0;
@@ -422,11 +592,23 @@
                 }
                 return indexA - indexB;
             });
+          if (ordenSeleccionado === "menor-precio") return precioA - precioB;
+          if (ordenSeleccionado === "mayor-precio") return precioB - precioA;
+          if (ordenSeleccionado === "nuevo") {
+            if (esNuevoB !== esNuevoA) return esNuevoB - esNuevoA;
+            return idB - idA;
+          }
+          return indexA - indexB;
+        });
 
             tarjetas.forEach(card => grid.appendChild(card));
 
             document.getElementById('contador-productos').textContent = 
                 visibles === 1 ? '1 producto encontrado' : `${visibles} productos encontrados`;
+        document.getElementById("contador-productos").textContent =
+          visibles === 1
+            ? "1 producto encontrado"
+            : `${visibles} productos encontrados`;
 
             const sinResultados = document.getElementById('sin-resultados');
             if (visibles === 0) {
@@ -636,5 +818,5 @@
             }
         });
     </script>
-</body>
+  </body>
 </html>
