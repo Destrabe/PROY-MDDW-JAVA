@@ -4,12 +4,15 @@ import com.example.limabasics.entities.Producto;
 import com.example.limabasics.repositories.ProductoRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping({"/cart", "/carrito"})
@@ -61,28 +64,12 @@ public class CarritoController {
         session.setAttribute("carritoTotal", totalPrecio);
     }
 
-    @GetMapping
-    public String verCarrito(HttpSession session, Model model) {
-        List<ItemCarrito> carrito = obtenerCarrito(session);
-        actualizarContadores(session, carrito);
-        model.addAttribute("items", carrito);
-        return "cart";
-    }
-
-    @PostMapping("/agregar")
-    public String agregarProducto(
-            @RequestParam Long productoId,
-            @RequestParam(required = false, defaultValue = "bg-black") String color,
-            @RequestParam(required = false, defaultValue = "M") String talla,
-            HttpSession session,
-            HttpServletRequest request) {
-
+    private void procesarAgregar(Long productoId, String color, String talla, HttpSession session) {
         Producto producto = productoRepository.findById(productoId).orElse(null);
         if (producto != null) {
             List<ItemCarrito> carrito = obtenerCarrito(session);
             boolean encontrado = false;
 
-            // Si ya existe el mismo producto con el mismo color y talla, suma 1 a la cantidad
             for (ItemCarrito item : carrito) {
                 if (item.getProducto().getId().equals(productoId)
                         && item.getColor().equals(color)
@@ -98,7 +85,43 @@ public class CarritoController {
             }
             actualizarContadores(session, carrito);
         }
+    }
 
+    @GetMapping
+    public String verCarrito(HttpSession session, Model model) {
+        List<ItemCarrito> carrito = obtenerCarrito(session);
+        actualizarContadores(session, carrito);
+        model.addAttribute("items", carrito);
+        return "cart";
+    }
+
+    // Nuevo método AJAX para agregar sin recargar la página
+    @PostMapping("/agregar-ajax")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> agregarProductoAjax(
+            @RequestParam Long productoId,
+            @RequestParam(required = false, defaultValue = "bg-black") String color,
+            @RequestParam(required = false, defaultValue = "M") String talla,
+            HttpSession session) {
+
+        procesarAgregar(productoId, color, talla, session);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("ok", true);
+        response.put("carritoCantidad", session.getAttribute("carritoCantidad"));
+        response.put("carritoTotal", session.getAttribute("carritoTotal"));
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/agregar")
+    public String agregarProducto(
+            @RequestParam Long productoId,
+            @RequestParam(required = false, defaultValue = "bg-black") String color,
+            @RequestParam(required = false, defaultValue = "M") String talla,
+            HttpSession session,
+            HttpServletRequest request) {
+
+        procesarAgregar(productoId, color, talla, session);
         String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/catalog");
     }

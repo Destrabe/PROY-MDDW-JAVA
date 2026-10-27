@@ -70,14 +70,13 @@
                     </div>
                 </div>
 
-                <!-- Color (Se llena automáticamente con los colores reales de tus productos + base) -->
+                <!-- Color -->
                 <div class="mb-8">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-bold uppercase tracking-wider text-sm">Color</h3>
                         <span id="etiqueta-color-activo" class="text-xs font-mono text-gray-500">Todos</span>
                     </div>
                     <div id="filtro-colores-contenedor" class="flex flex-wrap gap-3">
-                        <!-- Generado dinámicamente por JS según tus productos -->
                     </div>
                 </div>
 
@@ -118,7 +117,6 @@
                             
                             <img th:src="${producto.imagen}" th:alt="${producto.nombre}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             
-                            <!-- Overlay y botón al pasar el mouse (hover) -->
                             <div class="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                                 <button type="button"
                                         th:data-id="${producto.id}"
@@ -130,7 +128,7 @@
                                         th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
                                         onclick="abrirModalInteres(this)"
                                         class="w-full bg-white/95 hover:bg-black hover:text-white text-gray-900 font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2">
-                                    <span>agregar al carrito</span>
+                                    <span>Agregar a carrito</span>
                                     <i class="fas fa-arrow-right text-[11px]"></i>
                                 </button>
                             </div>
@@ -168,7 +166,7 @@
                 <i class="fas fa-times"></i>
             </button>
 
-            <form th:action="@{/carrito/agregar}" method="post" class="p-6">
+            <form id="form-agregar-carrito" onsubmit="agregarAlCarritoSinRecargar(event)" class="p-6">
                 <input type="hidden" id="modal-prod-id" name="productoId">
                 <input type="hidden" id="modal-color-seleccionado" name="color" required>
                 <input type="hidden" id="modal-talla-seleccionada" name="talla" value="M">
@@ -208,9 +206,9 @@
                     </div>
                 </div>
 
-                <!-- Condicional: Si está logeada muestra "Agregar al carrito", si no, pide Iniciar Sesión -->
+                <!-- Botón de acción según sesión -->
                 <div class="pt-3">
-                    <button th:if="${session.usuarioId != null}" type="submit" 
+                    <button th:if="${session.usuarioId != null}" id="btn-submit-carrito" type="submit" 
                             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
                         <i class="fas fa-shopping-cart"></i>
                         <span>Agregar al carrito</span>
@@ -229,10 +227,25 @@
         </div>
     </div>
 
+    <!-- NOTIFICACIÓN TOAST FLOTANTE (Al agregar al carrito) -->
+    <div id="toast-carrito" class="fixed bottom-6 right-6 z-[110] hidden transform transition-all duration-300 translate-y-4 opacity-0">
+        <div class="bg-gray-900 text-white px-5 py-4 rounded-xl shadow-2xl flex items-center gap-3.5 border border-gray-800">
+            <div class="w-7 h-7 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-check text-sm"></i>
+            </div>
+            <div>
+                <p class="text-sm font-bold leading-tight">¡Agregado al carrito!</p>
+                <p id="toast-detalle" class="text-xs text-gray-400 mt-0.5"></p>
+            </div>
+            <a th:href="@{/cart}" class="ml-3 text-xs font-bold text-blue-400 hover:text-blue-300 underline whitespace-nowrap">
+                Ver carrito
+            </a>
+        </div>
+    </div>
+
     <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script>
-        // Estado global de los filtros activos
         const estadoFiltros = {
             categoria: 'Todos',
             talla: null,
@@ -241,7 +254,8 @@
             orden: 'relevancia'
         };
 
-        // Convierte una clase de Tailwind ('bg-black', 'bg-[#ddbea9]', etc.) a su HEX y nombre legible
+        let toastTimeout = null;
+
         function claseTailwindAColorCSS(clase) {
             const limpia = (clase || '').trim();
             if (limpia === 'bg-white') return { hex: '#FFFFFF', nombre: 'Blanco', clave: 'bg-white' };
@@ -257,7 +271,6 @@
             return { hex: '#000000', nombre: limpia, clave: limpia };
         }
 
-        // Inicializar barra lateral de colores y rango de precio según los productos reales en pantalla
         document.addEventListener('DOMContentLoaded', () => {
             const tarjetas = Array.from(document.querySelectorAll('.producto-card'));
             const mapaColores = new Map();
@@ -276,7 +289,6 @@
                 });
             });
 
-            // Ajustar el tope del slider si hay productos más caros que S/ 300
             const sliderPrecio = document.getElementById('rango-precio');
             sliderPrecio.max = maxPrecioDetectado;
             sliderPrecio.value = maxPrecioDetectado;
@@ -284,7 +296,6 @@
             document.getElementById('precio-max-valor').textContent = 'S/ ' + maxPrecioDetectado;
             document.getElementById('precio-tope-label').textContent = 'S/ ' + maxPrecioDetectado;
 
-            // Renderizar círculos de filtro de color
             const contenedorColoresFiltro = document.getElementById('filtro-colores-contenedor');
             contenedorColoresFiltro.innerHTML = '';
 
@@ -314,7 +325,6 @@
         function filtrarTalla(talla, btnElemento) {
             const etiquetaTalla = document.getElementById('etiqueta-talla-activa');
 
-            // Si hace clic en la misma talla activa, la desmarca
             if (estadoFiltros.talla === talla) {
                 estadoFiltros.talla = null;
                 etiquetaTalla.classList.add('hidden');
@@ -338,7 +348,6 @@
         function filtrarColor(hex, nombre, btnElemento) {
             const etiquetaColor = document.getElementById('etiqueta-color-activo');
 
-            // Si vuelve a pulsar el mismo color, desactiva el filtro de color
             if (estadoFiltros.color === hex) {
                 estadoFiltros.color = null;
                 etiquetaColor.textContent = 'Todos';
@@ -395,7 +404,6 @@
                 }
             });
 
-            // Ordenar las tarjetas en el DOM
             tarjetas.sort((a, b) => {
                 const precioA = parseFloat(a.dataset.precio) || 0;
                 const precioB = parseFloat(b.dataset.precio) || 0;
@@ -412,12 +420,11 @@
                     if (esNuevoB !== esNuevoA) return esNuevoB - esNuevoA;
                     return idB - idA;
                 }
-                return indexA - indexB; // relevancia (orden original)
+                return indexA - indexB;
             });
 
             tarjetas.forEach(card => grid.appendChild(card));
 
-            // Actualizar contador y estado vacío
             document.getElementById('contador-productos').textContent = 
                 visibles === 1 ? '1 producto encontrado' : `${visibles} productos encontrados`;
 
@@ -430,7 +437,6 @@
                 grid.classList.remove('hidden');
             }
 
-            // Mostrar u ocultar botón "Limpiar todo"
             const sliderMax = parseFloat(document.getElementById('rango-precio').max);
             const hayFiltroActivo = estadoFiltros.categoria !== 'Todos' || 
                                     estadoFiltros.talla !== null || 
@@ -463,7 +469,76 @@
             filtrarCategoria('Todos', btnTodos);
         }
 
-        // --- LÓGICA DEL MODAL DE COMPRA ---
+        // --- LÓGICA DEL MODAL Y ENVÍO SIN RECARGAR (AJAX) ---
+        async function agregarAlCarritoSinRecargar(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('form-agregar-carrito');
+            const btnSubmit = document.getElementById('btn-submit-carrito');
+            const formData = new FormData(form);
+            const nombreProd = document.getElementById('modal-prod-nombre').textContent;
+            const tallaElegida = document.getElementById('modal-talla-seleccionada').value;
+
+            if (btnSubmit) btnSubmit.disabled = true;
+
+            try {
+                const response = await fetch('/cart/agregar-ajax', {
+                    method: 'POST',
+                    body: new URLSearchParams(formData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    actualizarBurbujaHeader(data.carritoCantidad);
+                    cerrarModalInteres();
+                    mostrarToast(`${nombreProd} (Talla ${tallaElegida})`);
+                }
+            } catch (error) {
+                console.error('Error al agregar al carrito:', error);
+            } finally {
+                if (btnSubmit) btnSubmit.disabled = false;
+            }
+        }
+
+        function actualizarBurbujaHeader(cantidad) {
+            // Busca el badge por id="cart-badge" o el span dentro del enlace al carrito en el header
+            let badge = document.getElementById('cart-badge') || document.querySelector('a[aria-label="Carrito"] span');
+
+            if (!badge) {
+                const linkCarrito = document.querySelector('a[aria-label="Carrito"]');
+                if (linkCarrito) {
+                    badge = document.createElement('span');
+                    badge.id = 'cart-badge';
+                    badge.className = 'absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center';
+                    linkCarrito.appendChild(badge);
+                }
+            }
+
+            if (badge) {
+                badge.textContent = cantidad;
+                if (cantidad > 0) {
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                }
+            }
+        }
+
+        function mostrarToast(textoDetalle) {
+            const toast = document.getElementById('toast-carrito');
+            document.getElementById('toast-detalle').textContent = textoDetalle;
+
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-4', 'opacity-0');
+            }, 10);
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 3000);
+        }
+
         function abrirModalInteres(btn) {
             const id = btn.dataset.id;
             const nombre = btn.dataset.nombre;
@@ -515,7 +590,6 @@
                 }
             });
 
-            // Si el usuario tenía filtrada una talla en el catálogo, preseleccionarla en el modal
             const tallaInicial = estadoFiltros.talla || 'M';
             document.querySelectorAll('#modal-tallas-contenedor .talla-btn').forEach(b => {
                 if (b.textContent.trim() === tallaInicial) {
