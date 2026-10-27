@@ -12,7 +12,6 @@
     <div th:replace="~{fragments/header :: header}"></div>
 
     <main class="flex-grow max-w-7xl mx-auto px-6 md:px-12 w-full py-10">
-        <!-- Encabezado y selector de orden -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 pb-6 border-b border-gray-200">
             <div>
                 <h1 class="text-4xl font-black tracking-tighter">Catálogo</h1>
@@ -232,7 +231,6 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script>
-        // Estado global de los filtros activos
         const estadoFiltros = {
             categoria: 'Todos',
             talla: null,
@@ -241,23 +239,44 @@
             orden: 'relevancia'
         };
 
-        // Convierte una clase de Tailwind ('bg-black', 'bg-[#ddbea9]', etc.) a su HEX y nombre legible
         function claseTailwindAColorCSS(clase) {
-            const limpia = (clase || '').trim();
-            if (limpia === 'bg-white') return { hex: '#FFFFFF', nombre: 'Blanco', clave: 'bg-white' };
-            if (limpia === 'bg-black') return { hex: '#000000', nombre: 'Negro', clave: 'bg-black' };
-            const match = limpia.match(/bg-\[(#[0-9a-fA-F]{3,6})\]/);
+            const limpia = (clase || '').trim().toLowerCase();
+
+            const colores = {
+                'bg-white': { hex: '#FFFFFF', nombre: 'Blanco' },
+                'bg-black': { hex: '#000000', nombre: 'Negro' },
+                'bg-gray-200': { hex: '#E5E7EB', nombre: 'Gris Claro' },
+                'bg-gray-400': { hex: '#9CA3AF', nombre: 'Gris' }, 
+                'bg-gray-500': { hex: '#6B7280', nombre: 'Gris Oscuro' },
+                'bg-red-500': { hex: '#EF4444', nombre: 'Rojo' },
+                'bg-[#ff0000]': { hex: '#FF0000', nombre: 'Rojo' },
+                'bg-[#8b7355]': { hex: '#8B7355', nombre: 'Marrón' }, 
+                'bg-[#6b705c]': { hex: '#6B705C', nombre: 'Verde Oliva' },
+                'bg-[#1b263b]': { hex: '#1B263B', nombre: 'Azul Marino' },
+                'bg-[#fbff00]': { hex: '#FBFF00', nombre: 'Amarillo' }
+            };
+
+            if (colores[limpia]) {
+                return { 
+                    hex: colores[limpia].hex, 
+                    nombre: colores[limpia].nombre, 
+                    clave: clase 
+                };
+            }
+
+            const match = limpia.match(/bg-\[(#[0-9a-f]{3,6})\]/);
             if (match) {
                 const hexUpper = match[1].toUpperCase();
-                return { hex: hexUpper, nombre: hexUpper, clave: `bg-[${match[1].toLowerCase()}]` };
+                return { hex: hexUpper, nombre: 'Color ' + hexUpper, clave: clase };
             }
+            
             if (limpia.startsWith('#')) {
-                return { hex: limpia.toUpperCase(), nombre: limpia.toUpperCase(), clave: `bg-[${limpia.toLowerCase()}]` };
+                return { hex: limpia.toUpperCase(), nombre: 'Color ' + limpia.toUpperCase(), clave: clase };
             }
-            return { hex: '#000000', nombre: limpia, clave: limpia };
+
+            return { hex: '#000000', nombre: clase, clave: clase };
         }
 
-        // Inicializar barra lateral de colores y rango de precio según los productos reales en pantalla
         document.addEventListener('DOMContentLoaded', () => {
             const tarjetas = Array.from(document.querySelectorAll('.producto-card'));
             const mapaColores = new Map();
