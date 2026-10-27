@@ -17,9 +17,11 @@ import java.util.Optional;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final CarritoController carritoController;
 
-    public UsuarioController(UsuarioService usuarioService) {
+    public UsuarioController(UsuarioService usuarioService, CarritoController carritoController) {
         this.usuarioService = usuarioService;
+        this.carritoController = carritoController;
     }
 
     @PostMapping("/login-ajax")
@@ -50,6 +52,8 @@ public class UsuarioController {
         session.setAttribute("usuarioEmail", usuario.getEmail());
         session.setAttribute("usuarioRol", usuario.getRol());
 
+        carritoController.sincronizarContadoresSesion(session);
+
         response.put("success", true);
         return ResponseEntity.ok(response);
     }
@@ -75,6 +79,8 @@ public class UsuarioController {
         session.setAttribute("usuarioNombre", nuevo.getNombre());
         session.setAttribute("usuarioEmail", nuevo.getEmail());
         session.setAttribute("usuarioRol", nuevo.getRol());
+
+        carritoController.sincronizarContadoresSesion(session);
 
         response.put("success", true);
         return ResponseEntity.ok(response);
