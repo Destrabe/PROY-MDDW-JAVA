@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lima Basics | Tu Carrito</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
     <div th:replace="~{fragments/header :: header}"></div>
@@ -21,16 +22,32 @@
             <div class="lg:col-span-2 space-y-4">
                 <div th:each="item : ${items}" class="bg-white p-4 rounded-xl border border-gray-200 flex items-center justify-between">
                     <div class="flex items-center space-x-4">
-                        <img th:src="${item.producto.imagen}" class="w-20 h-24 object-cover rounded" alt="">
+                        <img th:src="${item.producto.imagen}" class="w-20 h-24 object-cover rounded border border-gray-100" alt="">
                         <div>
-                            <h3 class="font-bold text-lg" th:text="${item.producto.nombre}"></h3>
-                            <p class="text-sm text-gray-500" th:text="'Cantidad: ' + ${item.cantidad}"></p>
-                            <p class="text-blue-600 font-bold mt-1" th:text="'S/ ' + ${item.subtotal}"></p>
+                            <h3 class="font-bold text-lg leading-snug" th:text="${item.producto.nombre}"></h3>
+                            
+                            <div class="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                                <span th:text="'Cantidad: ' + ${item.cantidad}"></span>
+                                <span>•</span>
+                                <span th:text="'Talla: ' + ${item.talla}" class="font-semibold text-gray-700"></span>
+                                <span>•</span>
+                                <span class="flex items-center gap-1">
+                                    Color:
+                                    <span th:class="'inline-block w-3.5 h-3.5 rounded-full border border-gray-300 ' + ${item.color}"></span>
+                                </span>
+                            </div>
+
+                            <p class="text-blue-600 font-black mt-1.5" th:text="'S/ ' + ${item.subtotal}"></p>
                         </div>
                     </div>
-                    <form th:action="@{/carrito/eliminar}" method="post">
+
+                    <form th:action="@{/cart/eliminar}" method="post">
                         <input type="hidden" name="productoId" th:value="${item.producto.id}">
-                        <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-bold">Eliminar</button>
+                        <input type="hidden" name="color" th:value="${item.color}">
+                        <input type="hidden" name="talla" th:value="${item.talla}">
+                        <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-bold px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors">
+                            Eliminar
+                        </button>
                     </form>
                 </div>
             </div>
