@@ -1,70 +1,127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lima Basics | Tu Carrito</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen"
+  >
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <main class="flex-grow max-w-5xl mx-auto px-6 py-12 w-full">
-        <h1 class="text-4xl font-black tracking-tighter mb-8">Tu Carrito</h1>
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-10 w-full">
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight mb-8">
+        Tu Carrito
+      </h1>
 
-        <div th:if="${#lists.isEmpty(items)}" class="bg-white p-12 text-center rounded-xl border border-gray-200">
-            <p class="text-gray-500 mb-6">Tu carrito está vacío en este momento.</p>
-            <a th:href="@{/catalog}" class="bg-blue-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">Ir al Catálogo</a>
-        </div>
+      <div
+        th:if="${items == null or #lists.isEmpty(items)}"
+        class="text-center py-20 bg-white rounded-2xl border border-gray-200"
+      >
+        <i class="fas fa-shopping-cart text-4xl text-gray-300 mb-4 block"></i>
+        <h3 class="text-lg font-bold text-gray-800 mb-1">
+          Tu carrito está vacío
+        </h3>
+        <p class="text-sm text-gray-500 mb-6">
+          Explora nuestro catálogo y descubre las mejores prendas.
+        </p>
+        <a
+          th:href="@{/catalog}"
+          class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-lg transition-colors"
+        >
+          Ver catálogo
+        </a>
+      </div>
 
-        <div th:if="${!#lists.isEmpty(items)}" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-4">
-                <div th:each="item : ${items}" class="bg-white p-4 rounded-xl border border-gray-200 flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <img th:src="${item.producto.imagen}" class="w-20 h-24 object-cover rounded border border-gray-100" alt="">
-                        <div>
-                            <h3 class="font-bold text-lg leading-snug" th:text="${item.producto.nombre}"></h3>
-                            
-                            <div class="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                                <span th:text="'Cantidad: ' + ${item.cantidad}"></span>
-                                <span>•</span>
-                                <span th:text="'Talla: ' + ${item.talla}" class="font-semibold text-gray-700"></span>
-                                <span>•</span>
-                                <span class="flex items-center gap-1">
-                                    Color:
-                                    <span th:class="'inline-block w-3.5 h-3.5 rounded-full border border-gray-300 ' + ${item.color}"></span>
-                                </span>
-                            </div>
-
-                            <p class="text-blue-600 font-black mt-1.5" th:text="'S/ ' + ${item.subtotal}"></p>
-                        </div>
-                    </div>
-
-                    <form th:action="@{/cart/eliminar}" method="post">
-                        <input type="hidden" name="productoId" th:value="${item.producto.id}">
-                        <input type="hidden" name="color" th:value="${item.color}">
-                        <input type="hidden" name="talla" th:value="${item.talla}">
-                        <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-bold px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors">
-                            Eliminar
-                        </button>
-                    </form>
+      <div
+        th:if="${items != null and !#lists.isEmpty(items)}"
+        class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+      >
+        <div class="lg:col-span-8 space-y-4">
+          <div
+            th:each="item : ${items}"
+            class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm"
+          >
+            <div class="flex items-center gap-4 w-full sm:w-auto">
+              <img
+                th:src="${item.producto.imagen}"
+                th:alt="${item.producto.nombre}"
+                class="w-20 h-24 sm:w-24 sm:h-28 object-cover rounded-xl border border-gray-100 bg-gray-50 flex-shrink-0"
+              />
+              <div class="flex-grow">
+                <h3
+                  class="font-bold text-base sm:text-lg text-gray-900 leading-snug"
+                  th:text="${item.producto.nombre}"
+                ></h3>
+                <div
+                  class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 mt-1.5"
+                >
+                  <span>Cantidad: <strong th:text="${item.cantidad}">1</strong></span>
+                  <span>·</span>
+                  <span>Talla: <strong th:text="${item.talla}">M</strong></span>
+                  <span>·</span>
+                  <span class="flex items-center gap-1">
+                    Color:
+                    <span
+                      th:class="'w-3.5 h-3.5 rounded-full border border-gray-300 inline-block ' + ${item.color}"
+                    ></span>
+                  </span>
                 </div>
+                <p
+                  class="font-black text-blue-600 text-base sm:text-lg mt-2"
+                  th:text="'S/ ' + ${item.subtotal}"
+                ></p>
+              </div>
             </div>
 
-            <div class="bg-white p-6 rounded-xl border border-gray-200 h-fit">
-                <h2 class="font-bold text-xl mb-4">Resumen</h2>
-                <div class="flex justify-between text-lg font-black border-t border-gray-200 pt-4 mb-6">
-                    <span>Total</span>
-                    <span th:text="'S/ ' + ${session.carritoTotal}"></span>
-                </div>
-                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg transition-colors">
-                    PROCEDER AL PAGO
-                </button>
-            </div>
+            <form
+              th:action="@{/cart/eliminar}"
+              method="post"
+              class="self-end sm:self-center"
+            >
+              <input type="hidden" name="productoId" th:value="${item.producto.id}" />
+              <input type="hidden" name="color" th:value="${item.color}" />
+              <input type="hidden" name="talla" th:value="${item.talla}" />
+              <button
+                type="submit"
+                class="text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3.5 py-2 rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                <i class="fas fa-trash-alt text-[11px]"></i>
+                <span>Eliminar</span>
+              </button>
+            </form>
+          </div>
         </div>
+
+        <div class="lg:col-span-4">
+          <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm sticky top-6">
+            <h3 class="font-bold text-lg text-gray-900 mb-4 pb-3 border-b border-gray-100">
+              Resumen
+            </h3>
+            <div class="flex justify-between items-center mb-6">
+              <span class="font-bold text-gray-700 text-base">Total</span>
+              <span
+                class="font-black text-xl text-gray-900"
+                th:text="'S/ ' + ${session.carritoTotal != null ? session.carritoTotal : 0}"
+              ></span>
+            </div>
+            <a
+              th:href="@{/checkout}"
+              class="block text-center w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-colors text-sm uppercase tracking-wider shadow-md"
+            >
+              PROCEDER AL PAGO
+            </a>
+          </div>
+        </div>
+      </div>
     </main>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
-</body>
+  </body>
 </html>

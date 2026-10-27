@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lima Basics | Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-[#f8f9fc] text-gray-900 font-sans antialiased flex flex-col min-h-screen"
+  >
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-10 w-full">
+      <div class="flex items-center justify-center mb-8 sm:mb-12 overflow-x-auto py-2">
+        <div class="flex items-center min-w-[280px]">
+          <div class="flex flex-col items-center">
+            <div
+              id="step-circle-1"
+              class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1d4ed8] text-white font-bold text-xs sm:text-sm flex items-center justify-center transition-colors"
+            >
+              1
+            </div>
+            <span
+              id="step-label-1"
+              class="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase mt-2 text-gray-900"
+              >DATOS</span
+            >
+          </div>
+
+          <div
+            id="step-line-1"
+            class="w-16 sm:w-28 md:w-32 h-[2px] bg-[#1d4ed8] mx-2 sm:mx-4 -mt-4 sm:-mt-5 transition-colors"
+          ></div>
+
+          <div class="flex flex-col items-center">
+            <div
+              id="step-circle-2"
+              class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-200 text-gray-500 font-bold text-xs sm:text-sm flex items-center justify-center transition-colors"
+            >
+              2
+            </div>
+            <span
+              id="step-label-2"
+              class="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase mt-2 text-gray-400"
+              >ENVÍO</span
+            >
+          </div>
+
+          <div
+            id="step-line-2"
+            class="w-16 sm:w-28 md:w-32 h-[2px] bg-gray-200 mx-2 sm:mx-4 -mt-4 sm:-mt-5 transition-colors"
+          ></div>
+
+          <div class="flex flex-col items-center">
+            <div
+              id="step-circle-3"
+              class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-200 text-gray-500 font-bold text-xs sm:text-sm flex items-center justify-center transition-colors"
+            >
+              3
+            </div>
+            <span
+              id="step-label-3"
+              class="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase mt-2 text-gray-400"
+              >PAGO</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+        <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm">
+          <form id="form-datos" onsubmit="irAPaso(2, event)">
+            <h2 class="text-xl sm:text-2xl font-bold tracking-tight mb-6">
+              Datos de facturación
+            </h2>
+
+            <div class="inline-flex rounded-lg border border-gray-200 bg-gray-50 mb-6 overflow-hidden">
+              <button
+                type="button"
+                id="btn-boleta"
+                onclick="seleccionarComprobante('BOLETA')"
+                class="px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-bold bg-[#0f1115] text-white transition-colors"
+              >
+                Boleta
+              </button>
+              <button
+                type="button"
+                id="btn-factura"
+                onclick="seleccionarComprobante('FACTURA')"
+                class="px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-medium text-gray-600 hover:text-gray-900 bg-white transition-colors"
+              >
+                Factura
+              </button>
+            </div>
+
+            <div class="mb-5">
+              <label class="block text-xs font-bold text-gray-800 mb-2"
+                >Tipo de documento</label
+              >
+              <div class="flex items-center gap-5">
+                <label class="inline-flex items-center gap-2 text-sm cursor-pointer">
+                  <input
+                    type="radio"
+                    name="tipoDoc"
+                    id="radio-dni"
+                    value="DNI"
+                    checked
+                    onchange="actualizarCamposDocumento()"
+                    class="accent-[#1d4ed8] w-4 h-4"
+                  />
+                  <span>DNI</span>
+                </label>
+                <label class="inline-flex items-center gap-2 text-sm cursor-pointer">
+                  <input
+                    type="radio"
+                    name="tipoDoc"
+                    id="radio-ruc"
+                    value="RUC"
+                    onchange="actualizarCamposDocumento()"
+                    class="accent-[#1d4ed8] w-4 h-4"
+                  />
+                  <span>RUC</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label
+                  id="label-doc"
+                  class="block text-xs font-bold text-gray-800 mb-1.5"
+                  >DNI (8 dígitos)</label
+                >
+                <input
+                  type="text"
+                  id="input-doc"
+                  placeholder="12345678"
+                  maxlength="8"
+                  required
+                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                  >Celular (9 dígitos)</label
+                >
+                <input
+                  type="tel"
+                  id="input-celular"
+                  placeholder="999000111"
+                  maxlength="9"
+                  minlength="9"
+                  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)"
+                  required
+                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                />
+              </div>
+            </div>
+
+            <div id="contenedor-razon-social" class="mb-4 hidden">
+              <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                >Razón social</label
+              >
+              <input
+                type="text"
+                id="input-razon-social"
+                placeholder="Empresa S.A.C."
+                class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label
+                  id="label-nombre"
+                  class="block text-xs font-bold text-gray-800 mb-1.5"
+                  >Nombres</label
+                >
+                <input
+                  type="text"
+                  id="input-nombre"
+                  th:value="${session.usuarioNombre != null ? session.usuarioNombre : ''}"
+                  placeholder="Ana"
+                  required
+                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                  >Apellidos</label
+                >
+                <input
+                  type="text"
+                  id="input-apellido"
+                  placeholder="García"
+                  required
+                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                />
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                >Correo electrónico</label
+              >
+              <input
+                type="email"
+                id="input-correo"
+                th:value="${session.usuarioEmail != null ? session.usuarioEmail : ''}"
+                placeholder="ana@correo.pe"
+                required
+                class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                >Dirección de entrega</label
+              >
+              <input
+                type="text"
+                id="input-direccion"
+                placeholder="Av. Larco 821, Dpto 302"
+                required
+                class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                  >Distrito</label
+                >
+                <select
+                  id="input-distrito"
+                  required
+                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                >
+                  <option value="" disabled selected>Seleccionar...</option>
+                  <option value="Miraflores">Miraflores</option>
+                  <option value="San Isidro">San Isidro</option>
+                  <option value="Santiago de Surco">Santiago de Surco</option>
+                  <option value="Barranco">Barranco</option>
+                  <option value="San Miguel">San Miguel</option>
+                  <option value="Jesús María">Jesús María</option>
+                  <option value="Lince">Lince</option>
+                  <option value="Magdalena">Magdalena</option>
+                  <option value="La Molina">La Molina</option>
+                  <option value="Lima Cercado">Lima Cercado</option>
+                  <option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
+                  <option value="Los Olivos">Los Olivos</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                  >Referencia (opcional)</label
+                >
+                <input
+                  type="text"
+                  id="input-referencia"
+                  placeholder="Frente al parque"
+                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-sm transition-colors shadow-md"
+            >
+              Continuar con el envío &rarr;
+            </button>
+          </form>
+
+          <form id="form-envio" class="hidden" onsubmit="irAPaso(3, event)">
+            <h2 class="text-xl sm:text-2xl font-bold tracking-tight mb-6">
+              Método de envío
+            </h2>
+
+            <div class="space-y-4 mb-6">
+              <label
+                class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-[#1d4ed8] bg-white cursor-pointer transition-all gap-3"
+                id="card-envio-estandar"
+              >
+                <div class="flex items-start sm:items-center gap-3.5">
+                  <input
+                    type="radio"
+                    name="metodoEnvio"
+                    value="8"
+                    checked
+                    onchange="cambiarCostoEnvio(8, 'card-envio-estandar')"
+                    class="accent-[#1d4ed8] w-4 h-4 mt-1 sm:mt-0 flex-shrink-0"
+                  />
+                  <div>
+                    <p class="font-bold text-sm text-gray-900">
+                      Envío Estándar en Lima
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      Entrega entre 2 a 3 días hábiles
+                    </p>
+                  </div>
+                </div>
+                <span class="font-bold text-sm text-gray-900 sm:text-right pl-7 sm:pl-0">S/ 8.00</span>
+              </label>
+
+              <label
+                class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer transition-all gap-3"
+                id="card-envio-express"
+              >
+                <div class="flex items-start sm:items-center gap-3.5">
+                  <input
+                    type="radio"
+                    name="metodoEnvio"
+                    value="15"
+                    onchange="cambiarCostoEnvio(15, 'card-envio-express')"
+                    class="accent-[#1d4ed8] w-4 h-4 mt-1 sm:mt-0 flex-shrink-0"
+                  />
+                  <div>
+                    <p class="font-bold text-sm text-gray-900">
+                      Envío Express (24 horas)
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      Recíbelo mañana mismo en tu dirección
+                    </p>
+                  </div>
+                </div>
+                <span class="font-bold text-sm text-gray-900 sm:text-right pl-7 sm:pl-0">S/ 15.00</span>
+              </label>
+
+              <label
+                class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer transition-all gap-3"
+                id="card-envio-tienda"
+              >
+                <div class="flex items-start sm:items-center gap-3.5">
+                  <input
+                    type="radio"
+                    name="metodoEnvio"
+                    value="0"
+                    onchange="cambiarCostoEnvio(0, 'card-envio-tienda')"
+                    class="accent-[#1d4ed8] w-4 h-4 mt-1 sm:mt-0 flex-shrink-0"
+                  />
+                  <div>
+                    <p class="font-bold text-sm text-gray-900">
+                      Retiro en tienda Lima Basics
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      Sede Miraflores o San Miguel (Listo en 2 horas)
+                    </p>
+                  </div>
+                </div>
+                <span class="font-bold text-sm text-green-600 sm:text-right pl-7 sm:pl-0">Gratis</span>
+              </label>
+            </div>
+
+            <div class="flex gap-3">
+              <button
+                type="button"
+                onclick="irAPaso(1)"
+                class="w-1/3 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-bold py-4 rounded-xl text-sm transition-colors"
+              >
+                &larr; Volver
+              </button>
+              <button
+                type="submit"
+                class="w-2/3 bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-sm transition-colors shadow-md"
+              >
+                Continuar al pago &rarr;
+              </button>
+            </div>
+          </form>
+
+          <form id="form-pago" class="hidden" onsubmit="finalizarCompra(event)">
+            <h2 class="text-xl sm:text-2xl font-bold tracking-tight mb-6">
+              Método de pago
+            </h2>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-4 mb-6">
+              <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                <span class="text-sm font-bold text-gray-800"
+                  >Tarjeta de Crédito o Débito</span
+                >
+                <div class="flex gap-2 text-gray-400 text-lg">
+                  <i class="fab fa-cc-visa text-blue-700"></i>
+                  <i class="fab fa-cc-mastercard text-red-500"></i>
+                  <i class="fab fa-cc-amex text-blue-500"></i>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                  >Número de tarjeta</label
+                >
+                <input
+                  type="text"
+                  placeholder="4557 •••• •••• 1234"
+                  maxlength="19"
+                  required
+                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                />
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                    >Vencimiento (MM/AA)</label
+                  >
+                  <input
+                    type="text"
+                    placeholder="08/29"
+                    maxlength="5"
+                    required
+                    class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                    >CVV</label
+                  >
+                  <input
+                    type="password"
+                    placeholder="123"
+                    maxlength="4"
+                    required
+                    class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                  >Nombre en la tarjeta</label
+                >
+                <input
+                  type="text"
+                  th:value="${session.usuarioNombre != null ? session.usuarioNombre : ''}"
+                  placeholder="ANA GARCIA"
+                  required
+                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm uppercase focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                />
+              </div>
+            </div>
+
+            <div class="flex gap-3">
+              <button
+                type="button"
+                onclick="irAPaso(2)"
+                class="w-1/3 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-bold py-4 rounded-xl text-sm transition-colors"
+              >
+                &larr; Volver
+              </button>
+              <button
+                type="submit"
+                id="btn-pagar-final"
+                class="w-2/3 bg-[#0f1115] hover:bg-black text-white font-bold py-4 rounded-xl text-sm transition-colors shadow-md"
+              >
+                Pagar ahora
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="bg-white p-6 sm:p-7 rounded-2xl border border-gray-200 shadow-sm">
+            <h3 class="font-bold text-base text-gray-900 mb-5">
+              Resumen del pedido
+            </h3>
+
+            <div class="space-y-4 mb-6">
+              <div
+                th:each="item : ${items}"
+                class="flex items-start justify-between gap-3"
+              >
+                <div class="flex items-center gap-3.5">
+                  <div class="relative flex-shrink-0">
+                    <img
+                      th:src="${item.producto.imagen}"
+                      th:alt="${item.producto.nombre}"
+                      class="w-14 h-16 object-cover rounded-xl border border-gray-200 bg-gray-50"
+                    />
+                    <span
+                      th:text="${item.cantidad}"
+                      class="absolute -top-1.5 -right-1.5 bg-gray-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                    ></span>
+                  </div>
+                  <div>
+                    <h4
+                      class="font-bold text-xs sm:text-sm text-gray-900 leading-snug"
+                      th:text="${item.producto.nombre}"
+                    ></h4>
+                    <p class="text-[11px] text-gray-400 mt-0.5">
+                      <span
+                        class="nombre-color-item"
+                        th:data-color="${item.color}"
+                        >Color</span
+                      >
+                      · <span th:text="${item.talla}">M</span>
+                    </p>
+                  </div>
+                </div>
+                <span
+                  class="font-bold text-xs sm:text-sm text-gray-900 whitespace-nowrap"
+                  th:text="'S/ ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}"
+                ></span>
+              </div>
+            </div>
+
+            <div class="border-t border-gray-100 pt-4 space-y-2 text-xs sm:text-sm">
+              <div class="flex justify-between text-gray-500">
+                <span>Subtotal</span>
+                <span
+                  id="resumen-subtotal"
+                  class="font-bold text-gray-900"
+                  th:data-subtotal="${session.carritoTotal != null ? session.carritoTotal : 0}"
+                  th:text="'S/ ' + ${#numbers.formatDecimal(session.carritoTotal != null ? session.carritoTotal : 0, 1, 2)}"
+                ></span>
+              </div>
+              <div class="flex justify-between text-gray-500">
+                <span>Envío</span>
+                <span id="resumen-envio" class="font-bold text-gray-900"
+                  >S/ 8.00</span
+                >
+              </div>
+              <div id="fila-igv" class="flex justify-between text-gray-500 hidden">
+                <span>IGV (18%)</span>
+                <span id="resumen-igv" class="font-bold text-gray-900">S/ 0.00</span>
+              </div>
+            </div>
+
+            <div
+              class="flex justify-between items-center border-t border-gray-100 mt-4 pt-4 mb-5"
+            >
+              <span class="font-bold text-base text-gray-900">Total</span>
+              <span
+                id="resumen-total"
+                class="font-black text-lg text-gray-900"
+                th:text="'S/ ' + ${#numbers.formatDecimal((session.carritoTotal != null ? session.carritoTotal : 0) + 8, 1, 2)}"
+              ></span>
+            </div>
+
+            <div
+              class="bg-[#f8f9fc] border border-gray-200/70 rounded-xl py-3 px-4 flex items-center justify-center gap-2 text-xs text-gray-500"
+            >
+              <i class="fas fa-lock text-emerald-600"></i>
+              <span>Transacción protegida · SSL 256-bit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div
+      id="modal-exito"
+      class="hidden fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4"
+    >
+      <div class="bg-white rounded-2xl max-w-md w-full p-8 text-center shadow-2xl">
+        <div
+          class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4 text-2xl"
+        >
+          <i class="fas fa-check"></i>
+        </div>
+        <h3 class="text-2xl font-black tracking-tight mb-2">
+          ¡Compra confirmada!
+        </h3>
+        <p class="text-sm text-gray-500 mb-6">
+          Hemos recibido tu pedido correctamente. Te enviaremos el comprobante y
+          el seguimiento a tu correo electrónico.
+        </p>
+        <a
+          th:href="@{/catalog}"
+          class="block w-full bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-3.5 rounded-xl text-sm transition-colors shadow-md"
+        >
+          Volver a la tienda
+        </a>
+      </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+      let costoEnvioActual = 8;
+      let esFacturaActiva = false;
+
+      function traducirColor(clase) {
+        const limpia = (clase || "").trim().toLowerCase();
+        const colores = {
+          "bg-white": "Blanco",
+          "bg-black": "Negro",
+          "bg-gray-200": "Gris Claro",
+          "bg-gray-400": "Gris",
+          "bg-gray-500": "Gris Oscuro",
+          "bg-red-500": "Rojo",
+          "bg-[#ff0000]": "Rojo",
+          "bg-[#8b7355]": "Marrón",
+          "bg-[#6b705c]": "Verde Kaki",
+          "bg-[#1b263b]": "Azul Marino",
+          "bg-[#ddbea9]": "Beige",
+          "bg-[#fbff00]": "Amarillo",
+        };
+        return colores[limpia] || "Clásico";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".nombre-color-item").forEach((el) => {
+          el.textContent = traducirColor(el.dataset.color);
+        });
+      });
+
+      function seleccionarComprobante(tipo) {
+        const btnBoleta = document.getElementById("btn-boleta");
+        const btnFactura = document.getElementById("btn-factura");
+        const contenedorRazon = document.getElementById("contenedor-razon-social");
+        const inputRazon = document.getElementById("input-razon-social");
+        const filaIgv = document.getElementById("fila-igv");
+
+        if (tipo === "BOLETA") {
+          btnBoleta.className =
+            "px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-bold bg-[#0f1115] text-white transition-colors";
+          btnFactura.className =
+            "px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-medium text-gray-600 hover:text-gray-900 bg-white transition-colors";
+          contenedorRazon.classList.add("hidden");
+          inputRazon.removeAttribute("required");
+          esFacturaActiva = false;
+          filaIgv.classList.add("hidden");
+        } else {
+          btnFactura.className =
+            "px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-bold bg-[#0f1115] text-white transition-colors";
+          btnBoleta.className =
+            "px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-medium text-gray-600 hover:text-gray-900 bg-white transition-colors";
+          contenedorRazon.classList.remove("hidden");
+          inputRazon.setAttribute("required", "true");
+          esFacturaActiva = true;
+          filaIgv.classList.remove("hidden");
+        }
+        recalcularTotales();
+      }
+
+      function actualizarCamposDocumento() {
+        const esRuc = document.getElementById("radio-ruc").checked;
+        const labelDoc = document.getElementById("label-doc");
+        const inputDoc = document.getElementById("input-doc");
+
+        if (esRuc) {
+          labelDoc.textContent = "RUC (11 dígitos)";
+          inputDoc.placeholder = "20123456789";
+          inputDoc.maxLength = 11;
+        } else {
+          labelDoc.textContent = "DNI (8 dígitos)";
+          inputDoc.placeholder = "12345678";
+          inputDoc.maxLength = 8;
+        }
+      }
+
+      function cambiarCostoEnvio(nuevoCosto, cardId) {
+        costoEnvioActual = nuevoCosto;
+
+        ["card-envio-estandar", "card-envio-express", "card-envio-tienda"].forEach((id) => {
+          const card = document.getElementById(id);
+          if (card) {
+            card.className = "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer transition-all gap-3";
+          }
+        });
+
+        const cardSeleccionada = document.getElementById(cardId);
+        if (cardSeleccionada) {
+          cardSeleccionada.className = "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-[#1d4ed8] bg-white cursor-pointer transition-all gap-3";
+        }
+
+        document.getElementById("resumen-envio").textContent =
+          costoEnvioActual === 0
+            ? "Gratis"
+            : "S/ " + costoEnvioActual.toFixed(2);
+        recalcularTotales();
+      }
+
+      function recalcularTotales() {
+        const subtotalEl = document.getElementById("resumen-subtotal");
+        const subtotal = parseFloat(subtotalEl.dataset.subtotal) || 0;
+        
+        let total = subtotal + costoEnvioActual;
+
+        if (esFacturaActiva) {
+          const igv = subtotal * 0.18;
+          document.getElementById("resumen-igv").textContent = "S/ " + igv.toFixed(2);
+          total += igv;
+        }
+
+        document.getElementById("resumen-total").textContent = "S/ " + total.toFixed(2);
+      }
+
+      function irAPaso(paso, event) {
+        if (event) event.preventDefault();
+
+        if (paso === 2) {
+          const celularInput = document.getElementById("input-celular");
+          if (celularInput.value.length !== 9) {
+            alert("Por favor, ingresa un número de celular válido de exactamente 9 dígitos.");
+            celularInput.focus();
+            return;
+          }
+        }
+
+        document.getElementById("form-datos").classList.toggle("hidden", paso !== 1);
+        document.getElementById("form-envio").classList.toggle("hidden", paso !== 2);
+        document.getElementById("form-pago").classList.toggle("hidden", paso !== 3);
+
+        for (let i = 1; i <= 3; i++) {
+          const circle = document.getElementById("step-circle-" + i);
+          const label = document.getElementById("step-label-" + i);
+
+          if (i <= paso) {
+            circle.className =
+              "w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1d4ed8] text-white font-bold text-xs sm:text-sm flex items-center justify-center transition-colors";
+            label.className =
+              "text-[10px] sm:text-[11px] font-bold tracking-wider uppercase mt-2 text-gray-900";
+          } else {
+            circle.className =
+              "w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-200 text-gray-500 font-bold text-xs sm:text-sm flex items-center justify-center transition-colors";
+            label.className =
+              "text-[10px] sm:text-[11px] font-bold tracking-wider uppercase mt-2 text-gray-400";
+          }
+        }
+
+        document.getElementById("step-line-1").className =
+          paso >= 2
+            ? "w-16 sm:w-28 md:w-32 h-[2px] bg-[#1d4ed8] mx-2 sm:mx-4 -mt-4 sm:-mt-5 transition-colors"
+            : "w-16 sm:w-28 md:w-32 h-[2px] bg-gray-200 mx-2 sm:mx-4 -mt-4 sm:-mt-5 transition-colors";
+
+        document.getElementById("step-line-2").className =
+          paso >= 3
+            ? "w-16 sm:w-28 md:w-32 h-[2px] bg-[#1d4ed8] mx-2 sm:mx-4 -mt-4 sm:-mt-5 transition-colors"
+            : "w-16 sm:w-28 md:w-32 h-[2px] bg-gray-200 mx-2 sm:mx-4 -mt-4 sm:-mt-5 transition-colors";
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      async function finalizarCompra(event) {
+        event.preventDefault();
+        const btn = document.getElementById("btn-pagar-final");
+        btn.disabled = true;
+        btn.textContent = "Procesando...";
+
+        try {
+          const res = await fetch("/checkout/procesar", { method: "POST" });
+          const data = await res.json();
+          if (data.success) {
+            const badge = document.getElementById("cart-badge");
+            if (badge) badge.classList.add("hidden");
+            document.getElementById("modal-exito").classList.remove("hidden");
+          }
+        } catch (e) {
+          console.error(e);
+          btn.disabled = false;
+          btn.textContent = "Pagar ahora";
+        }
+      }
+    </script>
+  </body>
+</html>

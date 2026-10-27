@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping({"/cart", "/carrito"})
 public class CarritoController {
 
     private final ProductoRepository productoRepository;
@@ -59,7 +58,7 @@ public class CarritoController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/cart")
     public String verCarrito(HttpSession session, Model model) {
         Long usuarioId = (Long) session.getAttribute("usuarioId");
         List<CarritoItem> carrito = (usuarioId != null)
@@ -71,7 +70,38 @@ public class CarritoController {
         return "cart";
     }
 
-    @PostMapping("/agregar")
+    @GetMapping("/checkout")
+    public String verCheckout(HttpSession session, Model model) {
+        Long usuarioId = (Long) session.getAttribute("usuarioId");
+        if (usuarioId == null) {
+            return "redirect:/";
+        }
+        List<CarritoItem> carrito = carritoItemRepository.findByUsuarioId(usuarioId);
+        if (carrito.isEmpty()) {
+            return "redirect:/cart";
+        }
+        sincronizarContadoresSesion(session);
+        model.addAttribute("items", carrito);
+        return "checkout";
+    }
+
+    @PostMapping("/checkout/procesar")
+    @ResponseBody
+    public Map<String, Object> procesarCompra(HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Long usuarioId = (Long) session.getAttribute("usuarioId");
+        if (usuarioId != null) {
+            List<CarritoItem> items = carritoItemRepository.findByUsuarioId(usuarioId);
+            carritoItemRepository.deleteAll(items);
+            sincronizarContadoresSesion(session);
+            response.put("success", true);
+        } else {
+            response.put("success", false);
+        }
+        return response;
+    }
+
+    @PostMapping("/cart/agregar")
     public String agregarProducto(
             @RequestParam Long productoId,
             @RequestParam(required = false, defaultValue = "bg-black") String color,
@@ -91,7 +121,7 @@ public class CarritoController {
         return "redirect:" + (referer != null ? referer : "/catalog");
     }
 
-    @PostMapping("/agregar-ajax")
+    @PostMapping("/cart/agregar-ajax")
     @ResponseBody
     public Map<String, Object> agregarProductoAjax(
             @RequestParam Long productoId,
@@ -117,7 +147,7 @@ public class CarritoController {
         return response;
     }
 
-    @PostMapping("/eliminar")
+    @PostMapping("/cart/eliminar")
     public String eliminarProducto(
             @RequestParam Long productoId,
             @RequestParam(required = false) String color,
