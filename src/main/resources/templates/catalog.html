@@ -1,585 +1,926 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lima Basics | Catálogo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-white text-gray-900 font-sans antialiased flex flex-col min-h-screen">
-
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="bg-white text-gray-900 font-sans antialiased flex flex-col min-h-screen"
+  >
     <div th:replace="~{fragments/header :: header}"></div>
 
     <main class="flex-grow max-w-7xl mx-auto px-6 md:px-12 w-full py-10">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 pb-6 border-b border-gray-200">
-            <div>
-                <h1 class="text-4xl font-black tracking-tighter">Catálogo</h1>
-                <p id="contador-productos" class="text-gray-500 mt-2" th:text="${productos.size()} + ' productos encontrados'"></p>
-            </div>
-            <div class="mt-4 md:mt-0 w-full md:w-auto flex items-center gap-3">
-                <label for="select-orden" class="text-xs font-bold uppercase tracking-wider text-gray-400 hidden sm:block">Ordenar por:</label>
-                <select id="select-orden" onchange="aplicarFiltrosYOrden()" class="w-full md:w-48 border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white cursor-pointer">
-                    <option value="relevancia">Relevancia</option>
-                    <option value="menor-precio">Menor precio</option>
-                    <option value="mayor-precio">Mayor precio</option>
-                    <option value="nuevo">Lo más nuevo</option>
-                </select>
-            </div>
+      <div
+        class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 pb-6 border-b border-gray-200"
+      >
+        <div>
+          <h1 class="text-4xl font-black tracking-tighter">Catálogo</h1>
+          <p
+            id="contador-productos"
+            class="text-gray-500 mt-2"
+            th:text="${productos.size()} + ' productos encontrados'"
+          ></p>
         </div>
-
-        <div class="flex flex-col lg:flex-row gap-10">
-            <!-- BARRA LATERAL DE FILTROS -->
-            <aside class="w-full lg:w-64 flex-shrink-0">
-                <div class="flex justify-between items-center mb-4 lg:hidden">
-                    <span class="font-bold uppercase tracking-wider text-sm">Filtros</span>
-                </div>
-
-                <!-- Categoría -->
-                <div class="mb-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold uppercase tracking-wider text-sm">Categoría</h3>
-                        <button type="button" id="btn-limpiar-lateral" onclick="restablecerFiltros()" class="hidden text-xs font-bold text-blue-600 hover:underline">
-                            Limpiar todo
-                        </button>
-                    </div>
-                    <ul class="space-y-1" id="lista-categorias">
-                        <li><button type="button" onclick="filtrarCategoria('Todos', this)" class="cat-btn w-full text-left block bg-gray-900 text-white px-4 py-2.5 rounded text-sm font-medium transition-colors">Todos</button></li>
-                        <li><button type="button" onclick="filtrarCategoria('Polos', this)" class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors">Polos</button></li>
-                        <li><button type="button" onclick="filtrarCategoria('Hoodies', this)" class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors">Hoodies</button></li>
-                        <li><button type="button" onclick="filtrarCategoria('Pantalones', this)" class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors">Pantalones</button></li>
-                        <li><button type="button" onclick="filtrarCategoria('Chaquetas', this)" class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors">Chaquetas</button></li>
-                        <li><button type="button" onclick="filtrarCategoria('Shorts', this)" class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors">Shorts</button></li>
-                    </ul>
-                </div>
-
-                <!-- Talla -->
-                <div class="mb-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold uppercase tracking-wider text-sm">Talla</h3>
-                        <span id="etiqueta-talla-activa" class="text-xs text-blue-600 font-bold hidden"></span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" id="filtro-tallas">
-                        <button type="button" onclick="filtrarTalla('XS', this)" class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors">XS</button>
-                        <button type="button" onclick="filtrarTalla('S', this)" class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors">S</button>
-                        <button type="button" onclick="filtrarTalla('M', this)" class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors">M</button>
-                        <button type="button" onclick="filtrarTalla('L', this)" class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors">L</button>
-                        <button type="button" onclick="filtrarTalla('XL', this)" class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors">XL</button>
-                        <button type="button" onclick="filtrarTalla('2XL', this)" class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors">2XL</button>
-                    </div>
-                </div>
-
-                <!-- Color (Se llena automáticamente con los colores reales de tus productos + base) -->
-                <div class="mb-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold uppercase tracking-wider text-sm">Color</h3>
-                        <span id="etiqueta-color-activo" class="text-xs font-mono text-gray-500">Todos</span>
-                    </div>
-                    <div id="filtro-colores-contenedor" class="flex flex-wrap gap-3">
-                        <!-- Generado dinámicamente por JS según tus productos -->
-                    </div>
-                </div>
-
-                <!-- Precio Máximo -->
-                <div class="mb-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold uppercase tracking-wider text-sm">Precio Máximo:</h3>
-                        <span id="precio-max-valor" class="text-blue-600 font-bold text-sm">S/ 300</span>
-                    </div>
-                    <input type="range" id="rango-precio" min="50" max="300" step="5" value="300" 
-                           oninput="actualizarPrecioMaximo(this.value)"
-                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
-                    <div class="flex justify-between text-xs text-gray-500 mt-2">
-                        <span>S/ 50</span>
-                        <span id="precio-tope-label">S/ 300</span>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- CONTENEDOR DE PRODUCTOS -->
-            <div class="flex-grow">
-                <div id="grid-productos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
-                    <div class="producto-card group cursor-pointer" 
-                         th:each="producto, iterStat : ${productos}"
-                         th:data-index="${iterStat.index}"
-                         th:data-id="${producto.id}"
-                         th:data-nombre="${producto.nombre}"
-                         th:data-categoria="${producto.categoria}"
-                         th:data-precio="${producto.precio}"
-                         th:data-etiqueta="${producto.etiqueta != null ? producto.etiqueta : ''}"
-                         th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
-                         th:data-tallas="'XS,S,M,L,XL,2XL'">
-                        
-                        <div class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded">
-                            <span th:if="${producto.etiqueta != null and !producto.etiqueta.isEmpty()}" 
-                                  th:class="'absolute top-3 left-3 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10 ' + ${producto.claseEtiqueta}"
-                                  th:text="${producto.etiqueta}"></span>
-                            
-                            <img th:src="${producto.imagen}" th:alt="${producto.nombre}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            
-                            <!-- Overlay y botón al pasar el mouse (hover) -->
-                            <div class="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                                <button type="button"
-                                        th:data-id="${producto.id}"
-                                        th:data-nombre="${producto.nombre}"
-                                        th:data-categoria="${producto.categoria}"
-                                        th:data-precio="${producto.precio}"
-                                        th:data-precio-anterior="${producto.precioAnterior}"
-                                        th:data-imagen="${producto.imagen}"
-                                        th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
-                                        onclick="abrirModalInteres(this)"
-                                        class="w-full bg-white/95 hover:bg-black hover:text-white text-gray-900 font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2">
-                                    <span>agregar al carrito</span>
-                                    <i class="fas fa-arrow-right text-[11px]"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <p class="text-xs text-gray-500 uppercase tracking-widest mb-1" th:text="${producto.categoria}"></p>
-                        <h3 class="font-bold text-lg leading-tight mb-1" th:text="${producto.nombre}"></h3>
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="font-black text-lg" th:text="'S/ ' + ${producto.precio}"></span>
-                            <span th:if="${producto.precioAnterior != null}" class="text-gray-400 line-through text-sm" th:text="'S/ ' + ${producto.precioAnterior}"></span>
-                        </div>
-                        <div class="flex gap-1.5" th:if="${producto.colores != null}">
-                            <div th:each="color : ${producto.colores}" th:class="'w-4 h-4 rounded-full border border-gray-300 ' + ${color}"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mensaje cuando ningún producto coincide con los filtros -->
-                <div id="sin-resultados" class="hidden text-center py-20 px-4 bg-gray-50 rounded-2xl border border-gray-100">
-                    <i class="fas fa-search text-3xl text-gray-300 mb-3 block"></i>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">No encontramos prendas con esos filtros</h3>
-                    <p class="text-sm text-gray-500 mb-5">Prueba ajustando el rango de precio, el color o la categoría seleccionada.</p>
-                    <button type="button" onclick="restablecerFiltros()" class="bg-gray-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-lg transition-colors">
-                        Restablecer filtros
-                    </button>
-                </div>
-            </div>
+        <div class="mt-4 md:mt-0 w-full md:w-auto flex items-center gap-3">
+          <label
+            for="select-orden"
+            class="text-xs font-bold uppercase tracking-wider text-gray-400 hidden sm:block"
+            >Ordenar por:</label
+          >
+          <select
+            id="select-orden"
+            onchange="aplicarFiltrosYOrden()"
+            class="w-full md:w-48 border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white cursor-pointer"
+          >
+            <option value="relevancia">Relevancia</option>
+            <option value="menor-precio">Menor precio</option>
+            <option value="mayor-precio">Mayor precio</option>
+            <option value="nuevo">Lo más nuevo</option>
+          </select>
         </div>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-10">
+        <aside class="w-full lg:w-64 flex-shrink-0">
+          <div class="flex justify-between items-center mb-4 lg:hidden">
+            <span class="font-bold uppercase tracking-wider text-sm"
+              >Filtros</span
+            >
+          </div>
+
+          <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-bold uppercase tracking-wider text-sm">
+                Categoría
+              </h3>
+              <button
+                type="button"
+                id="btn-limpiar-lateral"
+                onclick="restablecerFiltros()"
+                class="hidden text-xs font-bold text-blue-600 hover:underline"
+              >
+                Limpiar todo
+              </button>
+            </div>
+            <ul class="space-y-1" id="lista-categorias">
+              <li>
+                <button
+                  type="button"
+                  onclick="filtrarCategoria('Todos', this)"
+                  class="cat-btn w-full text-left block bg-gray-900 text-white px-4 py-2.5 rounded text-sm font-medium transition-colors"
+                >
+                  Todos
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onclick="filtrarCategoria('Polos', this)"
+                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                >
+                  Polos
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onclick="filtrarCategoria('Hoodies', this)"
+                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                >
+                  Hoodies
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onclick="filtrarCategoria('Pantalones', this)"
+                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                >
+                  Pantalones
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onclick="filtrarCategoria('Chaquetas', this)"
+                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                >
+                  Chaquetas
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onclick="filtrarCategoria('Shorts', this)"
+                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                >
+                  Shorts
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-bold uppercase tracking-wider text-sm">Talla</h3>
+              <span
+                id="etiqueta-talla-activa"
+                class="text-xs text-blue-600 font-bold hidden"
+              ></span>
+            </div>
+            <div class="grid grid-cols-3 gap-2" id="filtro-tallas">
+              <button
+                type="button"
+                onclick="filtrarTalla('XS', this)"
+                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
+              >
+                XS
+              </button>
+              <button
+                type="button"
+                onclick="filtrarTalla('S', this)"
+                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
+              >
+                S
+              </button>
+              <button
+                type="button"
+                onclick="filtrarTalla('M', this)"
+                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
+              >
+                M
+              </button>
+              <button
+                type="button"
+                onclick="filtrarTalla('L', this)"
+                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
+              >
+                L
+              </button>
+              <button
+                type="button"
+                onclick="filtrarTalla('XL', this)"
+                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
+              >
+                XL
+              </button>
+              <button
+                type="button"
+                onclick="filtrarTalla('2XL', this)"
+                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
+              >
+                2XL
+              </button>
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-bold uppercase tracking-wider text-sm">Color</h3>
+              <span
+                id="etiqueta-color-activo"
+                class="text-xs font-mono text-gray-500"
+                >Todos</span
+              >
+            </div>
+            <div
+              id="filtro-colores-contenedor"
+              class="flex flex-wrap gap-3"
+            ></div>
+          </div>
+
+          <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-bold uppercase tracking-wider text-sm">
+                Precio Máximo:
+              </h3>
+              <span
+                id="precio-max-valor"
+                class="text-blue-600 font-bold text-sm"
+                >S/ 300</span
+              >
+            </div>
+            <input
+              type="range"
+              id="rango-precio"
+              min="50"
+              max="300"
+              step="5"
+              value="300"
+              oninput="actualizarPrecioMaximo(this.value)"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            />
+            <div class="flex justify-between text-xs text-gray-500 mt-2">
+              <span>S/ 50</span>
+              <span id="precio-tope-label">S/ 300</span>
+            </div>
+          </div>
+        </aside>
+
+        <div class="flex-grow">
+          <div
+            id="grid-productos"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10"
+          >
+            <div
+              class="producto-card group cursor-pointer"
+              th:each="producto, iterStat : ${productos}"
+              th:data-index="${iterStat.index}"
+              th:data-id="${producto.id}"
+              th:data-nombre="${producto.nombre}"
+              th:data-categoria="${producto.categoria}"
+              th:data-precio="${producto.precio}"
+              th:data-etiqueta="${producto.etiqueta != null ? producto.etiqueta : ''}"
+              th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
+              th:data-tallas="'XS,S,M,L,XL,2XL'"
+            >
+              <div
+                class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded"
+              >
+                <span
+                  th:if="${producto.etiqueta != null and !producto.etiqueta.isEmpty()}"
+                  th:class="'absolute top-3 left-3 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10 ' + ${producto.claseEtiqueta}"
+                  th:text="${producto.etiqueta}"
+                ></span>
+
+                <img
+                  th:src="${producto.imagen}"
+                  th:alt="${producto.nombre}"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+
+                <div
+                  class="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4"
+                >
+                  <button
+                    type="button"
+                    th:data-id="${producto.id}"
+                    th:data-nombre="${producto.nombre}"
+                    th:data-categoria="${producto.categoria}"
+                    th:data-precio="${producto.precio}"
+                    th:data-precio-anterior="${producto.precioAnterior}"
+                    th:data-imagen="${producto.imagen}"
+                    th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
+                    onclick="abrirModalInteres(this)"
+                    class="w-full bg-white/95 hover:bg-black hover:text-white text-gray-900 font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    <span>agregar al carrito</span>
+                    <i class="fas fa-arrow-right text-[11px]"></i>
+                  </button>
+                </div>
+              </div>
+
+              <p
+                class="text-xs text-gray-500 uppercase tracking-widest mb-1"
+                th:text="${producto.categoria}"
+              ></p>
+              <h3
+                class="font-bold text-lg leading-tight mb-1"
+                th:text="${producto.nombre}"
+              ></h3>
+              <div class="flex items-center gap-2 mb-2">
+                <span
+                  class="font-black text-lg"
+                  th:text="'S/ ' + ${producto.precio}"
+                ></span>
+                <span
+                  th:if="${producto.precioAnterior != null}"
+                  class="text-gray-400 line-through text-sm"
+                  th:text="'S/ ' + ${producto.precioAnterior}"
+                ></span>
+              </div>
+              <div class="flex gap-1.5" th:if="${producto.colores != null}">
+                <div
+                  th:each="color : ${producto.colores}"
+                  th:class="'w-4 h-4 rounded-full border border-gray-300 ' + ${color}"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="sin-resultados"
+            class="hidden text-center py-20 px-4 bg-gray-50 rounded-2xl border border-gray-100"
+          >
+            <i class="fas fa-search text-3xl text-gray-300 mb-3 block"></i>
+            <h3 class="text-lg font-bold text-gray-900 mb-1">
+              No encontramos prendas con esos filtros
+            </h3>
+            <p class="text-sm text-gray-500 mb-5">
+              Prueba ajustando el rango de precio, el color o la categoría
+              seleccionada.
+            </p>
+            <button
+              type="button"
+              onclick="restablecerFiltros()"
+              class="bg-gray-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-lg transition-colors"
+            >
+              Restablecer filtros
+            </button>
+          </div>
+        </div>
+      </div>
     </main>
 
-    <!-- MODAL DE SELECCIÓN DE COLOR Y CARRITO -->
-    <div id="modal-interes" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4">
-        <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden relative shadow-2xl">
-            <button type="button" onclick="cerrarModalInteres()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 hover:bg-gray-100 text-gray-500 hover:text-black flex items-center justify-center z-10 transition-colors">
-                <i class="fas fa-times"></i>
+    <div
+      id="modal-interes"
+      class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4"
+    >
+      <div
+        class="bg-white rounded-2xl w-full max-w-md overflow-hidden relative shadow-2xl"
+      >
+        <button
+          type="button"
+          onclick="cerrarModalInteres()"
+          class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/80 hover:bg-gray-100 text-gray-500 hover:text-black flex items-center justify-center z-10 transition-colors"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+
+        <form th:action="@{/carrito/agregar}" method="post" class="p-6">
+          <input type="hidden" id="modal-prod-id" name="productoId" />
+          <input
+            type="hidden"
+            id="modal-color-seleccionado"
+            name="color"
+            required
+          />
+          <input
+            type="hidden"
+            id="modal-talla-seleccionada"
+            name="talla"
+            value="M"
+          />
+
+          <div class="flex gap-4 items-center pb-5 border-b border-gray-100">
+            <img
+              id="modal-prod-img"
+              src=""
+              alt="Producto"
+              class="w-20 h-24 object-cover rounded-lg border border-gray-200 flex-shrink-0 bg-gray-100"
+            />
+            <div>
+              <span
+                id="modal-prod-cat"
+                class="text-[11px] font-bold uppercase tracking-widest text-blue-600 block mb-0.5"
+              ></span>
+              <h3
+                id="modal-prod-nombre"
+                class="text-xl font-black tracking-tight text-gray-900 leading-snug"
+              ></h3>
+              <div class="flex items-center gap-2 mt-1">
+                <span
+                  id="modal-prod-precio"
+                  class="font-black text-lg text-gray-900"
+                ></span>
+                <span
+                  id="modal-prod-precio-ant"
+                  class="text-gray-400 line-through text-sm hidden"
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="py-5 border-b border-gray-100">
+            <div class="flex justify-between items-center mb-3">
+              <label
+                class="block text-xs font-bold uppercase tracking-wider text-gray-700"
+                >Escoge el color de la prenda</label
+              >
+              <span
+                id="modal-color-etiqueta"
+                class="text-xs font-mono text-gray-500"
+              ></span>
+            </div>
+            <div
+              id="modal-colores-contenedor"
+              class="flex flex-wrap gap-3"
+            ></div>
+          </div>
+
+          <div class="py-4">
+            <label
+              class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2.5"
+              >Talla</label
+            >
+            <div class="grid grid-cols-6 gap-2" id="modal-tallas-contenedor">
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('XS', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                XS
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('S', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                S
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('M', this)"
+                class="talla-btn border-2 border-gray-900 bg-gray-900 text-white py-2 text-xs font-bold rounded transition-colors"
+              >
+                M
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('L', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                L
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('XL', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                XL
+              </button>
+              <button
+                type="button"
+                onclick="seleccionarTallaModal('2XL', this)"
+                class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors"
+              >
+                2XL
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-3">
+            <button
+              th:if="${session.usuarioId != null}"
+              type="submit"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              <span>Agregar al carrito</span>
             </button>
 
-            <form th:action="@{/carrito/agregar}" method="post" class="p-6">
-                <input type="hidden" id="modal-prod-id" name="productoId">
-                <input type="hidden" id="modal-color-seleccionado" name="color" required>
-                <input type="hidden" id="modal-talla-seleccionada" name="talla" value="M">
-
-                <div class="flex gap-4 items-center pb-5 border-b border-gray-100">
-                    <img id="modal-prod-img" src="" alt="Producto" class="w-20 h-24 object-cover rounded-lg border border-gray-200 flex-shrink-0 bg-gray-100">
-                    <div>
-                        <span id="modal-prod-cat" class="text-[11px] font-bold uppercase tracking-widest text-blue-600 block mb-0.5"></span>
-                        <h3 id="modal-prod-nombre" class="text-xl font-black tracking-tight text-gray-900 leading-snug"></h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span id="modal-prod-precio" class="font-black text-lg text-gray-900"></span>
-                            <span id="modal-prod-precio-ant" class="text-gray-400 line-through text-sm hidden"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Selector de color -->
-                <div class="py-5 border-b border-gray-100">
-                    <div class="flex justify-between items-center mb-3">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-gray-700">Escoge el color de la prenda</label>
-                        <span id="modal-color-etiqueta" class="text-xs font-mono text-gray-500"></span>
-                    </div>
-                    <div id="modal-colores-contenedor" class="flex flex-wrap gap-3">
-                    </div>
-                </div>
-
-                <!-- Selector de talla -->
-                <div class="py-4">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2.5">Talla</label>
-                    <div class="grid grid-cols-6 gap-2" id="modal-tallas-contenedor">
-                        <button type="button" onclick="seleccionarTallaModal('XS', this)" class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors">XS</button>
-                        <button type="button" onclick="seleccionarTallaModal('S', this)" class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors">S</button>
-                        <button type="button" onclick="seleccionarTallaModal('M', this)" class="talla-btn border-2 border-gray-900 bg-gray-900 text-white py-2 text-xs font-bold rounded transition-colors">M</button>
-                        <button type="button" onclick="seleccionarTallaModal('L', this)" class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors">L</button>
-                        <button type="button" onclick="seleccionarTallaModal('XL', this)" class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors">XL</button>
-                        <button type="button" onclick="seleccionarTallaModal('2XL', this)" class="talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors">2XL</button>
-                    </div>
-                </div>
-
-                <!-- Condicional: Si está logeada muestra "Agregar al carrito", si no, pide Iniciar Sesión -->
-                <div class="pt-3">
-                    <button th:if="${session.usuarioId != null}" type="submit" 
-                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Agregar al carrito</span>
-                    </button>
-
-                    <div th:if="${session.usuarioId == null}" class="space-y-2.5">
-                        <p class="text-xs text-center text-gray-500">Debes iniciar sesión para agregar prendas a tu carrito.</p>
-                        <button type="button" onclick="irALoginDesdeModal()" 
-                                class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span>Iniciar sesión para comprar</span>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
+            <div th:if="${session.usuarioId == null}" class="space-y-2.5">
+              <p class="text-xs text-center text-gray-500">
+                Debes iniciar sesión para agregar prendas a tu carrito.
+              </p>
+              <button
+                type="button"
+                onclick="irALoginDesdeModal()"
+                class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+              >
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Iniciar sesión para comprar</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script>
-        const estadoFiltros = {
-            categoria: 'Todos',
-            talla: null,
-            color: null,
-            precioMax: 300,
-            orden: 'relevancia'
+      const estadoFiltros = {
+        categoria: "Todos",
+        talla: null,
+        color: null,
+        precioMax: 300,
+        orden: "relevancia",
+      };
+
+      function claseTailwindAColorCSS(clase) {
+        const limpia = (clase || "").trim().toLowerCase();
+
+        const colores = {
+          "bg-white": { hex: "#FFFFFF", nombre: "Blanco" },
+          "bg-black": { hex: "#000000", nombre: "Negro" },
+          "bg-gray-200": { hex: "#E5E7EB", nombre: "Gris Claro" },
+          "bg-gray-400": { hex: "#9CA3AF", nombre: "Gris" },
+          "bg-gray-500": { hex: "#6B7280", nombre: "Gris Oscuro" },
+          "bg-red-500": { hex: "#EF4444", nombre: "Rojo" },
+          "bg-[#ff0000]": { hex: "#FF0000", nombre: "Rojo" },
+          "bg-[#8b7355]": { hex: "#8B7355", nombre: "Marrón" },
+          "bg-[#6b705c]": { hex: "#6B705C", nombre: "Verde Oliva" },
+          "bg-[#1b263b]": { hex: "#1B263B", nombre: "Azul Marino" },
+          "bg-[#fbff00]": { hex: "#FBFF00", nombre: "Amarillo" },
         };
 
-        function claseTailwindAColorCSS(clase) {
-            const limpia = (clase || '').trim().toLowerCase();
-
-            const colores = {
-                'bg-white': { hex: '#FFFFFF', nombre: 'Blanco' },
-                'bg-black': { hex: '#000000', nombre: 'Negro' },
-                'bg-gray-200': { hex: '#E5E7EB', nombre: 'Gris Claro' },
-                'bg-gray-400': { hex: '#9CA3AF', nombre: 'Gris' }, 
-                'bg-gray-500': { hex: '#6B7280', nombre: 'Gris Oscuro' },
-                'bg-red-500': { hex: '#EF4444', nombre: 'Rojo' },
-                'bg-[#ff0000]': { hex: '#FF0000', nombre: 'Rojo' },
-                'bg-[#8b7355]': { hex: '#8B7355', nombre: 'Marrón' }, 
-                'bg-[#6b705c]': { hex: '#6B705C', nombre: 'Verde Oliva' },
-                'bg-[#1b263b]': { hex: '#1B263B', nombre: 'Azul Marino' },
-                'bg-[#fbff00]': { hex: '#FBFF00', nombre: 'Amarillo' }
-            };
-
-            if (colores[limpia]) {
-                return { 
-                    hex: colores[limpia].hex, 
-                    nombre: colores[limpia].nombre, 
-                    clave: clase 
-                };
-            }
-
-            const match = limpia.match(/bg-\[(#[0-9a-f]{3,6})\]/);
-            if (match) {
-                const hexUpper = match[1].toUpperCase();
-                return { hex: hexUpper, nombre: 'Color ' + hexUpper, clave: clase };
-            }
-            
-            if (limpia.startsWith('#')) {
-                return { hex: limpia.toUpperCase(), nombre: 'Color ' + limpia.toUpperCase(), clave: clase };
-            }
-
-            return { hex: '#000000', nombre: clase, clave: clase };
+        if (colores[limpia]) {
+          return {
+            hex: colores[limpia].hex,
+            nombre: colores[limpia].nombre,
+            clave: clase,
+          };
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const tarjetas = Array.from(document.querySelectorAll('.producto-card'));
-            const mapaColores = new Map();
-            let maxPrecioDetectado = 300;
+        const match = limpia.match(/bg-\[(#[0-9a-f]{3,6})\]/);
+        if (match) {
+          const hexUpper = match[1].toUpperCase();
+          return { hex: hexUpper, nombre: "Color " + hexUpper, clave: clase };
+        }
 
-            tarjetas.forEach(card => {
-                const precio = parseFloat(card.dataset.precio) || 0;
-                if (precio > maxPrecioDetectado) maxPrecioDetectado = Math.ceil(precio / 10) * 10;
+        if (limpia.startsWith("#")) {
+          return {
+            hex: limpia.toUpperCase(),
+            nombre: "Color " + limpia.toUpperCase(),
+            clave: clase,
+          };
+        }
 
-                const coloresStr = card.dataset.colores || '';
-                coloresStr.split(',').map(c => c.trim()).filter(c => c !== '').forEach(clase => {
-                    const info = claseTailwindAColorCSS(clase);
-                    if (!mapaColores.has(info.hex)) {
-                        mapaColores.set(info.hex, info);
-                    }
-                });
-            });
+        return { hex: "#000000", nombre: clase, clave: clase };
+      }
 
-            // Ajustar el tope del slider si hay productos más caros que S/ 300
-            const sliderPrecio = document.getElementById('rango-precio');
-            sliderPrecio.max = maxPrecioDetectado;
-            sliderPrecio.value = maxPrecioDetectado;
-            estadoFiltros.precioMax = maxPrecioDetectado;
-            document.getElementById('precio-max-valor').textContent = 'S/ ' + maxPrecioDetectado;
-            document.getElementById('precio-tope-label').textContent = 'S/ ' + maxPrecioDetectado;
+      document.addEventListener("DOMContentLoaded", () => {
+        const tarjetas = Array.from(
+          document.querySelectorAll(".producto-card"),
+        );
+        const mapaColores = new Map();
+        let maxPrecioDetectado = 300;
 
-            // Renderizar círculos de filtro de color
-            const contenedorColoresFiltro = document.getElementById('filtro-colores-contenedor');
-            contenedorColoresFiltro.innerHTML = '';
+        tarjetas.forEach((card) => {
+          const precio = parseFloat(card.dataset.precio) || 0;
+          if (precio > maxPrecioDetectado)
+            maxPrecioDetectado = Math.ceil(precio / 10) * 10;
 
-            mapaColores.forEach(info => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.dataset.hex = info.hex;
-                btn.title = info.nombre;
-                btn.style.backgroundColor = info.hex;
-                btn.className = 'color-filtro-btn w-8 h-8 rounded-full border border-gray-300 transition-all focus:outline-none hover:scale-105';
-                btn.onclick = () => filtrarColor(info.hex, info.nombre, btn);
-                contenedorColoresFiltro.appendChild(btn);
+          const coloresStr = card.dataset.colores || "";
+          coloresStr
+            .split(",")
+            .map((c) => c.trim())
+            .filter((c) => c !== "")
+            .forEach((clase) => {
+              const info = claseTailwindAColorCSS(clase);
+              if (!mapaColores.has(info.hex)) {
+                mapaColores.set(info.hex, info);
+              }
             });
         });
 
-        function filtrarCategoria(categoria, btnElemento) {
-            estadoFiltros.categoria = categoria;
+        const sliderPrecio = document.getElementById("rango-precio");
+        sliderPrecio.max = maxPrecioDetectado;
+        sliderPrecio.value = maxPrecioDetectado;
+        estadoFiltros.precioMax = maxPrecioDetectado;
+        document.getElementById("precio-max-valor").textContent =
+          "S/ " + maxPrecioDetectado;
+        document.getElementById("precio-tope-label").textContent =
+          "S/ " + maxPrecioDetectado;
 
-            document.querySelectorAll('#lista-categorias .cat-btn').forEach(btn => {
-                btn.className = 'cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors';
-            });
-            btnElemento.className = 'cat-btn w-full text-left block bg-gray-900 text-white px-4 py-2.5 rounded text-sm font-medium transition-colors';
+        const contenedorColoresFiltro = document.getElementById(
+          "filtro-colores-contenedor",
+        );
+        contenedorColoresFiltro.innerHTML = "";
 
-            aplicarFiltrosYOrden();
+        mapaColores.forEach((info) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.dataset.hex = info.hex;
+          btn.title = info.nombre;
+          btn.style.backgroundColor = info.hex;
+          btn.className =
+            "color-filtro-btn w-8 h-8 rounded-full border border-gray-300 transition-all focus:outline-none hover:scale-105";
+          btn.onclick = () => filtrarColor(info.hex, info.nombre, btn);
+          contenedorColoresFiltro.appendChild(btn);
+        });
+      });
+
+      function filtrarCategoria(categoria, btnElemento) {
+        estadoFiltros.categoria = categoria;
+
+        document
+          .querySelectorAll("#lista-categorias .cat-btn")
+          .forEach((btn) => {
+            btn.className =
+              "cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors";
+          });
+        btnElemento.className =
+          "cat-btn w-full text-left block bg-gray-900 text-white px-4 py-2.5 rounded text-sm font-medium transition-colors";
+
+        aplicarFiltrosYOrden();
+      }
+
+      function filtrarTalla(talla, btnElemento) {
+        const etiquetaTalla = document.getElementById("etiqueta-talla-activa");
+
+        if (estadoFiltros.talla === talla) {
+          estadoFiltros.talla = null;
+          etiquetaTalla.classList.add("hidden");
+        } else {
+          estadoFiltros.talla = talla;
+          etiquetaTalla.textContent = "Talla " + talla;
+          etiquetaTalla.classList.remove("hidden");
         }
 
-        function filtrarTalla(talla, btnElemento) {
-            const etiquetaTalla = document.getElementById('etiqueta-talla-activa');
-
-            // Si hace clic en la misma talla activa, la desmarca
-            if (estadoFiltros.talla === talla) {
-                estadoFiltros.talla = null;
-                etiquetaTalla.classList.add('hidden');
+        document
+          .querySelectorAll("#filtro-tallas .talla-filtro-btn")
+          .forEach((btn) => {
+            if (btn.textContent.trim() === estadoFiltros.talla) {
+              btn.className =
+                "talla-filtro-btn border-2 border-gray-900 bg-gray-900 text-white py-2 text-sm font-bold text-center rounded transition-colors";
             } else {
-                estadoFiltros.talla = talla;
-                etiquetaTalla.textContent = 'Talla ' + talla;
-                etiquetaTalla.classList.remove('hidden');
+              btn.className =
+                "talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors";
             }
+          });
 
-            document.querySelectorAll('#filtro-tallas .talla-filtro-btn').forEach(btn => {
-                if (btn.textContent.trim() === estadoFiltros.talla) {
-                    btn.className = 'talla-filtro-btn border-2 border-gray-900 bg-gray-900 text-white py-2 text-sm font-bold text-center rounded transition-colors';
-                } else {
-                    btn.className = 'talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors';
-                }
-            });
+        aplicarFiltrosYOrden();
+      }
 
-            aplicarFiltrosYOrden();
+      function filtrarColor(hex, nombre, btnElemento) {
+        const etiquetaColor = document.getElementById("etiqueta-color-activo");
+
+        if (estadoFiltros.color === hex) {
+          estadoFiltros.color = null;
+          etiquetaColor.textContent = "Todos";
+        } else {
+          estadoFiltros.color = hex;
+          etiquetaColor.textContent = nombre;
         }
 
-        function filtrarColor(hex, nombre, btnElemento) {
-            const etiquetaColor = document.getElementById('etiqueta-color-activo');
-
-            // Si vuelve a pulsar el mismo color, desactiva el filtro de color
-            if (estadoFiltros.color === hex) {
-                estadoFiltros.color = null;
-                etiquetaColor.textContent = 'Todos';
+        document
+          .querySelectorAll("#filtro-colores-contenedor .color-filtro-btn")
+          .forEach((btn) => {
+            if (btn.dataset.hex === estadoFiltros.color) {
+              btn.classList.add(
+                "ring-2",
+                "ring-offset-2",
+                "ring-gray-900",
+                "scale-110",
+              );
             } else {
-                estadoFiltros.color = hex;
-                etiquetaColor.textContent = nombre;
+              btn.classList.remove(
+                "ring-2",
+                "ring-offset-2",
+                "ring-gray-900",
+                "scale-110",
+              );
             }
+          });
 
-            document.querySelectorAll('#filtro-colores-contenedor .color-filtro-btn').forEach(btn => {
-                if (btn.dataset.hex === estadoFiltros.color) {
-                    btn.classList.add('ring-2', 'ring-offset-2', 'ring-gray-900', 'scale-110');
-                } else {
-                    btn.classList.remove('ring-2', 'ring-offset-2', 'ring-gray-900', 'scale-110');
-                }
-            });
+        aplicarFiltrosYOrden();
+      }
 
-            aplicarFiltrosYOrden();
+      function actualizarPrecioMaximo(valor) {
+        estadoFiltros.precioMax = parseFloat(valor);
+        document.getElementById("precio-max-valor").textContent = "S/ " + valor;
+        aplicarFiltrosYOrden();
+      }
+
+      function aplicarFiltrosYOrden() {
+        const grid = document.getElementById("grid-productos");
+        const tarjetas = Array.from(grid.querySelectorAll(".producto-card"));
+        const ordenSeleccionado = document.getElementById("select-orden").value;
+        estadoFiltros.orden = ordenSeleccionado;
+
+        let visibles = 0;
+
+        tarjetas.forEach((card) => {
+          const catProd = (card.dataset.categoria || "").trim().toLowerCase();
+          const precioProd = parseFloat(card.dataset.precio) || 0;
+          const tallasProd = (card.dataset.tallas || "")
+            .split(",")
+            .map((t) => t.trim());
+          const coloresHexProd = (card.dataset.colores || "")
+            .split(",")
+            .map((c) => c.trim())
+            .filter((c) => c !== "")
+            .map((c) => claseTailwindAColorCSS(c).hex);
+
+          const cumpleCategoria =
+            estadoFiltros.categoria === "Todos" ||
+            catProd === estadoFiltros.categoria.toLowerCase();
+          const cumplePrecio = precioProd <= estadoFiltros.precioMax;
+          const cumpleTalla =
+            !estadoFiltros.talla || tallasProd.includes(estadoFiltros.talla);
+          const cumpleColor =
+            !estadoFiltros.color ||
+            coloresHexProd.includes(estadoFiltros.color);
+
+          if (cumpleCategoria && cumplePrecio && cumpleTalla && cumpleColor) {
+            card.classList.remove("hidden");
+            visibles++;
+          } else {
+            card.classList.add("hidden");
+          }
+        });
+
+        tarjetas.sort((a, b) => {
+          const precioA = parseFloat(a.dataset.precio) || 0;
+          const precioB = parseFloat(b.dataset.precio) || 0;
+          const indexA = parseInt(a.dataset.index) || 0;
+          const indexB = parseInt(b.dataset.index) || 0;
+          const idA = parseInt(a.dataset.id) || 0;
+          const idB = parseInt(b.dataset.id) || 0;
+          const esNuevoA =
+            (a.dataset.etiqueta || "").toLowerCase() === "nuevo" ? 1 : 0;
+          const esNuevoB =
+            (b.dataset.etiqueta || "").toLowerCase() === "nuevo" ? 1 : 0;
+
+          if (ordenSeleccionado === "menor-precio") return precioA - precioB;
+          if (ordenSeleccionado === "mayor-precio") return precioB - precioA;
+          if (ordenSeleccionado === "nuevo") {
+            if (esNuevoB !== esNuevoA) return esNuevoB - esNuevoA;
+            return idB - idA;
+          }
+          return indexA - indexB;
+        });
+
+        tarjetas.forEach((card) => grid.appendChild(card));
+
+        document.getElementById("contador-productos").textContent =
+          visibles === 1
+            ? "1 producto encontrado"
+            : `${visibles} productos encontrados`;
+
+        const sinResultados = document.getElementById("sin-resultados");
+        if (visibles === 0) {
+          sinResultados.classList.remove("hidden");
+          grid.classList.add("hidden");
+        } else {
+          sinResultados.classList.add("hidden");
+          grid.classList.remove("hidden");
         }
 
-        function actualizarPrecioMaximo(valor) {
-            estadoFiltros.precioMax = parseFloat(valor);
-            document.getElementById('precio-max-valor').textContent = 'S/ ' + valor;
-            aplicarFiltrosYOrden();
+        const sliderMax = parseFloat(
+          document.getElementById("rango-precio").max,
+        );
+        const hayFiltroActivo =
+          estadoFiltros.categoria !== "Todos" ||
+          estadoFiltros.talla !== null ||
+          estadoFiltros.color !== null ||
+          estadoFiltros.precioMax < sliderMax;
+        document
+          .getElementById("btn-limpiar-lateral")
+          .classList.toggle("hidden", !hayFiltroActivo);
+      }
+
+      function restablecerFiltros() {
+        const slider = document.getElementById("rango-precio");
+        slider.value = slider.max;
+        estadoFiltros.precioMax = parseFloat(slider.max);
+        document.getElementById("precio-max-valor").textContent =
+          "S/ " + slider.max;
+
+        estadoFiltros.talla = null;
+        document
+          .getElementById("etiqueta-talla-activa")
+          .classList.add("hidden");
+        document
+          .querySelectorAll("#filtro-tallas .talla-filtro-btn")
+          .forEach((btn) => {
+            btn.className =
+              "talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors";
+          });
+
+        estadoFiltros.color = null;
+        document.getElementById("etiqueta-color-activo").textContent = "Todos";
+        document
+          .querySelectorAll("#filtro-colores-contenedor .color-filtro-btn")
+          .forEach((btn) => {
+            btn.classList.remove(
+              "ring-2",
+              "ring-offset-2",
+              "ring-gray-900",
+              "scale-110",
+            );
+          });
+
+        document.getElementById("select-orden").value = "relevancia";
+
+        const btnTodos = document.querySelector("#lista-categorias .cat-btn");
+        filtrarCategoria("Todos", btnTodos);
+      }
+
+      function abrirModalInteres(btn) {
+        const id = btn.dataset.id;
+        const nombre = btn.dataset.nombre;
+        const categoria = btn.dataset.categoria;
+        const precio = btn.dataset.precio;
+        const precioAnt = btn.dataset.precioAnterior;
+        const imagen = btn.dataset.imagen;
+        const coloresRaw = btn.dataset.colores || "bg-black";
+
+        document.getElementById("modal-prod-id").value = id;
+        document.getElementById("modal-prod-nombre").textContent = nombre;
+        document.getElementById("modal-prod-cat").textContent = categoria;
+        document.getElementById("modal-prod-precio").textContent =
+          "S/ " + precio;
+        document.getElementById("modal-prod-img").src = imagen;
+
+        const precioAntEl = document.getElementById("modal-prod-precio-ant");
+        if (precioAnt && precioAnt !== "null" && precioAnt !== "") {
+          precioAntEl.textContent = "S/ " + precioAnt;
+          precioAntEl.classList.remove("hidden");
+        } else {
+          precioAntEl.classList.add("hidden");
         }
 
-        function aplicarFiltrosYOrden() {
-            const grid = document.getElementById('grid-productos');
-            const tarjetas = Array.from(grid.querySelectorAll('.producto-card'));
-            const ordenSeleccionado = document.getElementById('select-orden').value;
-            estadoFiltros.orden = ordenSeleccionado;
+        const contenedorColores = document.getElementById(
+          "modal-colores-contenedor",
+        );
+        contenedorColores.innerHTML = "";
 
-            let visibles = 0;
+        const listaColores = coloresRaw
+          .split(",")
+          .map((c) => c.trim())
+          .filter((c) => c !== "");
+        if (listaColores.length === 0) listaColores.push("bg-black");
 
-            tarjetas.forEach(card => {
-                const catProd = (card.dataset.categoria || '').trim().toLowerCase();
-                const precioProd = parseFloat(card.dataset.precio) || 0;
-                const tallasProd = (card.dataset.tallas || '').split(',').map(t => t.trim());
-                const coloresHexProd = (card.dataset.colores || '')
-                    .split(',')
-                    .map(c => c.trim())
-                    .filter(c => c !== '')
-                    .map(c => claseTailwindAColorCSS(c).hex);
+        let indicePreseleccionado = 0;
+        if (estadoFiltros.color) {
+          const idx = listaColores.findIndex(
+            (c) => claseTailwindAColorCSS(c).hex === estadoFiltros.color,
+          );
+          if (idx !== -1) indicePreseleccionado = idx;
+        }
 
-                const cumpleCategoria = estadoFiltros.categoria === 'Todos' || catProd === estadoFiltros.categoria.toLowerCase();
-                const cumplePrecio = precioProd <= estadoFiltros.precioMax;
-                const cumpleTalla = !estadoFiltros.talla || tallasProd.includes(estadoFiltros.talla);
-                const cumpleColor = !estadoFiltros.color || coloresHexProd.includes(estadoFiltros.color);
+        listaColores.forEach((claseColor, index) => {
+          const infoColor = claseTailwindAColorCSS(claseColor);
+          const botonColor = document.createElement("button");
+          botonColor.type = "button";
+          botonColor.className = `color-option w-9 h-9 rounded-full border border-gray-300 transition-all flex items-center justify-center focus:outline-none ${claseColor}`;
+          botonColor.style.backgroundColor = infoColor.hex;
+          botonColor.title = infoColor.nombre;
+          botonColor.onclick = () =>
+            seleccionarColorModal(claseColor, infoColor.nombre, botonColor);
 
-                if (cumpleCategoria && cumplePrecio && cumpleTalla && cumpleColor) {
-                    card.classList.remove('hidden');
-                    visibles++;
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
+          contenedorColores.appendChild(botonColor);
 
-            // Ordenar las tarjetas en el DOM
-            tarjetas.sort((a, b) => {
-                const precioA = parseFloat(a.dataset.precio) || 0;
-                const precioB = parseFloat(b.dataset.precio) || 0;
-                const indexA = parseInt(a.dataset.index) || 0;
-                const indexB = parseInt(b.dataset.index) || 0;
-                const idA = parseInt(a.dataset.id) || 0;
-                const idB = parseInt(b.dataset.id) || 0;
-                const esNuevoA = (a.dataset.etiqueta || '').toLowerCase() === 'nuevo' ? 1 : 0;
-                const esNuevoB = (b.dataset.etiqueta || '').toLowerCase() === 'nuevo' ? 1 : 0;
+          if (index === indicePreseleccionado) {
+            seleccionarColorModal(claseColor, infoColor.nombre, botonColor);
+          }
+        });
 
-                if (ordenSeleccionado === 'menor-precio') return precioA - precioB;
-                if (ordenSeleccionado === 'mayor-precio') return precioB - precioA;
-                if (ordenSeleccionado === 'nuevo') {
-                    if (esNuevoB !== esNuevoA) return esNuevoB - esNuevoA;
-                    return idB - idA;
-                }
-                return indexA - indexB; // relevancia (orden original)
-            });
-
-            tarjetas.forEach(card => grid.appendChild(card));
-
-            // Actualizar contador y estado vacío
-            document.getElementById('contador-productos').textContent = 
-                visibles === 1 ? '1 producto encontrado' : `${visibles} productos encontrados`;
-
-            const sinResultados = document.getElementById('sin-resultados');
-            if (visibles === 0) {
-                sinResultados.classList.remove('hidden');
-                grid.classList.add('hidden');
-            } else {
-                sinResultados.classList.add('hidden');
-                grid.classList.remove('hidden');
+        const tallaInicial = estadoFiltros.talla || "M";
+        document
+          .querySelectorAll("#modal-tallas-contenedor .talla-btn")
+          .forEach((b) => {
+            if (b.textContent.trim() === tallaInicial) {
+              seleccionarTallaModal(tallaInicial, b);
             }
+          });
 
-            // Mostrar u ocultar botón "Limpiar todo"
-            const sliderMax = parseFloat(document.getElementById('rango-precio').max);
-            const hayFiltroActivo = estadoFiltros.categoria !== 'Todos' || 
-                                    estadoFiltros.talla !== null || 
-                                    estadoFiltros.color !== null || 
-                                    estadoFiltros.precioMax < sliderMax;
-            document.getElementById('btn-limpiar-lateral').classList.toggle('hidden', !hayFiltroActivo);
+        document.getElementById("modal-interes").classList.remove("hidden");
+      }
+
+      function seleccionarColorModal(valorColor, etiquetaNombre, btnElemento) {
+        document.getElementById("modal-color-seleccionado").value = valorColor;
+        document.getElementById("modal-color-etiqueta").textContent =
+          etiquetaNombre;
+
+        document
+          .querySelectorAll("#modal-colores-contenedor .color-option")
+          .forEach((b) => {
+            b.classList.remove(
+              "ring-2",
+              "ring-offset-2",
+              "ring-blue-600",
+              "scale-110",
+            );
+          });
+
+        btnElemento.classList.add(
+          "ring-2",
+          "ring-offset-2",
+          "ring-blue-600",
+          "scale-110",
+        );
+      }
+
+      function seleccionarTallaModal(talla, btnElemento) {
+        document.getElementById("modal-talla-seleccionada").value = talla;
+        document
+          .querySelectorAll("#modal-tallas-contenedor .talla-btn")
+          .forEach((b) => {
+            b.className =
+              "talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors";
+          });
+        btnElemento.className =
+          "talla-btn border-2 border-gray-900 bg-gray-900 text-white py-2 text-xs font-bold rounded transition-colors";
+      }
+
+      function cerrarModalInteres() {
+        document.getElementById("modal-interes").classList.add("hidden");
+      }
+
+      function irALoginDesdeModal() {
+        cerrarModalInteres();
+        if (typeof openLoginModal === "function") {
+          openLoginModal();
         }
+      }
 
-        function restablecerFiltros() {
-            const slider = document.getElementById('rango-precio');
-            slider.value = slider.max;
-            estadoFiltros.precioMax = parseFloat(slider.max);
-            document.getElementById('precio-max-valor').textContent = 'S/ ' + slider.max;
-
-            estadoFiltros.talla = null;
-            document.getElementById('etiqueta-talla-activa').classList.add('hidden');
-            document.querySelectorAll('#filtro-tallas .talla-filtro-btn').forEach(btn => {
-                btn.className = 'talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors';
-            });
-
-            estadoFiltros.color = null;
-            document.getElementById('etiqueta-color-activo').textContent = 'Todos';
-            document.querySelectorAll('#filtro-colores-contenedor .color-filtro-btn').forEach(btn => {
-                btn.classList.remove('ring-2', 'ring-offset-2', 'ring-gray-900', 'scale-110');
-            });
-
-            document.getElementById('select-orden').value = 'relevancia';
-
-            const btnTodos = document.querySelector('#lista-categorias .cat-btn');
-            filtrarCategoria('Todos', btnTodos);
-        }
-
-        // --- LÓGICA DEL MODAL DE COMPRA ---
-        function abrirModalInteres(btn) {
-            const id = btn.dataset.id;
-            const nombre = btn.dataset.nombre;
-            const categoria = btn.dataset.categoria;
-            const precio = btn.dataset.precio;
-            const precioAnt = btn.dataset.precioAnterior;
-            const imagen = btn.dataset.imagen;
-            const coloresRaw = btn.dataset.colores || 'bg-black';
-
-            document.getElementById('modal-prod-id').value = id;
-            document.getElementById('modal-prod-nombre').textContent = nombre;
-            document.getElementById('modal-prod-cat').textContent = categoria;
-            document.getElementById('modal-prod-precio').textContent = 'S/ ' + precio;
-            document.getElementById('modal-prod-img').src = imagen;
-
-            const precioAntEl = document.getElementById('modal-prod-precio-ant');
-            if (precioAnt && precioAnt !== 'null' && precioAnt !== '') {
-                precioAntEl.textContent = 'S/ ' + precioAnt;
-                precioAntEl.classList.remove('hidden');
-            } else {
-                precioAntEl.classList.add('hidden');
-            }
-
-            const contenedorColores = document.getElementById('modal-colores-contenedor');
-            contenedorColores.innerHTML = '';
-
-            const listaColores = coloresRaw.split(',').map(c => c.trim()).filter(c => c !== '');
-            if (listaColores.length === 0) listaColores.push('bg-black');
-
-            let indicePreseleccionado = 0;
-            if (estadoFiltros.color) {
-                const idx = listaColores.findIndex(c => claseTailwindAColorCSS(c).hex === estadoFiltros.color);
-                if (idx !== -1) indicePreseleccionado = idx;
-            }
-
-            listaColores.forEach((claseColor, index) => {
-                const infoColor = claseTailwindAColorCSS(claseColor);
-                const botonColor = document.createElement('button');
-                botonColor.type = 'button';
-                botonColor.className = `color-option w-9 h-9 rounded-full border border-gray-300 transition-all flex items-center justify-center focus:outline-none ${claseColor}`;
-                botonColor.style.backgroundColor = infoColor.hex;
-                botonColor.title = infoColor.nombre;
-                botonColor.onclick = () => seleccionarColorModal(claseColor, infoColor.nombre, botonColor);
-
-                contenedorColores.appendChild(botonColor);
-
-                if (index === indicePreseleccionado) {
-                    seleccionarColorModal(claseColor, infoColor.nombre, botonColor);
-                }
-            });
-
-            // Si el usuario tenía filtrada una talla en el catálogo, preseleccionarla en el modal
-            const tallaInicial = estadoFiltros.talla || 'M';
-            document.querySelectorAll('#modal-tallas-contenedor .talla-btn').forEach(b => {
-                if (b.textContent.trim() === tallaInicial) {
-                    seleccionarTallaModal(tallaInicial, b);
-                }
-            });
-
-            document.getElementById('modal-interes').classList.remove('hidden');
-        }
-
-        function seleccionarColorModal(valorColor, etiquetaNombre, btnElemento) {
-            document.getElementById('modal-color-seleccionado').value = valorColor;
-            document.getElementById('modal-color-etiqueta').textContent = etiquetaNombre;
-
-            document.querySelectorAll('#modal-colores-contenedor .color-option').forEach(b => {
-                b.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-600', 'scale-110');
-            });
-
-            btnElemento.classList.add('ring-2', 'ring-offset-2', 'ring-blue-600', 'scale-110');
-        }
-
-        function seleccionarTallaModal(talla, btnElemento) {
-            document.getElementById('modal-talla-seleccionada').value = talla;
-            document.querySelectorAll('#modal-tallas-contenedor .talla-btn').forEach(b => {
-                b.className = 'talla-btn border border-gray-300 py-2 text-xs font-bold rounded hover:border-gray-900 transition-colors';
-            });
-            btnElemento.className = 'talla-btn border-2 border-gray-900 bg-gray-900 text-white py-2 text-xs font-bold rounded transition-colors';
-        }
-
-        function cerrarModalInteres() {
-            document.getElementById('modal-interes').classList.add('hidden');
-        }
-
-        function irALoginDesdeModal() {
+      document
+        .getElementById("modal-interes")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
             cerrarModalInteres();
-            if (typeof openLoginModal === 'function') {
-                openLoginModal();
-            }
-        }
-
-        document.getElementById('modal-interes').addEventListener('click', function(e) {
-            if (e.target === this) {
-                cerrarModalInteres();
-            }
+          }
         });
     </script>
-</body>
+  </body>
 </html>
