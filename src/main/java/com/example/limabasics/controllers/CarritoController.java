@@ -4,7 +4,6 @@ import com.example.limabasics.entities.Producto;
 import com.example.limabasics.repositories.ProductoRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +63,22 @@ public class CarritoController {
         session.setAttribute("carritoTotal", totalPrecio);
     }
 
-    private void procesarAgregar(Long productoId, String color, String talla, HttpSession session) {
+    @GetMapping
+    public String verCarrito(HttpSession session, Model model) {
+        List<ItemCarrito> carrito = obtenerCarrito(session);
+        actualizarContadores(session, carrito);
+        model.addAttribute("items", carrito);
+        return "cart";
+    }
+
+    @PostMapping("/agregar")
+    public String agregarProducto(
+            @RequestParam Long productoId,
+            @RequestParam(required = false, defaultValue = "bg-black") String color,
+            @RequestParam(required = false, defaultValue = "M") String talla,
+            HttpSession session,
+            HttpServletRequest request) {
+
         Producto producto = productoRepository.findById(productoId).orElse(null);
         if (producto != null) {
             List<ItemCarrito> carrito = obtenerCarrito(session);
@@ -85,45 +99,49 @@ public class CarritoController {
             }
             actualizarContadores(session, carrito);
         }
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/catalog");
     }
 
-    @GetMapping
-    public String verCarrito(HttpSession session, Model model) {
-        List<ItemCarrito> carrito = obtenerCarrito(session);
-        actualizarContadores(session, carrito);
-        model.addAttribute("items", carrito);
-        return "cart";
-    }
-
-    // Nuevo método AJAX para agregar sin recargar la página
     @PostMapping("/agregar-ajax")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> agregarProductoAjax(
+    public Map<String, Object> agregarProductoAjax(
             @RequestParam Long productoId,
             @RequestParam(required = false, defaultValue = "bg-black") String color,
             @RequestParam(required = false, defaultValue = "M") String talla,
             HttpSession session) {
 
-        procesarAgregar(productoId, color, talla, session);
-
         Map<String, Object> response = new HashMap<>();
-        response.put("ok", true);
-        response.put("carritoCantidad", session.getAttribute("carritoCantidad"));
-        response.put("carritoTotal", session.getAttribute("carritoTotal"));
-        return ResponseEntity.ok(response);
-    }
 
-    @PostMapping("/agregar")
-    public String agregarProducto(
-            @RequestParam Long productoId,
-            @RequestParam(required = false, defaultValue = "bg-black") String color,
-            @RequestParam(required = false, defaultValue = "M") String talla,
-            HttpSession session,
-            HttpServletRequest request) {
+        Producto producto = productoRepository.findById(productoId).orElse(null);
+        if (producto != null) {
+            List<ItemCarrito> carrito = obtenerCarrito(session);
+            boolean encontrado = false;
 
-        procesarAgregar(productoId, color, talla, session);
-        String referer = request.getHeader("Referer");
-        return "redirect:" + (referer != null ? referer : "/catalog");
+            for (ItemCarrito item : carrito) {
+                if (item.getProducto().getId().equals(productoId)
+                        && item.getColor().equals(color)
+                        && item.getTalla().equals(talla)) {
+                    item.setCantidad(item.getCantidad() + 1);
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                carrito.add(new ItemCarrito(producto, 1, color, talla));
+            }
+            actualizarContadores(session, carrito);
+
+            response.put("success", true);
+            response.put("carritoCantidad", session.getAttribute("carritoCantidad"));
+            response.put("carritoTotal", session.getAttribute("carritoTotal"));
+        } else {
+            response.put("success", false);
+        }
+
+        return response;
     }
 
     @PostMapping("/eliminar")
