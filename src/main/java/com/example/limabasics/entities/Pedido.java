@@ -24,7 +24,7 @@ public class Pedido {
 
     public Pedido() {
         this.fechaCreacion = LocalDateTime.now();
-        this.estado = "Completado";
+        this.estado = "Confirmado";
     }
 
     public Pedido(Long usuarioId, String detallesItems, Double total) {
@@ -32,7 +32,7 @@ public class Pedido {
         this.detallesItems = detallesItems;
         this.total = total;
         this.fechaCreacion = LocalDateTime.now();
-        this.estado = "Completado";
+        this.estado = "Confirmado";
     }
 
     public Long getId() { return id; }

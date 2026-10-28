@@ -1,7 +1,9 @@
 package com.example.limabasics.controllers;
 
+import com.example.limabasics.entities.Pedido;
 import com.example.limabasics.entities.Producto;
 import com.example.limabasics.entities.Usuario;
+import com.example.limabasics.repositories.PedidoRepository;
 import com.example.limabasics.repositories.ProductoRepository;
 import com.example.limabasics.repositories.UsuarioRepository;
 import jakarta.servlet.http.HttpSession;
@@ -9,16 +11,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
     private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final PedidoRepository pedidoRepository;
 
-    public AdminController(ProductoRepository productoRepository, UsuarioRepository usuarioRepository) {
+    public AdminController(ProductoRepository productoRepository, 
+                           UsuarioRepository usuarioRepository, 
+                           PedidoRepository pedidoRepository) {
         this.productoRepository = productoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.pedidoRepository = pedidoRepository;
     }
 
     private boolean esAdmin(HttpSession session) {
@@ -47,8 +55,23 @@ public class AdminController {
 
         model.addAttribute("productos", productoRepository.findAll());
         model.addAttribute("usuarios", usuarioRepository.findAll());
+        model.addAttribute("pedidos", pedidoRepository.findAll()); 
+        
         model.addAttribute("activeTab", tab);
         return "admin-dashboard";
+    }
+
+    @PostMapping("/pedidos/actualizar-estado")
+    public String actualizarEstadoPedido(@RequestParam Long id, @RequestParam String estado, HttpSession session) {
+        if (!esAdmin(session)) return "redirect:/";
+
+        Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
+        if (pedidoOpt.isPresent()) {
+            Pedido pedido = pedidoOpt.get();
+            pedido.setEstado(estado);
+            pedidoRepository.save(pedido);
+        }
+        return "redirect:/admin/dashboard?tab=pedidos";
     }
 
     @PostMapping("/productos/crear")

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByUsuarioIdOrderByFechaCreacionDesc(Long usuarioId);
+    List<Pedido> findAllByOrderByFechaCreacionDesc(); 
 }
