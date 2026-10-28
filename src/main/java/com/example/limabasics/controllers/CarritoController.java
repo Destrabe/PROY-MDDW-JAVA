@@ -47,7 +47,6 @@ public class CarritoController {
         session.setAttribute("carritoTotal", totalPrecio);
     }
 
-    // Convertimos la clase CSS al nombre real del color para guardarlo en la orden
     private String nombrarColor(String claseColor) {
         if (claseColor == null) return "Clásico";
         switch (claseColor.trim().toLowerCase()) {
@@ -123,7 +122,6 @@ public class CarritoController {
                 StringBuilder sb = new StringBuilder();
                 double subtotalItems = 0;
                 
-                // Formato para Figma: ImagenUrl|Nombre|Talla|Color|Cantidad|Precio
                 for (CarritoItem item : items) {
                     sb.append(item.getProducto().getImagen()).append("|")
                       .append(item.getProducto().getNombre()).append("|")
