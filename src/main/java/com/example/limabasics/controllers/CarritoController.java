@@ -1,6 +1,7 @@
 package com.example.limabasics.controllers;
 
 import com.example.limabasics.entities.CarritoItem;
+import com.example.limabasics.entities.DetallePedido;
 import com.example.limabasics.entities.Pedido;
 import com.example.limabasics.entities.Producto;
 import com.example.limabasics.repositories.CarritoItemRepository;
@@ -26,8 +27,8 @@ public class CarritoController {
     private final PedidoRepository pedidoRepository;
 
     public CarritoController(ProductoRepository productoRepository,
-                               CarritoItemRepository carritoItemRepository,
-                               PedidoRepository pedidoRepository) {
+                             CarritoItemRepository carritoItemRepository,
+                             PedidoRepository pedidoRepository) {
         this.productoRepository = productoRepository;
         this.carritoItemRepository = carritoItemRepository;
         this.pedidoRepository = pedidoRepository;
@@ -119,24 +120,28 @@ public class CarritoController {
         if (usuarioId != null) {
             List<CarritoItem> items = carritoItemRepository.findByUsuarioId(usuarioId);
             if (!items.isEmpty()) {
-                StringBuilder sb = new StringBuilder();
                 double subtotalItems = 0;
                 
+                Pedido nuevoPedido = new Pedido();
+                nuevoPedido.setUsuarioId(usuarioId);
+                nuevoPedido.setEstado("Confirmado");
+                
                 for (CarritoItem item : items) {
-                    sb.append(item.getProducto().getImagen()).append("|")
-                      .append(item.getProducto().getNombre()).append("|")
-                      .append(item.getTalla()).append("|")
-                      .append(nombrarColor(item.getColor())).append("|")
-                      .append(item.getCantidad()).append("|")
-                      .append(String.format(java.util.Locale.US, "%.2f", (double)item.getSubtotal())).append(";");
+                    DetallePedido detalle = new DetallePedido();
+                    detalle.setProducto(item.getProducto());
+                    detalle.setCantidad(item.getCantidad());
+                    detalle.setColor(nombrarColor(item.getColor()));
+                    detalle.setTalla(item.getTalla());
+                    detalle.setSubtotal((double) item.getSubtotal());
+                    
+                    nuevoPedido.addDetalle(detalle);
                     subtotalItems += item.getSubtotal();
                 }
 
                 double totalFinal = subtotalItems + 8.0;
+                nuevoPedido.setTotal(totalFinal);
 
-                Pedido nuevoPedido = new Pedido(usuarioId, sb.toString(), totalFinal);
                 pedidoRepository.save(nuevoPedido);
-
                 carritoItemRepository.deleteAll(items);
                 sincronizarContadoresSesion(session);
                 
@@ -156,7 +161,8 @@ public class CarritoController {
         if (usuarioId == null) {
             return "redirect:/";
         }
-        List<Pedido> pedidos = pedidoRepository.findByUsuarioIdOrderByFechaCreacionDesc(usuarioId);
+        List<Pedido> pedidos = pedidoRepository.findAllByOrderByFechaCreacionDesc();
+        pedidos.removeIf(p -> !p.getUsuarioId().equals(usuarioId));
         model.addAttribute("pedidos", pedidos);
         sincronizarContadoresSesion(session);
         return "orders";

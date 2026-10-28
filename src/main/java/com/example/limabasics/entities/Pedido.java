@@ -2,6 +2,8 @@ package com.example.limabasics.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "pedidos")
@@ -12,27 +14,28 @@ public class Pedido {
     private Long id;
 
     private Long usuarioId;
-
-    @Column(columnDefinition = "TEXT")
-    private String detallesItems; 
-
     private Double total;
-
     private String estado;
-
     private LocalDateTime fechaCreacion;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetallePedido> detalles = new ArrayList<>();
 
     public Pedido() {
         this.fechaCreacion = LocalDateTime.now();
         this.estado = "Confirmado";
     }
 
-    public Pedido(Long usuarioId, String detallesItems, Double total) {
+    public Pedido(Long usuarioId, Double total) {
         this.usuarioId = usuarioId;
-        this.detallesItems = detallesItems;
         this.total = total;
         this.fechaCreacion = LocalDateTime.now();
         this.estado = "Confirmado";
+    }
+
+    public void addDetalle(DetallePedido detalle) {
+        detalles.add(detalle);
+        detalle.setPedido(this);
     }
 
     public Long getId() { return id; }
@@ -40,9 +43,6 @@ public class Pedido {
 
     public Long getUsuarioId() { return usuarioId; }
     public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
-
-    public String getDetallesItems() { return detallesItems; }
-    public void setDetallesItems(String detallesItems) { this.detallesItems = detallesItems; }
 
     public Double getTotal() { return total; }
     public void setTotal(Double total) { this.total = total; }
@@ -52,4 +52,7 @@ public class Pedido {
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+
+    public List<DetallePedido> getDetalles() { return detalles; }
+    public void setDetalles(List<DetallePedido> detalles) { this.detalles = detalles; }
 }
