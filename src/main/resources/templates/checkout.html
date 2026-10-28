@@ -15,8 +15,12 @@
   >
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-10 w-full">
-      <div class="flex items-center justify-center mb-8 sm:mb-12 overflow-x-auto py-2">
+    <main
+      class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-10 w-full"
+    >
+      <div
+        class="flex items-center justify-center mb-8 sm:mb-12 overflow-x-auto py-2"
+      >
         <div class="flex items-center min-w-[280px]">
           <div class="flex flex-col items-center">
             <div
@@ -73,13 +77,17 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-        <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm">
+        <div
+          class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm"
+        >
           <form id="form-datos" onsubmit="irAPaso(2, event)">
             <h2 class="text-xl sm:text-2xl font-bold tracking-tight mb-6">
               Datos de facturación
             </h2>
 
-            <div class="inline-flex rounded-lg border border-gray-200 bg-gray-50 mb-6 overflow-hidden">
+            <div
+              class="inline-flex rounded-lg border border-gray-200 bg-gray-50 mb-6 overflow-hidden"
+            >
               <button
                 type="button"
                 id="btn-boleta"
@@ -103,7 +111,9 @@
                 >Tipo de documento</label
               >
               <div class="flex items-center gap-5">
-                <label class="inline-flex items-center gap-2 text-sm cursor-pointer">
+                <label
+                  class="inline-flex items-center gap-2 text-sm cursor-pointer"
+                >
                   <input
                     type="radio"
                     name="tipoDoc"
@@ -115,7 +125,9 @@
                   />
                   <span>DNI</span>
                 </label>
-                <label class="inline-flex items-center gap-2 text-sm cursor-pointer">
+                <label
+                  class="inline-flex items-center gap-2 text-sm cursor-pointer"
+                >
                   <input
                     type="radio"
                     name="tipoDoc"
@@ -156,7 +168,9 @@
                   placeholder="999000111"
                   maxlength="9"
                   minlength="9"
-                  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)"
+                  oninput="
+                    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)
+                  "
                   required
                   class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
                 />
@@ -254,7 +268,9 @@
                   <option value="Magdalena">Magdalena</option>
                   <option value="La Molina">La Molina</option>
                   <option value="Lima Cercado">Lima Cercado</option>
-                  <option value="San Juan de Lurigancho">San Juan de Lurigancho</option>
+                  <option value="San Juan de Lurigancho">
+                    San Juan de Lurigancho
+                  </option>
                   <option value="Los Olivos">Los Olivos</option>
                 </select>
               </div>
@@ -308,7 +324,10 @@
                     </p>
                   </div>
                 </div>
-                <span class="font-bold text-sm text-gray-900 sm:text-right pl-7 sm:pl-0">S/ 8.00</span>
+                <span
+                  class="font-bold text-sm text-gray-900 sm:text-right pl-7 sm:pl-0"
+                  >S/ 8.00</span
+                >
               </label>
 
               <label
@@ -332,7 +351,10 @@
                     </p>
                   </div>
                 </div>
-                <span class="font-bold text-sm text-gray-900 sm:text-right pl-7 sm:pl-0">S/ 15.00</span>
+                <span
+                  class="font-bold text-sm text-gray-900 sm:text-right pl-7 sm:pl-0"
+                  >S/ 15.00</span
+                >
               </label>
 
               <label
@@ -356,7 +378,10 @@
                     </p>
                   </div>
                 </div>
-                <span class="font-bold text-sm text-green-600 sm:text-right pl-7 sm:pl-0">Gratis</span>
+                <span
+                  class="font-bold text-sm text-green-600 sm:text-right pl-7 sm:pl-0"
+                  >Gratis</span
+                >
               </label>
             </div>
 
@@ -382,8 +407,12 @@
               Método de pago
             </h2>
 
-            <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-4 mb-6">
-              <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+            <div
+              class="bg-white p-6 rounded-xl border border-gray-200 space-y-4 mb-6"
+            >
+              <div
+                class="flex items-center justify-between border-b border-gray-100 pb-3"
+              >
                 <span class="text-sm font-bold text-gray-800"
                   >Tarjeta de Crédito o Débito</span
                 >
@@ -468,7 +497,9 @@
         </div>
 
         <div class="lg:col-span-5">
-          <div class="bg-white p-6 sm:p-7 rounded-2xl border border-gray-200 shadow-sm">
+          <div
+            class="bg-white p-6 sm:p-7 rounded-2xl border border-gray-200 shadow-sm"
+          >
             <h3 class="font-bold text-base text-gray-900 mb-5">
               Resumen del pedido
             </h3>
@@ -512,7 +543,9 @@
               </div>
             </div>
 
-            <div class="border-t border-gray-100 pt-4 space-y-2 text-xs sm:text-sm">
+            <div
+              class="border-t border-gray-100 pt-4 space-y-2 text-xs sm:text-sm"
+            >
               <div class="flex justify-between text-gray-500">
                 <span>Subtotal</span>
                 <span
@@ -528,9 +561,14 @@
                   >S/ 8.00</span
                 >
               </div>
-              <div id="fila-igv" class="flex justify-between text-gray-500 hidden">
+              <div
+                id="fila-igv"
+                class="flex justify-between text-gray-500 hidden"
+              >
                 <span>IGV (18%)</span>
-                <span id="resumen-igv" class="font-bold text-gray-900">S/ 0.00</span>
+                <span id="resumen-igv" class="font-bold text-gray-900"
+                  >S/ 0.00</span
+                >
               </div>
             </div>
 
@@ -560,7 +598,9 @@
       id="modal-exito"
       class="hidden fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4"
     >
-      <div class="bg-white rounded-2xl max-w-md w-full p-8 text-center shadow-2xl">
+      <div
+        class="bg-white rounded-2xl max-w-md w-full p-8 text-center shadow-2xl"
+      >
         <div
           class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4 text-2xl"
         >
@@ -616,7 +656,9 @@
       function seleccionarComprobante(tipo) {
         const btnBoleta = document.getElementById("btn-boleta");
         const btnFactura = document.getElementById("btn-factura");
-        const contenedorRazon = document.getElementById("contenedor-razon-social");
+        const contenedorRazon = document.getElementById(
+          "contenedor-razon-social",
+        );
         const inputRazon = document.getElementById("input-razon-social");
         const filaIgv = document.getElementById("fila-igv");
 
@@ -661,16 +703,22 @@
       function cambiarCostoEnvio(nuevoCosto, cardId) {
         costoEnvioActual = nuevoCosto;
 
-        ["card-envio-estandar", "card-envio-express", "card-envio-tienda"].forEach((id) => {
+        [
+          "card-envio-estandar",
+          "card-envio-express",
+          "card-envio-tienda",
+        ].forEach((id) => {
           const card = document.getElementById(id);
           if (card) {
-            card.className = "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer transition-all gap-3";
+            card.className =
+              "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer transition-all gap-3";
           }
         });
 
         const cardSeleccionada = document.getElementById(cardId);
         if (cardSeleccionada) {
-          cardSeleccionada.className = "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-[#1d4ed8] bg-white cursor-pointer transition-all gap-3";
+          cardSeleccionada.className =
+            "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-[#1d4ed8] bg-white cursor-pointer transition-all gap-3";
         }
 
         document.getElementById("resumen-envio").textContent =
@@ -683,16 +731,18 @@
       function recalcularTotales() {
         const subtotalEl = document.getElementById("resumen-subtotal");
         const subtotal = parseFloat(subtotalEl.dataset.subtotal) || 0;
-        
+
         let total = subtotal + costoEnvioActual;
 
         if (esFacturaActiva) {
           const igv = subtotal * 0.18;
-          document.getElementById("resumen-igv").textContent = "S/ " + igv.toFixed(2);
+          document.getElementById("resumen-igv").textContent =
+            "S/ " + igv.toFixed(2);
           total += igv;
         }
 
-        document.getElementById("resumen-total").textContent = "S/ " + total.toFixed(2);
+        document.getElementById("resumen-total").textContent =
+          "S/ " + total.toFixed(2);
       }
 
       function irAPaso(paso, event) {
@@ -701,15 +751,23 @@
         if (paso === 2) {
           const celularInput = document.getElementById("input-celular");
           if (celularInput.value.length !== 9) {
-            alert("Por favor, ingresa un número de celular válido de exactamente 9 dígitos.");
+            alert(
+              "Por favor, ingresa un número de celular válido de exactamente 9 dígitos.",
+            );
             celularInput.focus();
             return;
           }
         }
 
-        document.getElementById("form-datos").classList.toggle("hidden", paso !== 1);
-        document.getElementById("form-envio").classList.toggle("hidden", paso !== 2);
-        document.getElementById("form-pago").classList.toggle("hidden", paso !== 3);
+        document
+          .getElementById("form-datos")
+          .classList.toggle("hidden", paso !== 1);
+        document
+          .getElementById("form-envio")
+          .classList.toggle("hidden", paso !== 2);
+        document
+          .getElementById("form-pago")
+          .classList.toggle("hidden", paso !== 3);
 
         for (let i = 1; i <= 3; i++) {
           const circle = document.getElementById("step-circle-" + i);
@@ -749,19 +807,21 @@
 
         try {
           const res = await fetch("/checkout/procesar", { method: "POST" });
-          
+
           if (!res.ok) {
-              throw new Error("Error en el servidor");
+            throw new Error("Error en el servidor");
           }
 
           const data = await res.json();
-          
+
           if (data.success) {
             const badge = document.getElementById("cart-badge");
             if (badge) badge.classList.add("hidden");
             document.getElementById("modal-exito").classList.remove("hidden");
           } else {
-            alert("Tu sesión ha expirado o el carrito está vacío. Por favor, vuelve a iniciar sesión.");
+            alert(
+              "Tu sesión ha expirado o el carrito está vacío. Por favor, vuelve a iniciar sesión.",
+            );
             window.location.href = "/";
           }
         } catch (e) {

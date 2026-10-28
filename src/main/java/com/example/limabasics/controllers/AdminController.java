@@ -21,9 +21,9 @@ public class AdminController {
     private final UsuarioRepository usuarioRepository;
     private final PedidoRepository pedidoRepository;
 
-    public AdminController(ProductoRepository productoRepository, 
-                           UsuarioRepository usuarioRepository, 
-                           PedidoRepository pedidoRepository) {
+    public AdminController(ProductoRepository productoRepository,
+            UsuarioRepository usuarioRepository,
+            PedidoRepository pedidoRepository) {
         this.productoRepository = productoRepository;
         this.usuarioRepository = usuarioRepository;
         this.pedidoRepository = pedidoRepository;
@@ -34,7 +34,8 @@ public class AdminController {
     }
 
     private String obtenerClaseEtiqueta(String etiqueta) {
-        if (etiqueta == null || etiqueta.isBlank()) return null;
+        if (etiqueta == null || etiqueta.isBlank())
+            return null;
         return switch (etiqueta.trim()) {
             case "Nuevo" -> "bg-[#10b981]";
             case "Más vendido" -> "bg-blue-600";
@@ -55,15 +56,16 @@ public class AdminController {
 
         model.addAttribute("productos", productoRepository.findAll());
         model.addAttribute("usuarios", usuarioRepository.findAll());
-        model.addAttribute("pedidos", pedidoRepository.findAll()); 
-        
+        model.addAttribute("pedidos", pedidoRepository.findAll());
+
         model.addAttribute("activeTab", tab);
         return "admin-dashboard";
     }
 
     @PostMapping("/pedidos/actualizar-estado")
     public String actualizarEstadoPedido(@RequestParam Long id, @RequestParam String estado, HttpSession session) {
-        if (!esAdmin(session)) return "redirect:/";
+        if (!esAdmin(session))
+            return "redirect:/";
 
         Optional<Pedido> pedidoOpt = pedidoRepository.findById(id);
         if (pedidoOpt.isPresent()) {
@@ -85,7 +87,8 @@ public class AdminController {
             @RequestParam(required = false, defaultValue = "bg-white,bg-black") String coloresStr,
             HttpSession session) {
 
-        if (!esAdmin(session)) return "redirect:/";
+        if (!esAdmin(session))
+            return "redirect:/";
 
         String etiquetaLimpia = (etiqueta != null && !etiqueta.isBlank()) ? etiqueta.trim() : null;
         String claseEtiqueta = obtenerClaseEtiqueta(etiquetaLimpia);
@@ -98,8 +101,7 @@ public class AdminController {
                 nombre,
                 precio,
                 precioAnterior,
-                coloresStr != null && !coloresStr.isBlank() ? coloresStr.trim() : "bg-white,bg-black"
-        );
+                coloresStr != null && !coloresStr.isBlank() ? coloresStr.trim() : "bg-white,bg-black");
         productoRepository.save(nuevo);
         return "redirect:/admin/dashboard?tab=productos";
     }
@@ -116,7 +118,8 @@ public class AdminController {
             @RequestParam(required = false) String coloresStr,
             HttpSession session) {
 
-        if (!esAdmin(session)) return "redirect:/";
+        if (!esAdmin(session))
+            return "redirect:/";
 
         Producto prod = productoRepository.findById(id).orElse(null);
         if (prod != null) {
@@ -136,7 +139,8 @@ public class AdminController {
 
     @PostMapping("/productos/eliminar")
     public String eliminarProducto(@RequestParam Long id, HttpSession session) {
-        if (!esAdmin(session)) return "redirect:/";
+        if (!esAdmin(session))
+            return "redirect:/";
         productoRepository.deleteById(id);
         return "redirect:/admin/dashboard?tab=productos";
     }
@@ -150,7 +154,8 @@ public class AdminController {
             @RequestParam(required = false) String password,
             HttpSession session) {
 
-        if (!esAdmin(session)) return "redirect:/";
+        if (!esAdmin(session))
+            return "redirect:/";
 
         Usuario u = usuarioRepository.findById(id).orElse(null);
         if (u != null) {
@@ -174,7 +179,8 @@ public class AdminController {
 
     @PostMapping("/usuarios/eliminar")
     public String eliminarUsuario(@RequestParam Long id, HttpSession session) {
-        if (!esAdmin(session)) return "redirect:/";
+        if (!esAdmin(session))
+            return "redirect:/";
 
         Long idSesion = (Long) session.getAttribute("usuarioId");
         if (idSesion == null || !idSesion.equals(id)) {

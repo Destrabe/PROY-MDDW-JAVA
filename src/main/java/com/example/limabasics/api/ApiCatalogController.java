@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.limabasics.entities.Producto;
 import com.example.limabasics.repositories.ProductoRepository;
 
-@RestController 
+@RestController
 @RequestMapping("/api")
 public class ApiCatalogController {
     private final ProductoRepository productoRepository;
@@ -21,5 +21,5 @@ public class ApiCatalogController {
     public List<Producto> obtenerProductosJson() {
         return productoRepository.findAll();
     }
-    
+
 }

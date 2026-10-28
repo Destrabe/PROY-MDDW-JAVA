@@ -20,7 +20,8 @@ public class CarritoItem {
     private String color;
     private String talla;
 
-    public CarritoItem() {}
+    public CarritoItem() {
+    }
 
     public CarritoItem(Long usuarioId, Producto producto, int cantidad, String color, String talla) {
         this.usuarioId = usuarioId;
@@ -30,18 +31,53 @@ public class CarritoItem {
         this.talla = (talla != null && !talla.isEmpty()) ? talla : "M";
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public Long getUsuarioId() { return usuarioId; }
-    public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
-    public Producto getProducto() { return producto; }
-    public void setProducto(Producto producto) { this.producto = producto; }
-    public int getCantidad() { return cantidad; }
-    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
-    public String getColor() { return color; }
-    public void setColor(String color) { this.color = color; }
-    public String getTalla() { return talla; }
-    public void setTalla(String talla) { this.talla = talla; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getTalla() {
+        return talla;
+    }
+
+    public void setTalla(String talla) {
+        this.talla = talla;
+    }
 
     @Transient
     public int getSubtotal() {

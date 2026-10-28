@@ -24,18 +24,18 @@ public class NavegadorController {
     @GetMapping("/offers")
     public String offers(Model model) {
         model.addAttribute("ofertas", productoRepository.findByPrecioAnteriorIsNotNull());
-        return "offers"; 
+        return "offers";
     }
 
     @GetMapping("/about")
     public String about() {
-        return "about"; 
+        return "about";
     }
 
     @GetMapping("/contact")
     public String contact(Model model) {
-        String[] tiendas = {"Lima Centro", "San Miguel", "SJL"};
+        String[] tiendas = { "Lima Centro", "San Miguel", "SJL" };
         model.addAttribute("sedes", tiendas);
-        return "contact"; 
+        return "contact";
     }
 }

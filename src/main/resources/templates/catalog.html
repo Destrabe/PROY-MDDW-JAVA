@@ -490,17 +490,25 @@
       </div>
     </div>
 
-    <div id="toast-carrito" class="fixed bottom-6 right-6 z-[110] hidden transform translate-y-4 opacity-0 transition-all duration-300 bg-gray-900 text-white px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3">
-        <div class="w-7 h-7 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0">
-            <i class="fas fa-check text-sm"></i>
-        </div>
-        <div>
-            <p class="text-sm font-bold leading-tight">¡Agregado al carrito!</p>
-            <p id="toast-detalle" class="text-xs text-gray-400 mt-0.5"></p>
-        </div>
-        <a th:href="@{/cart}" class="ml-3 text-xs font-bold text-blue-400 hover:text-blue-300 underline uppercase tracking-wider">
-            Ver carrito
-        </a>
+    <div
+      id="toast-carrito"
+      class="fixed bottom-6 right-6 z-[110] hidden transform translate-y-4 opacity-0 transition-all duration-300 bg-gray-900 text-white px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3"
+    >
+      <div
+        class="w-7 h-7 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0"
+      >
+        <i class="fas fa-check text-sm"></i>
+      </div>
+      <div>
+        <p class="text-sm font-bold leading-tight">¡Agregado al carrito!</p>
+        <p id="toast-detalle" class="text-xs text-gray-400 mt-0.5"></p>
+      </div>
+      <a
+        th:href="@{/cart}"
+        class="ml-3 text-xs font-bold text-blue-400 hover:text-blue-300 underline uppercase tracking-wider"
+      >
+        Ver carrito
+      </a>
     </div>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
@@ -937,71 +945,77 @@
       }
 
       async function agregarAlCarritoSinRecargar(event) {
-          event.preventDefault();
+        event.preventDefault();
 
-          const form = document.getElementById('form-agregar-carrito');
-          const btnSubmit = document.getElementById('btn-submit-carrito');
-          const formData = new FormData(form);
-          const nombreProd = document.getElementById('modal-prod-nombre').textContent;
-          const tallaElegida = document.getElementById('modal-talla-seleccionada').value;
+        const form = document.getElementById("form-agregar-carrito");
+        const btnSubmit = document.getElementById("btn-submit-carrito");
+        const formData = new FormData(form);
+        const nombreProd =
+          document.getElementById("modal-prod-nombre").textContent;
+        const tallaElegida = document.getElementById(
+          "modal-talla-seleccionada",
+        ).value;
 
-          if (btnSubmit) btnSubmit.disabled = true;
+        if (btnSubmit) btnSubmit.disabled = true;
 
-          try {
-              const response = await fetch('/cart/agregar-ajax', {
-                  method: 'POST',
-                  body: new URLSearchParams(formData)
-              });
+        try {
+          const response = await fetch("/cart/agregar-ajax", {
+            method: "POST",
+            body: new URLSearchParams(formData),
+          });
 
-              if (response.ok) {
-                  const data = await response.json();
-                  actualizarBurbujaHeader(data.carritoCantidad);
-                  cerrarModalInteres();
-                  mostrarToast(`${nombreProd} (Talla ${tallaElegida})`);
-              }
-          } catch (error) {
-              console.error('Error al agregar al carrito:', error);
-          } finally {
-              if (btnSubmit) btnSubmit.disabled = false;
+          if (response.ok) {
+            const data = await response.json();
+            actualizarBurbujaHeader(data.carritoCantidad);
+            cerrarModalInteres();
+            mostrarToast(`${nombreProd} (Talla ${tallaElegida})`);
           }
+        } catch (error) {
+          console.error("Error al agregar al carrito:", error);
+        } finally {
+          if (btnSubmit) btnSubmit.disabled = false;
+        }
       }
 
       function actualizarBurbujaHeader(cantidad) {
-          let badge = document.getElementById('cart-badge') || document.querySelector('a[aria-label="Carrito"] span');
+        let badge =
+          document.getElementById("cart-badge") ||
+          document.querySelector('a[aria-label="Carrito"] span');
 
-          if (!badge) {
-              const linkCarrito = document.querySelector('a[aria-label="Carrito"]');
-              if (linkCarrito) {
-                  badge = document.createElement('span');
-                  badge.id = 'cart-badge';
-                  badge.className = 'absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center';
-                  linkCarrito.appendChild(badge);
-              }
+        if (!badge) {
+          const linkCarrito = document.querySelector('a[aria-label="Carrito"]');
+          if (linkCarrito) {
+            badge = document.createElement("span");
+            badge.id = "cart-badge";
+            badge.className =
+              "absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center";
+            linkCarrito.appendChild(badge);
           }
+        }
 
-          if (badge) {
-              badge.textContent = cantidad;
-              if (cantidad > 0) {
-                  badge.classList.remove('hidden');
-                  badge.classList.add('flex');
-              }
+        if (badge) {
+          badge.textContent = cantidad;
+          if (cantidad > 0) {
+            badge.classList.remove("hidden");
+            badge.classList.add("flex");
           }
+        }
       }
 
       function mostrarToast(textoDetalle) {
-          const toast = document.getElementById('toast-carrito');
-          document.getElementById('toast-detalle').textContent = textoDetalle;
+        const toast = document.getElementById("toast-carrito");
+        document.getElementById("toast-detalle").textContent = textoDetalle;
 
-          toast.classList.remove('hidden');
-          setTimeout(() => {
-              toast.classList.remove('translate-y-4', 'opacity-0');
-          }, 10);
+        toast.classList.remove("hidden");
+        setTimeout(() => {
+          toast.classList.remove("translate-y-4", "opacity-0");
+        }, 10);
 
-          if (toastTimeout) clearTimeout(toastTimeout);
-          toastTimeout = setTimeout(() => {
-              toast.classList.add('translate-y-4', 'opacity-0');
-              setTimeout(() => toast.classList.add('hidden'), 300);
-          }, 3000);
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.add("translate-y-4", "opacity-0");
+          setTimeout(() => toast.classList.add("hidden"), 300);
+        }, 3000);
       }
 
       document

@@ -16,7 +16,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Optional<Usuario> buscarPorEmail(String email) {
-        if (email == null) return Optional.empty();
+        if (email == null)
+            return Optional.empty();
         return usuarioRepository.findByEmailIgnoreCase(email.trim());
     }
 

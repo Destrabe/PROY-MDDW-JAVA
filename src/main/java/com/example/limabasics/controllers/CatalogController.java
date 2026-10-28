@@ -39,8 +39,8 @@ public class CatalogController {
         if (q != null && !q.isBlank()) {
             String query = q.toLowerCase();
             productos = productos.stream()
-                    .filter(p -> p.getNombre().toLowerCase().contains(query) || 
-                                 (p.getCategoria() != null && p.getCategoria().toLowerCase().contains(query)))
+                    .filter(p -> p.getNombre().toLowerCase().contains(query) ||
+                            (p.getCategoria() != null && p.getCategoria().toLowerCase().contains(query)))
                     .collect(Collectors.toList());
         }
 

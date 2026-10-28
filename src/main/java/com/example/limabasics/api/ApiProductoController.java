@@ -29,7 +29,7 @@ public class ApiProductoController {
     public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable Long id) {
         Optional<Producto> producto = productoRepository.findById(id);
         return producto.map(ResponseEntity::ok)
-                       .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -43,7 +43,6 @@ public class ApiProductoController {
         Producto guardado = productoRepository.save(nuevoProducto);
         return ResponseEntity.ok(guardado);
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto productoDetalles) {
@@ -67,7 +66,7 @@ public class ApiProductoController {
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
         if (productoRepository.existsById(id)) {
             productoRepository.deleteById(id);
-            return ResponseEntity.noContent().build(); 
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }

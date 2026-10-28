@@ -23,9 +23,11 @@ public class DetallePedido {
     private String talla;
     private Double subtotal;
 
-    public DetallePedido() {}
+    public DetallePedido() {
+    }
 
-    public DetallePedido(Pedido pedido, Producto producto, Integer cantidad, String color, String talla, Double subtotal) {
+    public DetallePedido(Pedido pedido, Producto producto, Integer cantidad, String color, String talla,
+            Double subtotal) {
         this.pedido = pedido;
         this.producto = producto;
         this.cantidad = cantidad;
@@ -34,24 +36,59 @@ public class DetallePedido {
         this.subtotal = subtotal;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Pedido getPedido() { return pedido; }
-    public void setPedido(Pedido pedido) { this.pedido = pedido; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Producto getProducto() { return producto; }
-    public void setProducto(Producto producto) { this.producto = producto; }
+    public Pedido getPedido() {
+        return pedido;
+    }
 
-    public Integer getCantidad() { return cantidad; }
-    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
 
-    public String getColor() { return color; }
-    public void setColor(String color) { this.color = color; }
+    public Producto getProducto() {
+        return producto;
+    }
 
-    public String getTalla() { return talla; }
-    public void setTalla(String talla) { this.talla = talla; }
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
 
-    public Double getSubtotal() { return subtotal; }
-    public void setSubtotal(Double subtotal) { this.subtotal = subtotal; }
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getTalla() {
+        return talla;
+    }
+
+    public void setTalla(String talla) {
+        this.talla = talla;
+    }
+
+    public Double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(Double subtotal) {
+        this.subtotal = subtotal;
+    }
 }
