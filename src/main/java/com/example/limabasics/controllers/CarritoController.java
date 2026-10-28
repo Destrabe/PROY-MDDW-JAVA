@@ -184,7 +184,17 @@ public class CarritoController {
         }
         List<Pedido> pedidos = pedidoRepository.findAllByOrderByFechaCreacionDesc();
         pedidos.removeIf(p -> !p.getUsuario().getId().equals(usuarioId));
+        
+        int totalProductos = 0;
+        for (Pedido p : pedidos) {
+            for (DetallePedido d : p.getDetalles()) {
+                totalProductos += d.getCantidad();
+            }
+        }
+        
         model.addAttribute("pedidos", pedidos);
+        model.addAttribute("totalProductos", totalProductos); 
+        
         sincronizarContadoresSesion(session);
         return "orders";
     }
