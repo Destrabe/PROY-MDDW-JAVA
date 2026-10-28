@@ -10,25 +10,34 @@ public class CarritoItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long usuarioId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    private int cantidad;
+    private Integer cantidad;
     private String color;
     private String talla;
 
     public CarritoItem() {
     }
 
-    public CarritoItem(Long usuarioId, Producto producto, int cantidad, String color, String talla) {
-        this.usuarioId = usuarioId;
+    public CarritoItem(Usuario usuario, Producto producto, Integer cantidad, String color, String talla) {
+        this.usuario = usuario;
         this.producto = producto;
         this.cantidad = cantidad;
-        this.color = (color != null && !color.isEmpty()) ? color : "bg-black";
-        this.talla = (talla != null && !talla.isEmpty()) ? talla : "M";
+        this.color = color;
+        this.talla = talla;
+    }
+
+    public Integer getSubtotal() {
+        if (producto != null && producto.getPrecio() != null && cantidad != null) {
+            return producto.getPrecio() * cantidad;
+        }
+        return 0;
     }
 
     public Long getId() {
@@ -39,12 +48,12 @@ public class CarritoItem {
         this.id = id;
     }
 
-    public Long getUsuarioId() {
-        return usuarioId;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setUsuarioId(Long usuarioId) {
-        this.usuarioId = usuarioId;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Producto getProducto() {
@@ -55,11 +64,11 @@ public class CarritoItem {
         this.producto = producto;
     }
 
-    public int getCantidad() {
+    public Integer getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -77,10 +86,5 @@ public class CarritoItem {
 
     public void setTalla(String talla) {
         this.talla = talla;
-    }
-
-    @Transient
-    public int getSubtotal() {
-        return producto != null ? producto.getPrecio() * cantidad : 0;
     }
 }

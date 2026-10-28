@@ -13,7 +13,10 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long usuarioId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
     private Double total;
     private String estado;
     private LocalDateTime fechaCreacion;
@@ -26,8 +29,8 @@ public class Pedido {
         this.estado = "Confirmado";
     }
 
-    public Pedido(Long usuarioId, Double total) {
-        this.usuarioId = usuarioId;
+    public Pedido(Usuario usuario, Double total) {
+        this.usuario = usuario;
         this.total = total;
         this.fechaCreacion = LocalDateTime.now();
         this.estado = "Confirmado";
@@ -46,12 +49,12 @@ public class Pedido {
         this.id = id;
     }
 
-    public Long getUsuarioId() {
-        return usuarioId;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setUsuarioId(Long usuarioId) {
-        this.usuarioId = usuarioId;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public Double getTotal() {

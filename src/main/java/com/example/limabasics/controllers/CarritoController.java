@@ -4,9 +4,11 @@ import com.example.limabasics.entities.CarritoItem;
 import com.example.limabasics.entities.DetallePedido;
 import com.example.limabasics.entities.Pedido;
 import com.example.limabasics.entities.Producto;
+import com.example.limabasics.entities.Usuario;
 import com.example.limabasics.repositories.CarritoItemRepository;
 import com.example.limabasics.repositories.PedidoRepository;
 import com.example.limabasics.repositories.ProductoRepository;
+import com.example.limabasics.repositories.UsuarioRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -25,13 +27,16 @@ public class CarritoController {
     private final ProductoRepository productoRepository;
     private final CarritoItemRepository carritoItemRepository;
     private final PedidoRepository pedidoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public CarritoController(ProductoRepository productoRepository,
             CarritoItemRepository carritoItemRepository,
-            PedidoRepository pedidoRepository) {
+            PedidoRepository pedidoRepository,
+            UsuarioRepository usuarioRepository) {
         this.productoRepository = productoRepository;
         this.carritoItemRepository = carritoItemRepository;
         this.pedidoRepository = pedidoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public void sincronizarContadoresSesion(HttpSession session) {
@@ -41,7 +46,7 @@ public class CarritoController {
             session.setAttribute("carritoTotal", 0);
             return;
         }
-        List<CarritoItem> items = carritoItemRepository.findByUsuarioId(usuarioId);
+        List<CarritoItem> items = carritoItemRepository.findByUsuario_Id(usuarioId);
         int totalItems = items.stream().mapToInt(CarritoItem::getCantidad).sum();
         int totalPrecio = items.stream().mapToInt(CarritoItem::getSubtotal).sum();
         session.setAttribute("carritoCantidad", totalItems);
@@ -80,19 +85,20 @@ public class CarritoController {
         }
     }
 
-    private void guardarOActualizarItem(Long usuarioId, Producto producto, String color, String talla) {
+    private void guardarOActualizarItem(Usuario usuario, Producto producto, String color, String talla) {
         String colorLimpio = (color != null && !color.isEmpty()) ? color : "bg-black";
         String tallaLimpia = (talla != null && !talla.isEmpty()) ? talla : "M";
 
         Optional<CarritoItem> existente = carritoItemRepository
-                .findByUsuarioIdAndProducto_IdAndColorAndTalla(usuarioId, producto.getId(), colorLimpio, tallaLimpia);
+                .findByUsuario_IdAndProducto_IdAndColorAndTalla(usuario.getId(), producto.getId(), colorLimpio,
+                        tallaLimpia);
 
         if (existente.isPresent()) {
             CarritoItem item = existente.get();
             item.setCantidad(item.getCantidad() + 1);
             carritoItemRepository.save(item);
         } else {
-            CarritoItem nuevo = new CarritoItem(usuarioId, producto, 1, colorLimpio, tallaLimpia);
+            CarritoItem nuevo = new CarritoItem(usuario, producto, 1, colorLimpio, tallaLimpia);
             carritoItemRepository.save(nuevo);
         }
     }
@@ -101,7 +107,7 @@ public class CarritoController {
     public String verCarrito(HttpSession session, Model model) {
         Long usuarioId = (Long) session.getAttribute("usuarioId");
         List<CarritoItem> carrito = (usuarioId != null)
-                ? carritoItemRepository.findByUsuarioId(usuarioId)
+                ? carritoItemRepository.findByUsuario_Id(usuarioId)
                 : Collections.emptyList();
 
         sincronizarContadoresSesion(session);
@@ -115,7 +121,7 @@ public class CarritoController {
         if (usuarioId == null) {
             return "redirect:/";
         }
-        List<CarritoItem> carrito = carritoItemRepository.findByUsuarioId(usuarioId);
+        List<CarritoItem> carrito = carritoItemRepository.findByUsuario_Id(usuarioId);
         if (carrito.isEmpty()) {
             return "redirect:/cart";
         }
@@ -131,12 +137,14 @@ public class CarritoController {
         Long usuarioId = (Long) session.getAttribute("usuarioId");
 
         if (usuarioId != null) {
-            List<CarritoItem> items = carritoItemRepository.findByUsuarioId(usuarioId);
-            if (!items.isEmpty()) {
+            Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
+            List<CarritoItem> items = carritoItemRepository.findByUsuario_Id(usuarioId);
+
+            if (usuario != null && !items.isEmpty()) {
                 double subtotalItems = 0;
 
                 Pedido nuevoPedido = new Pedido();
-                nuevoPedido.setUsuarioId(usuarioId);
+                nuevoPedido.setUsuario(usuario);
                 nuevoPedido.setEstado("Confirmado");
 
                 for (CarritoItem item : items) {
@@ -175,7 +183,7 @@ public class CarritoController {
             return "redirect:/";
         }
         List<Pedido> pedidos = pedidoRepository.findAllByOrderByFechaCreacionDesc();
-        pedidos.removeIf(p -> !p.getUsuarioId().equals(usuarioId));
+        pedidos.removeIf(p -> !p.getUsuario().getId().equals(usuarioId));
         model.addAttribute("pedidos", pedidos);
         sincronizarContadoresSesion(session);
         return "orders";
@@ -190,10 +198,11 @@ public class CarritoController {
             HttpServletRequest request) {
 
         Long usuarioId = (Long) session.getAttribute("usuarioId");
+        Usuario usuario = (usuarioId != null) ? usuarioRepository.findById(usuarioId).orElse(null) : null;
         Producto producto = productoRepository.findById(productoId).orElse(null);
 
-        if (usuarioId != null && producto != null) {
-            guardarOActualizarItem(usuarioId, producto, color, talla);
+        if (usuario != null && producto != null) {
+            guardarOActualizarItem(usuario, producto, color, talla);
             sincronizarContadoresSesion(session);
         }
 
@@ -211,10 +220,11 @@ public class CarritoController {
 
         Map<String, Object> response = new HashMap<>();
         Long usuarioId = (Long) session.getAttribute("usuarioId");
+        Usuario usuario = (usuarioId != null) ? usuarioRepository.findById(usuarioId).orElse(null) : null;
         Producto producto = productoRepository.findById(productoId).orElse(null);
 
-        if (usuarioId != null && producto != null) {
-            guardarOActualizarItem(usuarioId, producto, color, talla);
+        if (usuario != null && producto != null) {
+            guardarOActualizarItem(usuario, producto, color, talla);
             sincronizarContadoresSesion(session);
 
             response.put("success", true);
@@ -236,7 +246,7 @@ public class CarritoController {
 
         Long usuarioId = (Long) session.getAttribute("usuarioId");
         if (usuarioId != null) {
-            List<CarritoItem> items = carritoItemRepository.findByUsuarioId(usuarioId);
+            List<CarritoItem> items = carritoItemRepository.findByUsuario_Id(usuarioId);
             for (CarritoItem item : items) {
                 if (item.getProducto().getId().equals(productoId) &&
                         (color == null || item.getColor().equals(color)) &&

@@ -2,16 +2,14 @@ package com.example.limabasics.repositories;
 
 import com.example.limabasics.entities.CarritoItem;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface CarritoItemRepository extends JpaRepository<CarritoItem, Long> {
 
-    List<CarritoItem> findByUsuarioId(Long usuarioId);
+    List<CarritoItem> findByUsuario_Id(Long usuarioId);
 
-    Optional<CarritoItem> findByUsuarioIdAndProducto_IdAndColorAndTalla(
-            Long usuarioId, Long productoId, String color, String talla);
+    Optional<CarritoItem> findByUsuario_IdAndProducto_IdAndColorAndTalla(Long usuarioId, Long productoId, String color,
+            String talla);
 }
