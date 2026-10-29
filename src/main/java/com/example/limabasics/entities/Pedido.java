@@ -21,9 +21,19 @@ public class Pedido {
     private String estado;
     private LocalDateTime fechaCreacion;
 
+    private String tipoDocumento;
+    private String numeroDocumento;
+    private String nombres;
+    private String apellidos;
+    private String correo;
+    private String celular;
+
+    private String direccion;
+    private String distrito;
+    private String referencia;
+
     private String metodoEnvio;
     private Double costoEnvio;
-    private String direccionEnvio;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetallePedido> detalles = new ArrayList<>();
@@ -85,6 +95,78 @@ public class Pedido {
         this.fechaCreacion = fechaCreacion;
     }
 
+    public String getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
+    public String getNumeroDocumento() {
+        return numeroDocumento;
+    }
+
+    public void setNumeroDocumento(String numeroDocumento) {
+        this.numeroDocumento = numeroDocumento;
+    }
+
+    public String getNombres() {
+        return nombres;
+    }
+
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getDistrito() {
+        return distrito;
+    }
+
+    public void setDistrito(String distrito) {
+        this.distrito = distrito;
+    }
+
+    public String getReferencia() {
+        return referencia;
+    }
+
+    public void setReferencia(String referencia) {
+        this.referencia = referencia;
+    }
+
     public String getMetodoEnvio() {
         return metodoEnvio;
     }
@@ -99,14 +181,6 @@ public class Pedido {
 
     public void setCostoEnvio(Double costoEnvio) {
         this.costoEnvio = costoEnvio;
-    }
-
-    public String getDireccionEnvio() {
-        return direccionEnvio;
-    }
-
-    public void setDireccionEnvio(String direccionEnvio) {
-        this.direccionEnvio = direccionEnvio;
     }
 
     public List<DetallePedido> getDetalles() {

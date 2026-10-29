@@ -46,54 +46,35 @@ public class CarritoController {
             session.setAttribute("carritoTotal", 0);
             return;
         }
-        
         List<CarritoItem> items = carritoItemRepository.findByUsuario_Id(usuarioId);
-        
-        // Cuenta la cantidad de códigos distintos
-        int totalCodigos = items.size(); 
-        
+        int totalItems = items.stream().mapToInt(CarritoItem::getCantidad).sum();
         int totalPrecio = items.stream().mapToInt(CarritoItem::getSubtotal).sum();
-        
-        session.setAttribute("carritoCantidad", totalCodigos);
+        session.setAttribute("carritoCantidad", totalItems);
         session.setAttribute("carritoTotal", totalPrecio);
     }
 
     private String nombrarColor(String claseColor) {
         if (claseColor == null)
             return "Clásico";
-        switch (claseColor.trim().toLowerCase()) {
-            case "bg-white":
-                return "Blanco";
-            case "bg-black":
-                return "Negro";
-            case "bg-gray-200":
-                return "Gris Claro";
-            case "bg-gray-400":
-                return "Gris";
-            case "bg-gray-500":
-                return "Gris Oscuro";
-            case "bg-red-500":
-            case "bg-[#ff0000]":
-                return "Rojo";
-            case "bg-[#8b7355]":
-                return "Marrón";
-            case "bg-[#6b705c]":
-                return "Verde Kaki";
-            case "bg-[#1b263b]":
-                return "Azul Marino";
-            case "bg-[#ddbea9]":
-                return "Beige";
-            case "bg-[#fbff00]":
-                return "Amarillo";
-            default:
-                return "Clásico";
-        }
+        return switch (claseColor.trim().toLowerCase()) {
+            case "bg-white" -> "Blanco";
+            case "bg-black" -> "Negro";
+            case "bg-gray-200" -> "Gris Claro";
+            case "bg-gray-400" -> "Gris";
+            case "bg-gray-500" -> "Gris Oscuro";
+            case "bg-red-500", "bg-[#ff0000]" -> "Rojo";
+            case "bg-[#8b7355]" -> "Marrón";
+            case "bg-[#6b705c]" -> "Verde Kaki";
+            case "bg-[#1b263b]" -> "Azul Marino";
+            case "bg-[#ddbea9]" -> "Beige";
+            case "bg-[#fbff00]" -> "Amarillo";
+            default -> "Clásico";
+        };
     }
 
-    private void guardarOActualizarItem(Usuario usuario, Producto producto, String color, String talla, int cantidad) {
+    private void guardarOActualizarItem(Usuario usuario, Producto producto, String color, String talla) {
         String colorLimpio = (color != null && !color.isEmpty()) ? color : "bg-black";
         String tallaLimpia = (talla != null && !talla.isEmpty()) ? talla : "M";
-        int cantidadAgregar = (cantidad > 0) ? cantidad : 1;
 
         Optional<CarritoItem> existente = carritoItemRepository
                 .findByUsuario_IdAndProducto_IdAndColorAndTalla(usuario.getId(), producto.getId(), colorLimpio,
@@ -101,10 +82,10 @@ public class CarritoController {
 
         if (existente.isPresent()) {
             CarritoItem item = existente.get();
-            item.setCantidad(item.getCantidad() + cantidadAgregar);
+            item.setCantidad(item.getCantidad() + 1);
             carritoItemRepository.save(item);
         } else {
-            CarritoItem nuevo = new CarritoItem(usuario, producto, cantidadAgregar, colorLimpio, tallaLimpia);
+            CarritoItem nuevo = new CarritoItem(usuario, producto, 1, colorLimpio, tallaLimpia);
             carritoItemRepository.save(nuevo);
         }
     }
@@ -138,7 +119,20 @@ public class CarritoController {
 
     @PostMapping("/checkout/procesar")
     @ResponseBody
-    public Map<String, Object> procesarCompra(HttpSession session) {
+    public Map<String, Object> procesarCompra(
+            @RequestParam(required = false) String tipoDocumento,
+            @RequestParam(required = false) String numeroDocumento,
+            @RequestParam(required = false) String nombres,
+            @RequestParam(required = false) String apellidos,
+            @RequestParam(required = false) String celular,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String direccion,
+            @RequestParam(required = false) String distrito,
+            @RequestParam(required = false) String referencia,
+            @RequestParam(required = false, defaultValue = "Envío Estándar en Lima") String metodoEnvio,
+            @RequestParam(required = false, defaultValue = "8.0") Double costoEnvio,
+            HttpSession session) {
+
         Map<String, Object> response = new HashMap<>();
         Long usuarioId = (Long) session.getAttribute("usuarioId");
 
@@ -153,6 +147,26 @@ public class CarritoController {
                 nuevoPedido.setUsuario(usuario);
                 nuevoPedido.setEstado("Confirmado");
 
+                nuevoPedido.setTipoDocumento(tipoDocumento);
+                nuevoPedido.setNumeroDocumento(numeroDocumento);
+                nuevoPedido.setNombres(nombres);
+                nuevoPedido.setApellidos(apellidos);
+                nuevoPedido.setCelular(celular);
+                nuevoPedido.setCorreo(correo);
+
+                nuevoPedido.setMetodoEnvio(metodoEnvio);
+                nuevoPedido.setCostoEnvio(costoEnvio);
+
+                if ("Retiro en tienda Lima Basics".equals(metodoEnvio)) {
+                    nuevoPedido.setDireccion("Av. Larco 821");
+                    nuevoPedido.setDistrito("Miraflores");
+                    nuevoPedido.setReferencia("Tienda Lima Basics");
+                } else {
+                    nuevoPedido.setDireccion(direccion);
+                    nuevoPedido.setDistrito(distrito);
+                    nuevoPedido.setReferencia(referencia);
+                }
+
                 for (CarritoItem item : items) {
                     DetallePedido detalle = new DetallePedido();
                     detalle.setProducto(item.getProducto());
@@ -165,7 +179,7 @@ public class CarritoController {
                     subtotalItems += item.getSubtotal();
                 }
 
-                double totalFinal = subtotalItems + 8.0;
+                double totalFinal = subtotalItems + costoEnvio;
                 nuevoPedido.setTotal(totalFinal);
 
                 pedidoRepository.save(nuevoPedido);
@@ -188,19 +202,20 @@ public class CarritoController {
         if (usuarioId == null) {
             return "redirect:/";
         }
+
         List<Pedido> pedidos = pedidoRepository.findAllByOrderByFechaCreacionDesc();
         pedidos.removeIf(p -> !p.getUsuario().getId().equals(usuarioId));
-        
+
         int totalProductos = 0;
         for (Pedido p : pedidos) {
             for (DetallePedido d : p.getDetalles()) {
                 totalProductos += d.getCantidad();
             }
         }
-        
+
         model.addAttribute("pedidos", pedidos);
-        model.addAttribute("totalProductos", totalProductos); 
-        
+        model.addAttribute("totalProductos", totalProductos);
+
         sincronizarContadoresSesion(session);
         return "orders";
     }
@@ -210,7 +225,6 @@ public class CarritoController {
             @RequestParam Long productoId,
             @RequestParam(required = false, defaultValue = "bg-black") String color,
             @RequestParam(required = false, defaultValue = "M") String talla,
-            @RequestParam(defaultValue = "1") int cantidad,
             HttpSession session,
             HttpServletRequest request) {
 
@@ -219,7 +233,7 @@ public class CarritoController {
         Producto producto = productoRepository.findById(productoId).orElse(null);
 
         if (usuario != null && producto != null) {
-            guardarOActualizarItem(usuario, producto, color, talla, cantidad);
+            guardarOActualizarItem(usuario, producto, color, talla);
             sincronizarContadoresSesion(session);
         }
 
@@ -233,7 +247,6 @@ public class CarritoController {
             @RequestParam Long productoId,
             @RequestParam(required = false, defaultValue = "bg-black") String color,
             @RequestParam(required = false, defaultValue = "M") String talla,
-            @RequestParam(defaultValue = "1") int cantidad,
             HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
@@ -242,7 +255,7 @@ public class CarritoController {
         Producto producto = productoRepository.findById(productoId).orElse(null);
 
         if (usuario != null && producto != null) {
-            guardarOActualizarItem(usuario, producto, color, talla, cantidad);
+            guardarOActualizarItem(usuario, producto, color, talla);
             sincronizarContadoresSesion(session);
 
             response.put("success", true);
@@ -253,36 +266,6 @@ public class CarritoController {
         }
 
         return response;
-    }
-
-    @PostMapping("/cart/actualizar")
-    public String actualizarCantidad(
-            @RequestParam Long productoId,
-            @RequestParam String color,
-            @RequestParam String talla,
-            @RequestParam int cantidad,
-            HttpSession session) {
-
-        Long usuarioId = (Long) session.getAttribute("usuarioId");
-        if (usuarioId != null) {
-            List<CarritoItem> items = carritoItemRepository.findByUsuario_Id(usuarioId);
-            for (CarritoItem item : items) {
-                if (item.getProducto().getId().equals(productoId) &&
-                        item.getColor().equals(color) &&
-                        item.getTalla().equals(talla)) {
-                    
-                    if (cantidad > 0) {
-                        item.setCantidad(cantidad);
-                        carritoItemRepository.save(item);
-                    } else {
-                        carritoItemRepository.delete(item);
-                    }
-                    break;
-                }
-            }
-            sincronizarContadoresSesion(session);
-        }
-        return "redirect:/cart";
     }
 
     @PostMapping("/cart/eliminar")
