@@ -35,8 +35,9 @@
         <div>
           <span
             class="text-[11px] font-bold tracking-[0.15em] text-blue-500 uppercase block mb-3"
-            >Panel de Control</span
           >
+            Panel de Control
+          </span>
           <h1 class="text-4xl sm:text-5xl font-black tracking-tight mb-4">
             Dashboard Admin
           </h1>
@@ -464,7 +465,7 @@
                     >Información de Envío</span
                   >
                   <p class="text-sm font-bold text-blue-600 mb-0.5">
-                    <i class="fas fa-truck mr-1.5"></i> Envío Estándar
+                    <i class="fas fa-truck mr-1.5"></i> Envío Estándar (S/ 8.00)
                   </p>
                   <p class="text-xs text-gray-500 mt-1">
                     Dirección: Av. Larco 821, Miraflores, Lima
@@ -479,11 +480,12 @@
                   >
                   <p
                     class="text-sm font-bold text-gray-900 mb-0.5"
-                    th:text="'ID Usuario: #' + ${pedido.usuarioId}"
+                    th:text="${pedido.usuario.nombre}"
                   ></p>
-                  <p class="text-xs text-gray-500 mt-1">
-                    Verificado en base de datos
-                  </p>
+                  <p
+                    class="text-xs text-gray-500 mt-1"
+                    th:text="'ID: #' + ${pedido.usuario.id} + ' · ' + ${pedido.usuario.email}"
+                  ></p>
                 </div>
               </div>
             </div>
@@ -504,9 +506,10 @@
           </div>
           <span
             class="text-xs bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg font-medium hidden sm:block"
-            >El registro de nuevas cuentas se realiza desde el formulario
-            público.</span
           >
+            El registro de nuevas cuentas se realiza desde el formulario
+            público.
+          </span>
         </div>
 
         <div
