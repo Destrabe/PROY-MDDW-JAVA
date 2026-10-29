@@ -716,7 +716,12 @@
                     placeholder="MM/AA"
                     maxlength="5"
                     autocomplete="cc-exp"
-                    oninput="this.value = this.value.replace(/[^0-9\/]/g, '')"
+                    oninput="
+                      let v = this.value.replace(/\D/g, '');
+                      this.value =
+                        v.substring(0, 2) +
+                        (v.length > 2 ? '/' + v.substring(2, 4) : '');
+                    "
                     required
                     class="w-full bg-[#f9fafb] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-200 focus:border-[#1d4ed8] transition-colors"
                   />
@@ -1149,19 +1154,6 @@
 
         formData.append("metodoEnvio", metodo);
         formData.append("costoEnvio", costo);
-
-        const numeroTarjeta =
-          document.getElementById("input-numero-tarjeta")?.value || "";
-        const vencimientoTarjeta =
-          document.getElementById("input-vencimiento")?.value || "";
-        const cvcTarjeta = document.getElementById("input-cvc")?.value || "";
-        const nombreTarjeta =
-          document.getElementById("input-nombre-tarjeta")?.value || "";
-
-        formData.append("numeroTarjeta", numeroTarjeta);
-        formData.append("vencimientoTarjeta", vencimientoTarjeta);
-        formData.append("cvcTarjeta", cvcTarjeta);
-        formData.append("nombreTarjeta", nombreTarjeta);
 
         try {
           const res = await fetch("/checkout/procesar", {
