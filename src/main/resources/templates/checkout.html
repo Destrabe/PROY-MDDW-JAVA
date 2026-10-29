@@ -776,23 +776,22 @@
                   >
                     <i class="fas fa-tshirt text-gray-300"></i>
                   </div>
-                  <span
-                    class="absolute -top-2 -right-2 bg-gray-900 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white"
-                    th:text="${item.cantidad}"
-                    >1</span
-                  >
+                  <!-- Se eliminó el badge flotante con el número de cantidad -->
                 </div>
                 <div class="flex-grow flex flex-col justify-center">
                   <h4
                     class="font-bold text-sm text-gray-900 leading-tight mb-1"
                     th:text="${item.producto.nombre}"
                   ></h4>
+                  <!-- Se actualizó el texto para incluir Cantidad junto a Color y Talla -->
                   <p class="text-[11px] text-gray-500 font-medium">
                     <span
                       th:text="'Color · ' + (${item.color == 'bg-white' ? 'Blanco' : item.color == 'bg-black' ? 'Negro' : 'Elegido'})"
                     ></span>
                     <span class="mx-1">|</span>
                     <span th:text="'Talla · ' + ${item.talla}"></span>
+                    <span class="mx-1">|</span>
+                    <span th:text="'Cantidad · ' + ${item.cantidad}"></span>
                   </p>
                 </div>
                 <div class="flex flex-col justify-center items-end">

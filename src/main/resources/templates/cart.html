@@ -64,11 +64,6 @@
                 <div
                   class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 mt-1.5"
                 >
-                  <span
-                    >Cantidad:
-                    <strong th:text="${item.cantidad}">1</strong></span
-                  >
-                  <span>·</span>
                   <span>Talla: <strong th:text="${item.talla}">M</strong></span>
                   <span>·</span>
                   <span class="flex items-center gap-1">
@@ -78,10 +73,38 @@
                     ></span>
                   </span>
                 </div>
-                <p
-                  class="font-black text-blue-600 text-base sm:text-lg mt-2"
-                  th:text="'S/ ' + ${item.subtotal}"
-                ></p>
+
+                <!-- Selector editable de cantidad -->
+                <div class="flex items-center gap-3 mt-3">
+                  <div class="inline-flex items-center border border-gray-300 rounded-lg overflow-hidden bg-gray-50">
+                    <form th:action="@{/cart/actualizar}" method="post" class="inline">
+                      <input type="hidden" name="productoId" th:value="${item.producto.id}" />
+                      <input type="hidden" name="color" th:value="${item.color}" />
+                      <input type="hidden" name="talla" th:value="${item.talla}" />
+                      <input type="hidden" name="cantidad" th:value="${item.cantidad - 1}" />
+                      <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-minus text-[10px]"></i>
+                      </button>
+                    </form>
+
+                    <span class="w-9 text-center text-xs font-bold text-gray-900" th:text="${item.cantidad}">1</span>
+
+                    <form th:action="@{/cart/actualizar}" method="post" class="inline">
+                      <input type="hidden" name="productoId" th:value="${item.producto.id}" />
+                      <input type="hidden" name="color" th:value="${item.color}" />
+                      <input type="hidden" name="talla" th:value="${item.talla}" />
+                      <input type="hidden" name="cantidad" th:value="${item.cantidad + 1}" />
+                      <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-plus text-[10px]"></i>
+                      </button>
+                    </form>
+                  </div>
+
+                  <p
+                    class="font-black text-blue-600 text-base sm:text-lg"
+                    th:text="'S/ ' + ${item.subtotal}"
+                  ></p>
+                </div>
               </div>
             </div>
 
