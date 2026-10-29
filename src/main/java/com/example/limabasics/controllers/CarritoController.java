@@ -46,10 +46,15 @@ public class CarritoController {
             session.setAttribute("carritoTotal", 0);
             return;
         }
+        
         List<CarritoItem> items = carritoItemRepository.findByUsuario_Id(usuarioId);
-        int totalItems = items.stream().mapToInt(CarritoItem::getCantidad).sum();
+        
+        // Cuenta la cantidad de códigos distintos
+        int totalCodigos = items.size(); 
+        
         int totalPrecio = items.stream().mapToInt(CarritoItem::getSubtotal).sum();
-        session.setAttribute("carritoCantidad", totalItems);
+        
+        session.setAttribute("carritoCantidad", totalCodigos);
         session.setAttribute("carritoTotal", totalPrecio);
     }
 
@@ -185,17 +190,17 @@ public class CarritoController {
         }
         List<Pedido> pedidos = pedidoRepository.findAllByOrderByFechaCreacionDesc();
         pedidos.removeIf(p -> !p.getUsuario().getId().equals(usuarioId));
-
+        
         int totalProductos = 0;
         for (Pedido p : pedidos) {
             for (DetallePedido d : p.getDetalles()) {
                 totalProductos += d.getCantidad();
             }
         }
-
+        
         model.addAttribute("pedidos", pedidos);
-        model.addAttribute("totalProductos", totalProductos);
-
+        model.addAttribute("totalProductos", totalProductos); 
+        
         sincronizarContadoresSesion(session);
         return "orders";
     }
@@ -265,7 +270,7 @@ public class CarritoController {
                 if (item.getProducto().getId().equals(productoId) &&
                         item.getColor().equals(color) &&
                         item.getTalla().equals(talla)) {
-
+                    
                     if (cantidad > 0) {
                         item.setCantidad(cantidad);
                         carritoItemRepository.save(item);

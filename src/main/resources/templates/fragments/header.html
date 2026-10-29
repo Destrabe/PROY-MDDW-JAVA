@@ -64,8 +64,8 @@
             <span
               id="cart-badge"
               th:text="${session.carritoCantidad != null ? session.carritoCantidad : 0}"
-              th:classappend="${session.carritoCantidad == null or session.carritoCantidad == 0} ? 'hidden' : ''"
-              class="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+              th:classappend="${session.carritoCantidad == null or session.carritoCantidad == 0} ? 'hidden' : 'flex'"
+              class="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] font-bold w-4 h-4 rounded-full items-center justify-center"
             >
             </span>
           </a>
