@@ -72,9 +72,11 @@ public class CarritoController {
         };
     }
 
-    private void guardarOActualizarItem(Usuario usuario, Producto producto, String color, String talla) {
+    // Actualizado para recibir la cantidad seleccionada en el modal
+    private void guardarOActualizarItem(Usuario usuario, Producto producto, String color, String talla, int cantidad) {
         String colorLimpio = (color != null && !color.isEmpty()) ? color : "bg-black";
         String tallaLimpia = (talla != null && !talla.isEmpty()) ? talla : "M";
+        int cantidadAgregar = (cantidad > 0) ? cantidad : 1;
 
         Optional<CarritoItem> existente = carritoItemRepository
                 .findByUsuario_IdAndProducto_IdAndColorAndTalla(usuario.getId(), producto.getId(), colorLimpio,
@@ -82,10 +84,10 @@ public class CarritoController {
 
         if (existente.isPresent()) {
             CarritoItem item = existente.get();
-            item.setCantidad(item.getCantidad() + 1);
+            item.setCantidad(item.getCantidad() + cantidadAgregar);
             carritoItemRepository.save(item);
         } else {
-            CarritoItem nuevo = new CarritoItem(usuario, producto, 1, colorLimpio, tallaLimpia);
+            CarritoItem nuevo = new CarritoItem(usuario, producto, cantidadAgregar, colorLimpio, tallaLimpia);
             carritoItemRepository.save(nuevo);
         }
     }
@@ -205,6 +207,7 @@ public class CarritoController {
             @RequestParam Long productoId,
             @RequestParam(required = false, defaultValue = "bg-black") String color,
             @RequestParam(required = false, defaultValue = "M") String talla,
+            @RequestParam(defaultValue = "1") int cantidad,
             HttpSession session,
             HttpServletRequest request) {
 
@@ -213,7 +216,7 @@ public class CarritoController {
         Producto producto = productoRepository.findById(productoId).orElse(null);
 
         if (usuario != null && producto != null) {
-            guardarOActualizarItem(usuario, producto, color, talla);
+            guardarOActualizarItem(usuario, producto, color, talla, cantidad);
             sincronizarContadoresSesion(session);
         }
 
@@ -227,6 +230,7 @@ public class CarritoController {
             @RequestParam Long productoId,
             @RequestParam(required = false, defaultValue = "bg-black") String color,
             @RequestParam(required = false, defaultValue = "M") String talla,
+            @RequestParam(defaultValue = "1") int cantidad,
             HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
@@ -235,7 +239,7 @@ public class CarritoController {
         Producto producto = productoRepository.findById(productoId).orElse(null);
 
         if (usuario != null && producto != null) {
-            guardarOActualizarItem(usuario, producto, color, talla);
+            guardarOActualizarItem(usuario, producto, color, talla, cantidad);
             sincronizarContadoresSesion(session);
 
             response.put("success", true);

@@ -15,218 +15,265 @@
   >
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <main class="flex-grow max-w-7xl mx-auto px-6 md:px-12 w-full py-10">
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 md:px-12 w-full py-6 md:py-10">
       <div
-        class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 pb-6 border-b border-gray-200"
+        class="flex flex-row justify-between items-start md:items-end mb-6 md:mb-10 pb-5 md:pb-6 border-b border-gray-200 gap-3"
       >
         <div>
-          <h1 class="text-4xl font-black tracking-tighter">Catálogo</h1>
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter leading-none">
+            Catálogo
+          </h1>
           <p
             id="contador-productos"
-            class="text-gray-500 mt-2"
+            class="text-xs sm:text-sm text-gray-500 mt-1.5 leading-snug max-w-[120px] sm:max-w-none"
             th:text="${productos.size()} + ' productos encontrados'"
           ></p>
         </div>
-        <div class="mt-4 md:mt-0 w-full md:w-auto flex items-center gap-3">
+
+        <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           <label
             for="select-orden"
-            class="text-xs font-bold uppercase tracking-wider text-gray-400 hidden sm:block"
+            class="text-xs font-bold uppercase tracking-wider text-gray-400 hidden md:block"
             >Ordenar por:</label
           >
           <select
             id="select-orden"
             onchange="aplicarFiltrosYOrden()"
-            class="w-full md:w-48 border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white cursor-pointer"
+            class="border border-gray-200 rounded-lg px-2.5 sm:px-3.5 py-2 text-xs sm:text-sm text-gray-700 focus:outline-none focus:border-gray-900 bg-white cursor-pointer"
           >
             <option value="relevancia">Relevancia</option>
             <option value="menor-precio">Menor precio</option>
             <option value="mayor-precio">Mayor precio</option>
             <option value="nuevo">Lo más nuevo</option>
           </select>
+
+          <button
+            type="button"
+            onclick="abrirFiltrosMobile()"
+            class="lg:hidden inline-flex items-center gap-1.5 border border-gray-200 rounded-lg px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 bg-white transition-colors"
+          >
+            <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h6"></path>
+            </svg>
+            <span>Filtros</span>
+          </button>
         </div>
       </div>
 
+      <div
+        id="overlay-filtros-mobile"
+        onclick="cerrarFiltrosMobile()"
+        class="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[80] hidden lg:hidden transition-opacity"
+      ></div>
+
       <div class="flex flex-col lg:flex-row gap-10">
-        <aside class="w-full lg:w-64 flex-shrink-0">
-          <div class="flex justify-between items-center mb-4 lg:hidden">
-            <span class="font-bold uppercase tracking-wider text-sm"
-              >Filtros</span
+        <aside
+          id="aside-filtros"
+          class="fixed inset-y-0 left-0 z-[90] w-[78%] max-w-[310px] bg-white flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:w-64 lg:max-w-none lg:bg-transparent lg:z-auto flex-shrink-0 shadow-2xl lg:shadow-none"
+        >
+          <div class="flex justify-between items-center px-5 py-4 border-b border-gray-100 lg:hidden">
+            <span class="font-bold text-base text-gray-900">Filtros</span>
+            <button
+              type="button"
+              onclick="cerrarFiltrosMobile()"
+              class="w-7 h-7 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              aria-label="Cerrar filtros"
             >
+              <i class="fas fa-times text-sm"></i>
+            </button>
           </div>
 
-          <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="font-bold uppercase tracking-wider text-sm">
-                Categoría
-              </h3>
-              <button
-                type="button"
-                id="btn-limpiar-lateral"
-                onclick="restablecerFiltros()"
-                class="hidden text-xs font-bold text-blue-600 hover:underline"
-              >
-                Limpiar todo
-              </button>
+          <div class="p-5 lg:p-0 overflow-y-auto flex-grow">
+            <div class="mb-7">
+              <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900">
+                  Categoría
+                </h3>
+                <button
+                  type="button"
+                  id="btn-limpiar-lateral"
+                  onclick="restablecerFiltros()"
+                  class="hidden text-xs font-bold text-blue-600 hover:underline"
+                >
+                  Limpiar todo
+                </button>
+              </div>
+              <ul class="space-y-1" id="lista-categorias">
+                <li>
+                  <button
+                    type="button"
+                    onclick="filtrarCategoria('Todos', this)"
+                    class="cat-btn w-full text-left block bg-gray-900 text-white px-3.5 py-2 rounded-lg text-sm font-bold transition-colors"
+                  >
+                    Todos
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onclick="filtrarCategoria('Polos', this)"
+                    class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-3.5 py-2 rounded-lg text-sm transition-colors"
+                  >
+                    Polos
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onclick="filtrarCategoria('Hoodies', this)"
+                    class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-3.5 py-2 rounded-lg text-sm transition-colors"
+                  >
+                    Hoodies
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onclick="filtrarCategoria('Pantalones', this)"
+                    class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-3.5 py-2 rounded-lg text-sm transition-colors"
+                  >
+                    Pantalones
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onclick="filtrarCategoria('Chaquetas', this)"
+                    class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-3.5 py-2 rounded-lg text-sm transition-colors"
+                  >
+                    Chaquetas
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onclick="filtrarCategoria('Shorts', this)"
+                    class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-3.5 py-2 rounded-lg text-sm transition-colors"
+                  >
+                    Shorts
+                  </button>
+                </li>
+              </ul>
             </div>
-            <ul class="space-y-1" id="lista-categorias">
-              <li>
+
+            <div class="mb-7">
+              <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900">
+                  Talla
+                </h3>
+                <span
+                  id="etiqueta-talla-activa"
+                  class="text-xs text-blue-600 font-bold hidden"
+                ></span>
+              </div>
+              <div class="flex flex-wrap gap-2 lg:grid lg:grid-cols-3" id="filtro-tallas">
                 <button
                   type="button"
-                  onclick="filtrarCategoria('Todos', this)"
-                  class="cat-btn w-full text-left block bg-gray-900 text-white px-4 py-2.5 rounded text-sm font-medium transition-colors"
+                  onclick="filtrarTalla('XS', this)"
+                  class="talla-filtro-btn min-w-[44px] border border-gray-200 py-2 px-2.5 text-xs sm:text-sm text-center hover:border-gray-900 rounded-md transition-colors"
                 >
-                  Todos
+                  XS
                 </button>
-              </li>
-              <li>
                 <button
                   type="button"
-                  onclick="filtrarCategoria('Polos', this)"
-                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                  onclick="filtrarTalla('S', this)"
+                  class="talla-filtro-btn min-w-[44px] border border-gray-200 py-2 px-2.5 text-xs sm:text-sm text-center hover:border-gray-900 rounded-md transition-colors"
                 >
-                  Polos
+                  S
                 </button>
-              </li>
-              <li>
                 <button
                   type="button"
-                  onclick="filtrarCategoria('Hoodies', this)"
-                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                  onclick="filtrarTalla('M', this)"
+                  class="talla-filtro-btn min-w-[44px] border border-gray-200 py-2 px-2.5 text-xs sm:text-sm text-center hover:border-gray-900 rounded-md transition-colors"
                 >
-                  Hoodies
+                  M
                 </button>
-              </li>
-              <li>
                 <button
                   type="button"
-                  onclick="filtrarCategoria('Pantalones', this)"
-                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                  onclick="filtrarTalla('L', this)"
+                  class="talla-filtro-btn min-w-[44px] border border-gray-200 py-2 px-2.5 text-xs sm:text-sm text-center hover:border-gray-900 rounded-md transition-colors"
                 >
-                  Pantalones
+                  L
                 </button>
-              </li>
-              <li>
                 <button
                   type="button"
-                  onclick="filtrarCategoria('Chaquetas', this)"
-                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                  onclick="filtrarTalla('XL', this)"
+                  class="talla-filtro-btn min-w-[44px] border border-gray-200 py-2 px-2.5 text-xs sm:text-sm text-center hover:border-gray-900 rounded-md transition-colors"
                 >
-                  Chaquetas
+                  XL
                 </button>
-              </li>
-              <li>
                 <button
                   type="button"
-                  onclick="filtrarCategoria('Shorts', this)"
-                  class="cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors"
+                  onclick="filtrarTalla('2XL', this)"
+                  class="talla-filtro-btn min-w-[44px] border border-gray-200 py-2 px-2.5 text-xs sm:text-sm text-center hover:border-gray-900 rounded-md transition-colors"
                 >
-                  Shorts
+                  2XL
                 </button>
-              </li>
-            </ul>
+              </div>
+            </div>
+
+            <div class="mb-7">
+              <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900">
+                  Color
+                </h3>
+                <span
+                  id="etiqueta-color-activo"
+                  class="text-xs font-mono text-gray-500"
+                  >Todos</span
+                >
+              </div>
+              <div
+                id="filtro-colores-contenedor"
+                class="flex flex-wrap gap-2.5"
+              ></div>
+            </div>
+
+            <div class="mb-4">
+              <div class="flex items-center gap-1.5 mb-3">
+                <h3 class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900">
+                  Precio Máximo:
+                </h3>
+                <span
+                  id="precio-max-valor"
+                  class="text-blue-600 font-bold text-xs lg:text-sm"
+                  >S/ 300</span
+                >
+              </div>
+              <input
+                type="range"
+                id="rango-precio"
+                min="50"
+                max="300"
+                step="5"
+                value="300"
+                oninput="actualizarPrecioMaximo(this.value)"
+                class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              />
+              <div class="flex justify-between text-[11px] text-gray-400 mt-2">
+                <span>S/ 50</span>
+                <span id="precio-tope-label">S/ 300</span>
+              </div>
+            </div>
           </div>
 
-          <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="font-bold uppercase tracking-wider text-sm">Talla</h3>
-              <span
-                id="etiqueta-talla-activa"
-                class="text-xs text-blue-600 font-bold hidden"
-              ></span>
-            </div>
-            <div class="grid grid-cols-3 gap-2" id="filtro-tallas">
-              <button
-                type="button"
-                onclick="filtrarTalla('XS', this)"
-                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
-              >
-                XS
-              </button>
-              <button
-                type="button"
-                onclick="filtrarTalla('S', this)"
-                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
-              >
-                S
-              </button>
-              <button
-                type="button"
-                onclick="filtrarTalla('M', this)"
-                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
-              >
-                M
-              </button>
-              <button
-                type="button"
-                onclick="filtrarTalla('L', this)"
-                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
-              >
-                L
-              </button>
-              <button
-                type="button"
-                onclick="filtrarTalla('XL', this)"
-                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
-              >
-                XL
-              </button>
-              <button
-                type="button"
-                onclick="filtrarTalla('2XL', this)"
-                class="talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors"
-              >
-                2XL
-              </button>
-            </div>
-          </div>
-
-          <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="font-bold uppercase tracking-wider text-sm">Color</h3>
-              <span
-                id="etiqueta-color-activo"
-                class="text-xs font-mono text-gray-500"
-                >Todos</span
-              >
-            </div>
-            <div
-              id="filtro-colores-contenedor"
-              class="flex flex-wrap gap-3"
-            ></div>
-          </div>
-
-          <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="font-bold uppercase tracking-wider text-sm">
-                Precio Máximo:
-              </h3>
-              <span
-                id="precio-max-valor"
-                class="text-blue-600 font-bold text-sm"
-                >S/ 300</span
-              >
-            </div>
-            <input
-              type="range"
-              id="rango-precio"
-              min="50"
-              max="300"
-              step="5"
-              value="300"
-              oninput="actualizarPrecioMaximo(this.value)"
-              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-            />
-            <div class="flex justify-between text-xs text-gray-500 mt-2">
-              <span>S/ 50</span>
-              <span id="precio-tope-label">S/ 300</span>
-            </div>
+          <div class="p-5 border-t border-gray-100 lg:hidden bg-white">
+            <button
+              type="button"
+              id="btn-ver-productos-mobile"
+              onclick="cerrarFiltrosMobile()"
+              class="w-full bg-[#0f1115] hover:bg-black text-white font-bold text-xs py-3.5 rounded-lg transition-colors"
+              th:text="'Ver ' + ${productos.size()} + ' productos'"
+            >
+              Ver productos
+            </button>
           </div>
         </aside>
 
         <div class="flex-grow">
           <div
             id="grid-productos"
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10"
+            class="grid grid-cols-2 md:grid-cols-3 gap-x-3.5 sm:gap-x-6 gap-y-7 sm:gap-y-10"
           >
             <div
               class="producto-card group cursor-pointer"
@@ -239,13 +286,14 @@
               th:data-etiqueta="${producto.etiqueta != null ? producto.etiqueta : ''}"
               th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
               th:data-tallas="'XS,S,M,L,XL,2XL'"
+              onclick="abrirModalDesdeCard(this, event)"
             >
               <div
-                class="relative bg-gray-100 aspect-[3/4] mb-4 overflow-hidden rounded"
+                class="relative bg-gray-100 aspect-[3/4] mb-2.5 sm:mb-4 overflow-hidden rounded-lg"
               >
                 <span
                   th:if="${producto.etiqueta != null and !producto.etiqueta.isEmpty()}"
-                  th:class="'absolute top-3 left-3 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-sm z-10 ' + ${producto.claseEtiqueta}"
+                  th:class="'absolute top-2.5 left-2.5 text-white text-[9px] sm:text-[10px] font-bold px-2.5 py-1 uppercase tracking-wider rounded-full z-10 ' + ${producto.claseEtiqueta}"
                   th:text="${producto.etiqueta}"
                 ></span>
 
@@ -256,7 +304,7 @@
                 />
 
                 <div
-                  class="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4"
+                  class="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2.5 sm:p-4"
                 >
                   <button
                     type="button"
@@ -267,38 +315,38 @@
                     th:data-precio-anterior="${producto.precioAnterior}"
                     th:data-imagen="${producto.imagen}"
                     th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
-                    onclick="abrirModalInteres(this)"
-                    class="w-full bg-white/95 hover:bg-black hover:text-white text-gray-900 font-bold text-xs uppercase tracking-wider py-3.5 px-4 rounded shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2"
+                    onclick="event.stopPropagation(); abrirModalInteres(this)"
+                    class="btn-disparador-modal w-full bg-white/95 hover:bg-black hover:text-white text-gray-900 font-bold text-[10px] sm:text-xs uppercase tracking-wider py-2.5 sm:py-3.5 px-2 sm:px-4 rounded shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-1.5"
                   >
                     <span>agregar al carrito</span>
-                    <i class="fas fa-arrow-right text-[11px]"></i>
+                    <i class="fas fa-arrow-right text-[10px]"></i>
                   </button>
                 </div>
               </div>
 
               <p
-                class="text-xs text-gray-500 uppercase tracking-widest mb-1"
+                class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-widest mb-0.5"
                 th:text="${producto.categoria}"
               ></p>
               <h3
-                class="font-bold text-lg leading-tight mb-1"
+                class="font-semibold sm:font-bold text-xs sm:text-lg leading-snug mb-1 text-gray-900 line-clamp-1"
                 th:text="${producto.nombre}"
               ></h3>
-              <div class="flex items-center gap-2 mb-2">
+              <div class="flex items-center gap-1.5 sm:gap-2 mb-2">
                 <span
-                  class="font-black text-lg"
+                  class="font-black text-xs sm:text-lg text-gray-900"
                   th:text="'S/ ' + ${producto.precio}"
                 ></span>
                 <span
                   th:if="${producto.precioAnterior != null}"
-                  class="text-gray-400 line-through text-sm"
+                  class="text-gray-400 line-through text-[11px] sm:text-sm"
                   th:text="'S/ ' + ${producto.precioAnterior}"
                 ></span>
               </div>
               <div class="flex gap-1.5" th:if="${producto.colores != null}">
                 <div
                   th:each="color : ${producto.colores}"
-                  th:class="'w-4 h-4 rounded-full border border-gray-300 ' + ${color}"
+                  th:class="'w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-gray-300 ' + ${color}"
                 ></div>
               </div>
             </div>
@@ -328,6 +376,7 @@
       </div>
     </main>
 
+    <!-- MODAL DE SELECCIÓN DE COLOR, TALLA, CANTIDAD Y CARRITO -->
     <div
       id="modal-interes"
       class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4"
@@ -393,7 +442,7 @@
             </div>
           </div>
 
-          <div class="py-5 border-b border-gray-100">
+          <div class="py-4 border-b border-gray-100">
             <div class="flex justify-between items-center mb-3">
               <label
                 class="block text-xs font-bold uppercase tracking-wider text-gray-700"
@@ -410,7 +459,7 @@
             ></div>
           </div>
 
-          <div class="py-4">
+          <div class="py-4 border-b border-gray-100">
             <label
               class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2.5"
               >Talla</label
@@ -461,7 +510,22 @@
             </div>
           </div>
 
-          <div class="pt-3">
+          <!-- Selector de Cantidad -->
+          <div class="py-4 flex items-center justify-between">
+            <label class="block text-xs font-bold uppercase tracking-wider text-gray-700">Cantidad</label>
+            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-gray-50">
+              <button type="button" onclick="cambiarCantidad(-1)" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+                <i class="fas fa-minus text-xs"></i>
+              </button>
+              <input type="number" id="modal-cantidad" name="cantidad" value="1" min="1" max="99" 
+                     class="w-12 text-center bg-transparent text-sm font-bold text-gray-900 focus:outline-none" readonly>
+              <button type="button" onclick="cambiarCantidad(1)" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+                <i class="fas fa-plus text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-2">
             <button
               th:if="${session.usuarioId != null}"
               type="submit"
@@ -490,6 +554,7 @@
       </div>
     </div>
 
+    <!-- TOAST FLOTANTE -->
     <div
       id="toast-carrito"
       class="fixed bottom-6 right-6 z-[110] hidden transform translate-y-4 opacity-0 transition-all duration-300 bg-gray-900 text-white px-5 py-4 rounded-xl shadow-2xl flex items-center space-x-3"
@@ -524,6 +589,36 @@
         orden: "relevancia",
       };
 
+      function abrirFiltrosMobile() {
+        const aside = document.getElementById("aside-filtros");
+        const overlay = document.getElementById("overlay-filtros-mobile");
+        aside.classList.remove("-translate-x-full");
+        overlay.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function cerrarFiltrosMobile() {
+        const aside = document.getElementById("aside-filtros");
+        const overlay = document.getElementById("overlay-filtros-mobile");
+        aside.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      function abrirModalDesdeCard(card, event) {
+        const btn = card.querySelector(".btn-disparador-modal");
+        if (btn) abrirModalInteres(btn);
+      }
+
+      function cambiarCantidad(delta) {
+        const input = document.getElementById("modal-cantidad");
+        let valorActual = parseInt(input.value) || 1;
+        let nuevoValor = valorActual + delta;
+        if (nuevoValor < 1) nuevoValor = 1;
+        if (nuevoValor > 99) nuevoValor = 99;
+        input.value = nuevoValor;
+      }
+
       function claseTailwindAColorCSS(clase) {
         const limpia = (clase || "").trim().toLowerCase();
 
@@ -537,6 +632,8 @@
           "bg-[#ff0000]": { hex: "#FF0000", nombre: "Rojo" },
           "bg-[#8b7355]": { hex: "#8B7355", nombre: "Marrón" },
           "bg-[#6b705c]": { hex: "#6B705C", nombre: "Verde Oliva" },
+          "bg-[#cb997e]": { hex: "#CB997E", nombre: "Arcilla" },
+          "bg-[#ddbea9]": { hex: "#DDBEA9", nombre: "Beige" },
           "bg-[#1b263b]": { hex: "#1B263B", nombre: "Azul Marino" },
           "bg-[#fbff00]": { hex: "#FBFF00", nombre: "Amarillo" },
         };
@@ -625,10 +722,10 @@
           .querySelectorAll("#lista-categorias .cat-btn")
           .forEach((btn) => {
             btn.className =
-              "cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-4 py-2.5 rounded text-sm transition-colors";
+              "cat-btn w-full text-left block text-gray-600 hover:bg-gray-100 hover:text-gray-900 px-3.5 py-2 rounded-lg text-sm transition-colors";
           });
         btnElemento.className =
-          "cat-btn w-full text-left block bg-gray-900 text-white px-4 py-2.5 rounded text-sm font-medium transition-colors";
+          "cat-btn w-full text-left block bg-gray-900 text-white px-3.5 py-2 rounded-lg text-sm font-bold transition-colors";
 
         aplicarFiltrosYOrden();
       }
@@ -650,10 +747,10 @@
           .forEach((btn) => {
             if (btn.textContent.trim() === estadoFiltros.talla) {
               btn.className =
-                "talla-filtro-btn border-2 border-gray-900 bg-gray-900 text-white py-2 text-sm font-bold text-center rounded transition-colors";
+                "talla-filtro-btn min-w-[44px] border-2 border-gray-900 bg-gray-900 text-white py-2 px-2.5 text-xs sm:text-sm font-bold text-center rounded-md transition-colors";
             } else {
               btn.className =
-                "talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors";
+                "talla-filtro-btn min-w-[44px] border border-gray-200 py-2 px-2.5 text-xs sm:text-sm text-center hover:border-gray-900 rounded-md transition-colors";
             }
           });
 
@@ -766,6 +863,12 @@
             ? "1 producto encontrado"
             : `${visibles} productos encontrados`;
 
+        const btnMobileVer = document.getElementById("btn-ver-productos-mobile");
+        if (btnMobileVer) {
+          btnMobileVer.textContent =
+            visibles === 1 ? "Ver 1 producto" : `Ver ${visibles} productos`;
+        }
+
         const sinResultados = document.getElementById("sin-resultados");
         if (visibles === 0) {
           sinResultados.classList.remove("hidden");
@@ -803,7 +906,7 @@
           .querySelectorAll("#filtro-tallas .talla-filtro-btn")
           .forEach((btn) => {
             btn.className =
-              "talla-filtro-btn border border-gray-300 py-2 text-sm text-center hover:border-gray-900 rounded transition-colors";
+              "talla-filtro-btn min-w-[44px] border border-gray-200 py-2 px-2.5 text-xs sm:text-sm text-center hover:border-gray-900 rounded-md transition-colors";
           });
 
         estadoFiltros.color = null;
@@ -840,6 +943,7 @@
         document.getElementById("modal-prod-precio").textContent =
           "S/ " + precio;
         document.getElementById("modal-prod-img").src = imagen;
+        document.getElementById("modal-cantidad").value = 1; // Reiniciar cantidad a 1 al abrir
 
         const precioAntEl = document.getElementById("modal-prod-precio-ant");
         if (precioAnt && precioAnt !== "null" && precioAnt !== "") {
@@ -955,6 +1059,7 @@
         const tallaElegida = document.getElementById(
           "modal-talla-seleccionada",
         ).value;
+        const cantidadElegida = document.getElementById("modal-cantidad").value;
 
         if (btnSubmit) btnSubmit.disabled = true;
 
@@ -968,7 +1073,7 @@
             const data = await response.json();
             actualizarBurbujaHeader(data.carritoCantidad);
             cerrarModalInteres();
-            mostrarToast(`${nombreProd} (Talla ${tallaElegida})`);
+            mostrarToast(`${cantidadElegida}x ${nombreProd} (Talla ${tallaElegida})`);
           }
         } catch (error) {
           console.error("Error al agregar al carrito:", error);
