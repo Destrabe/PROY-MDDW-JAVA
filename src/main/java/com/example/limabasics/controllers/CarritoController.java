@@ -203,8 +203,7 @@ public class CarritoController {
             return "redirect:/";
         }
 
-        List<Pedido> pedidos = pedidoRepository.findAllByOrderByFechaCreacionDesc();
-        pedidos.removeIf(p -> !p.getUsuario().getId().equals(usuarioId));
+        List<Pedido> pedidos = pedidoRepository.findByUsuarioIdWithDetails(usuarioId);
 
         int totalProductos = 0;
         for (Pedido p : pedidos) {

@@ -1138,7 +1138,7 @@
         );
         formData.append(
           "referencia",
-          document.getElementById("input-referencia").value,
+          document.getElementById("input-referencia")?.value || "",
         );
 
         const envioInput = document.querySelector(
