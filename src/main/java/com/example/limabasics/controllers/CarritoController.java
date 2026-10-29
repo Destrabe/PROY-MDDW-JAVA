@@ -185,17 +185,17 @@ public class CarritoController {
         }
         List<Pedido> pedidos = pedidoRepository.findAllByOrderByFechaCreacionDesc();
         pedidos.removeIf(p -> !p.getUsuario().getId().equals(usuarioId));
-        
+
         int totalProductos = 0;
         for (Pedido p : pedidos) {
             for (DetallePedido d : p.getDetalles()) {
                 totalProductos += d.getCantidad();
             }
         }
-        
+
         model.addAttribute("pedidos", pedidos);
-        model.addAttribute("totalProductos", totalProductos); 
-        
+        model.addAttribute("totalProductos", totalProductos);
+
         sincronizarContadoresSesion(session);
         return "orders";
     }
@@ -265,7 +265,7 @@ public class CarritoController {
                 if (item.getProducto().getId().equals(productoId) &&
                         item.getColor().equals(color) &&
                         item.getTalla().equals(talla)) {
-                    
+
                     if (cantidad > 0) {
                         item.setCantidad(cantidad);
                         carritoItemRepository.save(item);

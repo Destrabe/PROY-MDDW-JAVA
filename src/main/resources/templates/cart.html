@@ -76,25 +76,77 @@
 
                 <!-- Selector editable de cantidad -->
                 <div class="flex items-center gap-3 mt-3">
-                  <div class="inline-flex items-center border border-gray-300 rounded-lg overflow-hidden bg-gray-50">
-                    <form th:action="@{/cart/actualizar}" method="post" class="inline">
-                      <input type="hidden" name="productoId" th:value="${item.producto.id}" />
-                      <input type="hidden" name="color" th:value="${item.color}" />
-                      <input type="hidden" name="talla" th:value="${item.talla}" />
-                      <input type="hidden" name="cantidad" th:value="${item.cantidad - 1}" />
-                      <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+                  <div
+                    class="inline-flex items-center border border-gray-300 rounded-lg overflow-hidden bg-gray-50"
+                  >
+                    <form
+                      th:action="@{/cart/actualizar}"
+                      method="post"
+                      class="inline"
+                    >
+                      <input
+                        type="hidden"
+                        name="productoId"
+                        th:value="${item.producto.id}"
+                      />
+                      <input
+                        type="hidden"
+                        name="color"
+                        th:value="${item.color}"
+                      />
+                      <input
+                        type="hidden"
+                        name="talla"
+                        th:value="${item.talla}"
+                      />
+                      <input
+                        type="hidden"
+                        name="cantidad"
+                        th:value="${item.cantidad - 1}"
+                      />
+                      <button
+                        type="submit"
+                        class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
+                      >
                         <i class="fas fa-minus text-[10px]"></i>
                       </button>
                     </form>
 
-                    <span class="w-9 text-center text-xs font-bold text-gray-900" th:text="${item.cantidad}">1</span>
+                    <span
+                      class="w-9 text-center text-xs font-bold text-gray-900"
+                      th:text="${item.cantidad}"
+                      >1</span
+                    >
 
-                    <form th:action="@{/cart/actualizar}" method="post" class="inline">
-                      <input type="hidden" name="productoId" th:value="${item.producto.id}" />
-                      <input type="hidden" name="color" th:value="${item.color}" />
-                      <input type="hidden" name="talla" th:value="${item.talla}" />
-                      <input type="hidden" name="cantidad" th:value="${item.cantidad + 1}" />
-                      <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+                    <form
+                      th:action="@{/cart/actualizar}"
+                      method="post"
+                      class="inline"
+                    >
+                      <input
+                        type="hidden"
+                        name="productoId"
+                        th:value="${item.producto.id}"
+                      />
+                      <input
+                        type="hidden"
+                        name="color"
+                        th:value="${item.color}"
+                      />
+                      <input
+                        type="hidden"
+                        name="talla"
+                        th:value="${item.talla}"
+                      />
+                      <input
+                        type="hidden"
+                        name="cantidad"
+                        th:value="${item.cantidad + 1}"
+                      />
+                      <button
+                        type="submit"
+                        class="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
+                      >
                         <i class="fas fa-plus text-[10px]"></i>
                       </button>
                     </form>

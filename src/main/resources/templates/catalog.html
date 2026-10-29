@@ -15,12 +15,16 @@
   >
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 md:px-12 w-full py-6 md:py-10">
+    <main
+      class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 md:px-12 w-full py-6 md:py-10"
+    >
       <div
         class="flex flex-row justify-between items-start md:items-end mb-6 md:mb-10 pb-5 md:pb-6 border-b border-gray-200 gap-3"
       >
         <div>
-          <h1 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter leading-none">
+          <h1
+            class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter leading-none"
+          >
             Catálogo
           </h1>
           <p
@@ -52,8 +56,18 @@
             onclick="abrirFiltrosMobile()"
             class="lg:hidden inline-flex items-center gap-1.5 border border-gray-200 rounded-lg px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 bg-white transition-colors"
           >
-            <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h6"></path>
+            <svg
+              class="w-3.5 h-3.5 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h10M4 18h6"
+              ></path>
             </svg>
             <span>Filtros</span>
           </button>
@@ -71,7 +85,9 @@
           id="aside-filtros"
           class="fixed inset-y-0 left-0 z-[90] w-[78%] max-w-[310px] bg-white flex flex-col justify-between transform -translate-x-full transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:w-64 lg:max-w-none lg:bg-transparent lg:z-auto flex-shrink-0 shadow-2xl lg:shadow-none"
         >
-          <div class="flex justify-between items-center px-5 py-4 border-b border-gray-100 lg:hidden">
+          <div
+            class="flex justify-between items-center px-5 py-4 border-b border-gray-100 lg:hidden"
+          >
             <span class="font-bold text-base text-gray-900">Filtros</span>
             <button
               type="button"
@@ -86,7 +102,9 @@
           <div class="p-5 lg:p-0 overflow-y-auto flex-grow">
             <div class="mb-7">
               <div class="flex justify-between items-center mb-3">
-                <h3 class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900">
+                <h3
+                  class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900"
+                >
                   Categoría
                 </h3>
                 <button
@@ -158,7 +176,9 @@
 
             <div class="mb-7">
               <div class="flex justify-between items-center mb-3">
-                <h3 class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900">
+                <h3
+                  class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900"
+                >
                   Talla
                 </h3>
                 <span
@@ -166,7 +186,10 @@
                   class="text-xs text-blue-600 font-bold hidden"
                 ></span>
               </div>
-              <div class="flex flex-wrap gap-2 lg:grid lg:grid-cols-3" id="filtro-tallas">
+              <div
+                class="flex flex-wrap gap-2 lg:grid lg:grid-cols-3"
+                id="filtro-tallas"
+              >
                 <button
                   type="button"
                   onclick="filtrarTalla('XS', this)"
@@ -214,7 +237,9 @@
 
             <div class="mb-7">
               <div class="flex justify-between items-center mb-3">
-                <h3 class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900">
+                <h3
+                  class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900"
+                >
                   Color
                 </h3>
                 <span
@@ -231,7 +256,9 @@
 
             <div class="mb-4">
               <div class="flex items-center gap-1.5 mb-3">
-                <h3 class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900">
+                <h3
+                  class="font-bold uppercase tracking-wider text-[11px] text-gray-500 lg:text-sm lg:text-gray-900"
+                >
                   Precio Máximo:
                 </h3>
                 <span
@@ -315,7 +342,10 @@
                     th:data-precio-anterior="${producto.precioAnterior}"
                     th:data-imagen="${producto.imagen}"
                     th:data-colores="${producto.colores != null ? #strings.listJoin(producto.colores, ',') : ''}"
-                    onclick="event.stopPropagation(); abrirModalInteres(this)"
+                    onclick="
+                      event.stopPropagation();
+                      abrirModalInteres(this);
+                    "
                     class="btn-disparador-modal w-full bg-white/95 hover:bg-black hover:text-white text-gray-900 font-bold text-[10px] sm:text-xs uppercase tracking-wider py-2.5 sm:py-3.5 px-2 sm:px-4 rounded shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-1.5"
                   >
                     <span>agregar al carrito</span>
@@ -512,14 +542,35 @@
 
           <!-- Selector de Cantidad -->
           <div class="py-4 flex items-center justify-between">
-            <label class="block text-xs font-bold uppercase tracking-wider text-gray-700">Cantidad</label>
-            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-gray-50">
-              <button type="button" onclick="cambiarCantidad(-1)" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+            <label
+              class="block text-xs font-bold uppercase tracking-wider text-gray-700"
+              >Cantidad</label
+            >
+            <div
+              class="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-gray-50"
+            >
+              <button
+                type="button"
+                onclick="cambiarCantidad(-1)"
+                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
+              >
                 <i class="fas fa-minus text-xs"></i>
               </button>
-              <input type="number" id="modal-cantidad" name="cantidad" value="1" min="1" max="99" 
-                     class="w-12 text-center bg-transparent text-sm font-bold text-gray-900 focus:outline-none" readonly>
-              <button type="button" onclick="cambiarCantidad(1)" class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+              <input
+                type="number"
+                id="modal-cantidad"
+                name="cantidad"
+                value="1"
+                min="1"
+                max="99"
+                class="w-12 text-center bg-transparent text-sm font-bold text-gray-900 focus:outline-none"
+                readonly
+              />
+              <button
+                type="button"
+                onclick="cambiarCantidad(1)"
+                class="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
+              >
                 <i class="fas fa-plus text-xs"></i>
               </button>
             </div>
@@ -863,7 +914,9 @@
             ? "1 producto encontrado"
             : `${visibles} productos encontrados`;
 
-        const btnMobileVer = document.getElementById("btn-ver-productos-mobile");
+        const btnMobileVer = document.getElementById(
+          "btn-ver-productos-mobile",
+        );
         if (btnMobileVer) {
           btnMobileVer.textContent =
             visibles === 1 ? "Ver 1 producto" : `Ver ${visibles} productos`;
@@ -1073,7 +1126,9 @@
             const data = await response.json();
             actualizarBurbujaHeader(data.carritoCantidad);
             cerrarModalInteres();
-            mostrarToast(`${cantidadElegida}x ${nombreProd} (Talla ${tallaElegida})`);
+            mostrarToast(
+              `${cantidadElegida}x ${nombreProd} (Talla ${tallaElegida})`,
+            );
           }
         } catch (error) {
           console.error("Error al agregar al carrito:", error);
