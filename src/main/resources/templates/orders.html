@@ -67,7 +67,11 @@
             >
           </div>
           <div class="px-8 py-5 text-center">
-            <span class="block text-2xl font-black mb-1" th:text="${totalProductos != null ? totalProductos : 0}">0</span>
+            <span
+              class="block text-2xl font-black mb-1"
+              th:text="${totalProductos != null ? totalProductos : 0}"
+              >0</span
+            >
             <span
               class="text-[10px] font-bold text-gray-400 tracking-wider uppercase"
               >Productos</span
@@ -266,16 +270,30 @@
                 </div>
               </div>
             </div>
-            <div class="p-5 sm:p-6 bg-white">
+
+            <div
+              class="p-5 sm:p-6 bg-white flex flex-col md:flex-row justify-between items-start gap-6"
+            >
               <div>
                 <span
                   class="text-[10px] font-bold text-gray-400 tracking-wider uppercase block mb-1.5"
-                  >Entrega</span
+                  >Información de Envío</span
                 >
-                <p class="text-sm font-bold text-gray-900 mb-0.5">
-                  Llega mañana, 20 de marzo
+                <p class="text-sm font-bold text-blue-600 mb-0.5">
+                  <i
+                    th:class="${pedido.costoEnvio != null and pedido.costoEnvio == 0 ? 'fas fa-store mr-1.5' : 'fas fa-truck mr-1.5'}"
+                  ></i>
+                  <span
+                    th:text="${pedido.metodoEnvio != null ? pedido.metodoEnvio : 'Envío Estándar'}"
+                  ></span>
+                  <span
+                    th:text="${pedido.costoEnvio != null and pedido.costoEnvio == 0 ? ' (Gratis)' : (pedido.costoEnvio != null ? ' (S/ ' + #numbers.formatDecimal(pedido.costoEnvio, 1, 2) + ')' : ' (S/ 8.00)')}"
+                  ></span>
                 </p>
-                <p class="text-xs text-gray-500">Av. Larco 821, Miraflores</p>
+                <p
+                  class="text-xs text-gray-500 mt-1"
+                  th:text="'Dirección: ' + ${pedido.direccionEnvio != null ? pedido.direccionEnvio : 'Pendiente'}"
+                ></p>
               </div>
             </div>
           </div>

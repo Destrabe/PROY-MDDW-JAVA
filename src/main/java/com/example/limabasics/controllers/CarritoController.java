@@ -56,33 +56,20 @@ public class CarritoController {
     private String nombrarColor(String claseColor) {
         if (claseColor == null)
             return "Clásico";
-        switch (claseColor.trim().toLowerCase()) {
-            case "bg-white":
-                return "Blanco";
-            case "bg-black":
-                return "Negro";
-            case "bg-gray-200":
-                return "Gris Claro";
-            case "bg-gray-400":
-                return "Gris";
-            case "bg-gray-500":
-                return "Gris Oscuro";
-            case "bg-red-500":
-            case "bg-[#ff0000]":
-                return "Rojo";
-            case "bg-[#8b7355]":
-                return "Marrón";
-            case "bg-[#6b705c]":
-                return "Verde Kaki";
-            case "bg-[#1b263b]":
-                return "Azul Marino";
-            case "bg-[#ddbea9]":
-                return "Beige";
-            case "bg-[#fbff00]":
-                return "Amarillo";
-            default:
-                return "Clásico";
-        }
+        return switch (claseColor.trim().toLowerCase()) {
+            case "bg-white" -> "Blanco";
+            case "bg-black" -> "Negro";
+            case "bg-gray-200" -> "Gris Claro";
+            case "bg-gray-400" -> "Gris";
+            case "bg-gray-500" -> "Gris Oscuro";
+            case "bg-red-500", "bg-[#ff0000]" -> "Rojo";
+            case "bg-[#8b7355]" -> "Marrón";
+            case "bg-[#6b705c]" -> "Verde Kaki";
+            case "bg-[#1b263b]" -> "Azul Marino";
+            case "bg-[#ddbea9]" -> "Beige";
+            case "bg-[#fbff00]" -> "Amarillo";
+            default -> "Clásico";
+        };
     }
 
     private void guardarOActualizarItem(Usuario usuario, Producto producto, String color, String talla) {
@@ -132,7 +119,12 @@ public class CarritoController {
 
     @PostMapping("/checkout/procesar")
     @ResponseBody
-    public Map<String, Object> procesarCompra(HttpSession session) {
+    public Map<String, Object> procesarCompra(
+            @RequestParam(required = false, defaultValue = "Envío Estándar en Lima") String metodoEnvio,
+            @RequestParam(required = false, defaultValue = "8.0") Double costoEnvio,
+            @RequestParam(required = false, defaultValue = "Pendiente") String direccionEnvio,
+            HttpSession session) {
+
         Map<String, Object> response = new HashMap<>();
         Long usuarioId = (Long) session.getAttribute("usuarioId");
 
@@ -146,6 +138,14 @@ public class CarritoController {
                 Pedido nuevoPedido = new Pedido();
                 nuevoPedido.setUsuario(usuario);
                 nuevoPedido.setEstado("Confirmado");
+                nuevoPedido.setMetodoEnvio(metodoEnvio);
+                nuevoPedido.setCostoEnvio(costoEnvio);
+
+                if ("Retiro en tienda Lima Basics".equals(metodoEnvio)) {
+                    nuevoPedido.setDireccionEnvio("Av. Larco 821, Miraflores, Lima");
+                } else {
+                    nuevoPedido.setDireccionEnvio(direccionEnvio);
+                }
 
                 for (CarritoItem item : items) {
                     DetallePedido detalle = new DetallePedido();
@@ -159,7 +159,7 @@ public class CarritoController {
                     subtotalItems += item.getSubtotal();
                 }
 
-                double totalFinal = subtotalItems + 8.0;
+                double totalFinal = subtotalItems + costoEnvio;
                 nuevoPedido.setTotal(totalFinal);
 
                 pedidoRepository.save(nuevoPedido);
@@ -182,19 +182,20 @@ public class CarritoController {
         if (usuarioId == null) {
             return "redirect:/";
         }
+
         List<Pedido> pedidos = pedidoRepository.findAllByOrderByFechaCreacionDesc();
         pedidos.removeIf(p -> !p.getUsuario().getId().equals(usuarioId));
-        
+
         int totalProductos = 0;
         for (Pedido p : pedidos) {
             for (DetallePedido d : p.getDetalles()) {
                 totalProductos += d.getCantidad();
             }
         }
-        
+
         model.addAttribute("pedidos", pedidos);
-        model.addAttribute("totalProductos", totalProductos); 
-        
+        model.addAttribute("totalProductos", totalProductos);
+
         sincronizarContadoresSesion(session);
         return "orders";
     }

@@ -21,6 +21,10 @@ public class Pedido {
     private String estado;
     private LocalDateTime fechaCreacion;
 
+    private String metodoEnvio;
+    private Double costoEnvio;
+    private String direccionEnvio;
+
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetallePedido> detalles = new ArrayList<>();
 
@@ -79,6 +83,30 @@ public class Pedido {
 
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getMetodoEnvio() {
+        return metodoEnvio;
+    }
+
+    public void setMetodoEnvio(String metodoEnvio) {
+        this.metodoEnvio = metodoEnvio;
+    }
+
+    public Double getCostoEnvio() {
+        return costoEnvio;
+    }
+
+    public void setCostoEnvio(Double costoEnvio) {
+        this.costoEnvio = costoEnvio;
+    }
+
+    public String getDireccionEnvio() {
+        return direccionEnvio;
+    }
+
+    public void setDireccionEnvio(String direccionEnvio) {
+        this.direccionEnvio = direccionEnvio;
     }
 
     public List<DetallePedido> getDetalles() {

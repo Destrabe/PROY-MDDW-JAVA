@@ -11,17 +11,15 @@
     />
   </head>
   <body
-    class="bg-[#f8f9fc] text-gray-900 font-sans antialiased flex flex-col min-h-screen"
+    class="bg-gray-50 text-gray-900 font-sans antialiased min-h-screen flex flex-col"
   >
     <div th:replace="~{fragments/header :: header}"></div>
 
     <main
-      class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-10 w-full"
+      class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 md:px-12 pt-8 sm:pt-12 pb-8 w-full flex flex-col lg:flex-row gap-8 lg:gap-12"
     >
-      <div
-        class="flex items-center justify-center mb-8 sm:mb-12 overflow-x-auto py-2"
-      >
-        <div class="flex items-center min-w-[280px]">
+      <div class="w-full lg:w-3/5 order-2 lg:order-1">
+        <div class="flex items-center justify-between mb-8 sm:mb-10 px-2">
           <div class="flex flex-col items-center">
             <div
               id="step-circle-1"
@@ -32,13 +30,12 @@
             <span
               id="step-label-1"
               class="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase mt-2 text-gray-900"
-              >DATOS</span
+              >Datos</span
             >
           </div>
-
           <div
             id="step-line-1"
-            class="w-16 sm:w-28 md:w-32 h-[2px] bg-[#1d4ed8] mx-2 sm:mx-4 -mt-4 sm:-mt-5 transition-colors"
+            class="w-16 sm:w-28 md:w-32 h-[2px] bg-gray-200 mx-2 sm:mx-4 -mt-4 sm:-mt-5 transition-colors"
           ></div>
 
           <div class="flex flex-col items-center">
@@ -51,10 +48,9 @@
             <span
               id="step-label-2"
               class="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase mt-2 text-gray-400"
-              >ENVÍO</span
+              >Envío</span
             >
           </div>
-
           <div
             id="step-line-2"
             class="w-16 sm:w-28 md:w-32 h-[2px] bg-gray-200 mx-2 sm:mx-4 -mt-4 sm:-mt-5 transition-colors"
@@ -70,227 +66,470 @@
             <span
               id="step-label-3"
               class="text-[10px] sm:text-[11px] font-bold tracking-wider uppercase mt-2 text-gray-400"
-              >PAGO</span
+              >Pago</span
             >
           </div>
         </div>
-      </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
         <div
-          class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm"
+          class="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm"
         >
           <form id="form-datos" onsubmit="irAPaso(2, event)">
-            <h2 class="text-xl sm:text-2xl font-bold tracking-tight mb-6">
-              Datos de facturación
-            </h2>
-
             <div
-              class="inline-flex rounded-lg border border-gray-200 bg-gray-50 mb-6 overflow-hidden"
+              class="flex flex-col sm:flex-row gap-0 sm:gap-4 mb-6 bg-gray-100 p-1.5 rounded-lg w-full sm:w-fit mx-auto sm:mx-0"
             >
               <button
                 type="button"
                 id="btn-boleta"
-                onclick="seleccionarComprobante('BOLETA')"
-                class="px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-bold bg-[#0f1115] text-white transition-colors"
+                onclick="seleccionarComprobante('boleta')"
+                class="w-full sm:w-auto px-6 sm:px-8 py-2.5 rounded-md text-sm font-bold bg-[#0f1115] text-white shadow-sm transition-all"
               >
                 Boleta
               </button>
               <button
                 type="button"
                 id="btn-factura"
-                onclick="seleccionarComprobante('FACTURA')"
-                class="px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-medium text-gray-600 hover:text-gray-900 bg-white transition-colors"
+                onclick="seleccionarComprobante('factura')"
+                class="w-full sm:w-auto px-6 sm:px-8 py-2.5 rounded-md text-sm font-bold text-gray-600 hover:text-gray-900 transition-all"
               >
                 Factura
               </button>
             </div>
 
-            <div class="mb-5">
-              <label class="block text-xs font-bold text-gray-800 mb-2"
-                >Tipo de documento</label
-              >
-              <div class="flex items-center gap-5">
-                <label
-                  class="inline-flex items-center gap-2 text-sm cursor-pointer"
+            <input type="hidden" id="tipo-comprobante" value="boleta" />
+
+            <div class="space-y-5">
+              <div>
+                <span class="block text-xs font-bold text-gray-900 mb-2.5"
+                  >Tipo de documento</span
                 >
+                <div class="flex items-center gap-6">
+                  <label
+                    class="flex items-center gap-2 cursor-pointer text-sm font-medium"
+                  >
+                    <input
+                      type="radio"
+                      name="tipo_doc"
+                      id="radio-dni"
+                      value="DNI"
+                      checked
+                      onchange="actualizarCamposDocumento()"
+                      class="accent-[#1d4ed8] w-4 h-4"
+                    />
+                    DNI
+                  </label>
+                  <label
+                    class="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-500"
+                  >
+                    <input
+                      type="radio"
+                      name="tipo_doc"
+                      id="radio-ruc"
+                      value="RUC"
+                      onchange="actualizarCamposDocumento()"
+                      class="accent-[#1d4ed8] w-4 h-4"
+                    />
+                    RUC
+                  </label>
+                </div>
+              </div>
+
+              <div id="contenedor-razon-social" class="hidden">
+                <label class="block text-xs font-bold text-gray-900 mb-1.5"
+                  >Razón Social</label
+                >
+                <input
+                  type="text"
+                  id="input-razon-social"
+                  placeholder="Ej. Mi Empresa S.A.C."
+                  class="w-full bg-[#f3f4f6] text-gray-900 text-sm rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
+                />
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    id="label-doc"
+                    class="block text-xs font-bold text-gray-900 mb-1.5"
+                    >DNI (8 dígitos)</label
+                  >
                   <input
-                    type="radio"
-                    name="tipoDoc"
-                    id="radio-dni"
-                    value="DNI"
-                    checked
-                    onchange="actualizarCamposDocumento()"
-                    class="accent-[#1d4ed8] w-4 h-4"
+                    type="text"
+                    id="input-doc"
+                    placeholder="Número de documento"
+                    required
+                    class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
                   />
-                  <span>DNI</span>
-                </label>
-                <label
-                  class="inline-flex items-center gap-2 text-sm cursor-pointer"
-                >
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-900 mb-1.5"
+                    >Celular (9 dígitos)</label
+                  >
                   <input
-                    type="radio"
-                    name="tipoDoc"
-                    id="radio-ruc"
-                    value="RUC"
-                    onchange="actualizarCamposDocumento()"
-                    class="accent-[#1d4ed8] w-4 h-4"
+                    type="text"
+                    id="input-celular"
+                    placeholder="Ej. 987654321"
+                    required
+                    pattern="[0-9]{9}"
+                    maxlength="9"
+                    class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
                   />
-                  <span>RUC</span>
-                </label>
+                </div>
               </div>
-            </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-gray-900 mb-1.5"
+                    >Nombres</label
+                  >
+                  <input
+                    type="text"
+                    placeholder="Tus nombres"
+                    th:value="${session.usuarioNombre != null ? session.usuarioNombre : ''}"
+                    required
+                    class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-900 mb-1.5"
+                    >Apellidos</label
+                  >
+                  <input
+                    type="text"
+                    placeholder="Tus apellidos completos"
+                    required
+                    class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label
-                  id="label-doc"
-                  class="block text-xs font-bold text-gray-800 mb-1.5"
-                  >DNI (8 dígitos)</label
+                <label class="block text-xs font-bold text-gray-900 mb-1.5"
+                  >Correo electrónico</label
+                >
+                <input
+                  type="email"
+                  placeholder="correo@ejemplo.com"
+                  th:value="${session.usuarioEmail != null ? session.usuarioEmail : ''}"
+                  required
+                  class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-900 mb-1.5"
+                  >Dirección de entrega</label
                 >
                 <input
                   type="text"
-                  id="input-doc"
-                  placeholder="12345678"
-                  maxlength="8"
+                  id="input-direccion"
+                  placeholder="Ej. Av. Javier Prado Este 123, Dpto 401"
                   required
-                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                  class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
                 />
               </div>
 
-              <div>
-                <label class="block text-xs font-bold text-gray-800 mb-1.5"
-                  >Celular (9 dígitos)</label
-                >
-                <input
-                  type="tel"
-                  id="input-celular"
-                  placeholder="999000111"
-                  maxlength="9"
-                  minlength="9"
-                  oninput="
-                    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9)
-                  "
-                  required
-                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
-                />
-              </div>
-            </div>
-
-            <div id="contenedor-razon-social" class="mb-4 hidden">
-              <label class="block text-xs font-bold text-gray-800 mb-1.5"
-                >Razón social</label
-              >
-              <input
-                type="text"
-                id="input-razon-social"
-                placeholder="Empresa S.A.C."
-                class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
-              />
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label
-                  id="label-nombre"
-                  class="block text-xs font-bold text-gray-800 mb-1.5"
-                  >Nombres</label
-                >
-                <input
-                  type="text"
-                  id="input-nombre"
-                  th:value="${session.usuarioNombre != null ? session.usuarioNombre : ''}"
-                  placeholder="Ana"
-                  required
-                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
-                />
-              </div>
-
-              <div>
-                <label class="block text-xs font-bold text-gray-800 mb-1.5"
-                  >Apellidos</label
-                >
-                <input
-                  type="text"
-                  id="input-apellido"
-                  placeholder="García"
-                  required
-                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
-                />
-              </div>
-            </div>
-
-            <div class="mb-4">
-              <label class="block text-xs font-bold text-gray-800 mb-1.5"
-                >Correo electrónico</label
-              >
-              <input
-                type="email"
-                id="input-correo"
-                th:value="${session.usuarioEmail != null ? session.usuarioEmail : ''}"
-                placeholder="ana@correo.pe"
-                required
-                class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
-              />
-            </div>
-
-            <div class="mb-4">
-              <label class="block text-xs font-bold text-gray-800 mb-1.5"
-                >Dirección de entrega</label
-              >
-              <input
-                type="text"
-                id="input-direccion"
-                placeholder="Av. Larco 821, Dpto 302"
-                required
-                class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
-              />
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div>
-                <label class="block text-xs font-bold text-gray-800 mb-1.5"
-                  >Distrito</label
-                >
-                <select
-                  id="input-distrito"
-                  required
-                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
-                >
-                  <option value="" disabled selected>Seleccionar...</option>
-                  <option value="Miraflores">Miraflores</option>
-                  <option value="San Isidro">San Isidro</option>
-                  <option value="Santiago de Surco">Santiago de Surco</option>
-                  <option value="Barranco">Barranco</option>
-                  <option value="San Miguel">San Miguel</option>
-                  <option value="Jesús María">Jesús María</option>
-                  <option value="Lince">Lince</option>
-                  <option value="Magdalena">Magdalena</option>
-                  <option value="La Molina">La Molina</option>
-                  <option value="Lima Cercado">Lima Cercado</option>
-                  <option value="San Juan de Lurigancho">
-                    San Juan de Lurigancho
-                  </option>
-                  <option value="Los Olivos">Los Olivos</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block text-xs font-bold text-gray-800 mb-1.5"
-                  >Referencia (opcional)</label
-                >
-                <input
-                  type="text"
-                  id="input-referencia"
-                  placeholder="Frente al parque"
-                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
-                />
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-gray-900 mb-1.5"
+                    >Distrito</label
+                  >
+                  <div class="relative" id="distrito-dropdown-container">
+                    <input type="hidden" id="input-distrito" required />
+                    <button
+                      type="button"
+                      onclick="toggleDistritos()"
+                      class="w-full bg-white text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-300 focus:border-[#1d4ed8] transition-colors cursor-pointer flex justify-between items-center shadow-sm"
+                    >
+                      <span id="distrito-texto" class="text-gray-500"
+                        >Selecciona un distrito</span
+                      >
+                      <i
+                        class="fas fa-chevron-down text-gray-500 text-xs transition-transform duration-200"
+                        id="distrito-icono"
+                      ></i>
+                    </button>
+                    <ul
+                      id="distrito-lista"
+                      class="hidden absolute bottom-full mb-1 z-10 w-full bg-white border border-gray-200 rounded-lg shadow-xl max-h-56 overflow-y-auto custom-scrollbar"
+                    >
+                      <li
+                        onclick="selecDistrito('Ancón')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Ancón
+                      </li>
+                      <li
+                        onclick="selecDistrito('Ate')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Ate
+                      </li>
+                      <li
+                        onclick="selecDistrito('Barranco')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Barranco
+                      </li>
+                      <li
+                        onclick="selecDistrito('Breña')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Breña
+                      </li>
+                      <li
+                        onclick="selecDistrito('Carabayllo')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Carabayllo
+                      </li>
+                      <li
+                        onclick="selecDistrito('Chaclacayo')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Chaclacayo
+                      </li>
+                      <li
+                        onclick="selecDistrito('Chorrillos')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Chorrillos
+                      </li>
+                      <li
+                        onclick="selecDistrito('Cieneguilla')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Cieneguilla
+                      </li>
+                      <li
+                        onclick="selecDistrito('Comas')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Comas
+                      </li>
+                      <li
+                        onclick="selecDistrito('El Agustino')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        El Agustino
+                      </li>
+                      <li
+                        onclick="selecDistrito('Independencia')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Independencia
+                      </li>
+                      <li
+                        onclick="selecDistrito('Jesús María')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Jesús María
+                      </li>
+                      <li
+                        onclick="selecDistrito('La Molina')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        La Molina
+                      </li>
+                      <li
+                        onclick="selecDistrito('La Victoria')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        La Victoria
+                      </li>
+                      <li
+                        onclick="selecDistrito('Lima')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Lima
+                      </li>
+                      <li
+                        onclick="selecDistrito('Lince')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Lince
+                      </li>
+                      <li
+                        onclick="selecDistrito('Los Olivos')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Los Olivos
+                      </li>
+                      <li
+                        onclick="selecDistrito('Lurigancho')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Lurigancho
+                      </li>
+                      <li
+                        onclick="selecDistrito('Lurín')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Lurín
+                      </li>
+                      <li
+                        onclick="selecDistrito('Magdalena del Mar')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Magdalena del Mar
+                      </li>
+                      <li
+                        onclick="selecDistrito('Miraflores')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Miraflores
+                      </li>
+                      <li
+                        onclick="selecDistrito('Pachacámac')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Pachacámac
+                      </li>
+                      <li
+                        onclick="selecDistrito('Pucusana')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Pucusana
+                      </li>
+                      <li
+                        onclick="selecDistrito('Pueblo Libre')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Pueblo Libre
+                      </li>
+                      <li
+                        onclick="selecDistrito('Puente Piedra')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Puente Piedra
+                      </li>
+                      <li
+                        onclick="selecDistrito('Punta Hermosa')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Punta Hermosa
+                      </li>
+                      <li
+                        onclick="selecDistrito('Punta Negra')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Punta Negra
+                      </li>
+                      <li
+                        onclick="selecDistrito('Rímac')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Rímac
+                      </li>
+                      <li
+                        onclick="selecDistrito('San Bartolo')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        San Bartolo
+                      </li>
+                      <li
+                        onclick="selecDistrito('San Borja')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        San Borja
+                      </li>
+                      <li
+                        onclick="selecDistrito('San Isidro')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        San Isidro
+                      </li>
+                      <li
+                        onclick="selecDistrito('San Juan de Lurigancho')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        San Juan de Lurigancho
+                      </li>
+                      <li
+                        onclick="selecDistrito('San Juan de Miraflores')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        San Juan de Miraflores
+                      </li>
+                      <li
+                        onclick="selecDistrito('San Luis')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        San Luis
+                      </li>
+                      <li
+                        onclick="selecDistrito('San Martín de Porres')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        San Martín de Porres
+                      </li>
+                      <li
+                        onclick="selecDistrito('San Miguel')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        San Miguel
+                      </li>
+                      <li
+                        onclick="selecDistrito('Santa Anita')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Santa Anita
+                      </li>
+                      <li
+                        onclick="selecDistrito('Santa María del Mar')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Santa María del Mar
+                      </li>
+                      <li
+                        onclick="selecDistrito('Santa Rosa')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Santa Rosa
+                      </li>
+                      <li
+                        onclick="selecDistrito('Santiago de Surco')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Santiago de Surco
+                      </li>
+                      <li
+                        onclick="selecDistrito('Surquillo')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Surquillo
+                      </li>
+                      <li
+                        onclick="selecDistrito('Villa El Salvador')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Villa El Salvador
+                      </li>
+                      <li
+                        onclick="selecDistrito('Villa María del Triunfo')"
+                        class="px-4 py-2.5 text-sm hover:bg-[#f3f4f6] cursor-pointer transition-colors text-gray-700 font-medium"
+                      >
+                        Villa María del Triunfo
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-900 mb-1.5"
+                    >Referencia (opcional)</label
+                  >
+                  <input
+                    type="text"
+                    placeholder="Ej. Frente al parque principal"
+                    class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
+                  />
+                </div>
               </div>
             </div>
 
             <button
               type="submit"
-              class="w-full bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-4 rounded-xl text-sm transition-colors shadow-md"
+              class="w-full bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-4 px-6 rounded-xl mt-8 text-sm transition-colors shadow-md"
             >
               Continuar con el envío &rarr;
             </button>
@@ -310,9 +549,10 @@
                   <input
                     type="radio"
                     name="metodoEnvio"
-                    value="8"
+                    value="Envío Estándar en Lima"
+                    data-costo="8"
                     checked
-                    onchange="cambiarCostoEnvio(8, 'card-envio-estandar')"
+                    onchange="cambiarCostoEnvio(this, 'card-envio-estandar')"
                     class="accent-[#1d4ed8] w-4 h-4 mt-1 sm:mt-0 flex-shrink-0"
                   />
                   <div>
@@ -338,8 +578,9 @@
                   <input
                     type="radio"
                     name="metodoEnvio"
-                    value="15"
-                    onchange="cambiarCostoEnvio(15, 'card-envio-express')"
+                    value="Envío Express (24 horas)"
+                    data-costo="15"
+                    onchange="cambiarCostoEnvio(this, 'card-envio-express')"
                     class="accent-[#1d4ed8] w-4 h-4 mt-1 sm:mt-0 flex-shrink-0"
                   />
                   <div>
@@ -365,8 +606,9 @@
                   <input
                     type="radio"
                     name="metodoEnvio"
-                    value="0"
-                    onchange="cambiarCostoEnvio(0, 'card-envio-tienda')"
+                    value="Retiro en tienda Lima Basics"
+                    data-costo="0"
+                    onchange="cambiarCostoEnvio(this, 'card-envio-tienda')"
                     class="accent-[#1d4ed8] w-4 h-4 mt-1 sm:mt-0 flex-shrink-0"
                   />
                   <div>
@@ -413,66 +655,76 @@
               <div
                 class="flex items-center justify-between border-b border-gray-100 pb-3"
               >
-                <span class="text-sm font-bold text-gray-800"
-                  >Tarjeta de Crédito o Débito</span
-                >
-                <div class="flex gap-2 text-gray-400 text-lg">
-                  <i class="fab fa-cc-visa text-blue-700"></i>
-                  <i class="fab fa-cc-mastercard text-red-500"></i>
-                  <i class="fab fa-cc-amex text-blue-500"></i>
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-credit-card text-[#1d4ed8] text-xl"></i>
+                  <span class="font-bold text-sm text-gray-900"
+                    >Tarjeta de crédito o débito</span
+                  >
+                </div>
+                <div class="flex gap-1">
+                  <div
+                    class="w-8 h-5 bg-gray-200 rounded text-[8px] flex items-center justify-center font-bold text-gray-500"
+                  >
+                    VISA
+                  </div>
+                  <div
+                    class="w-8 h-5 bg-gray-200 rounded text-[8px] flex items-center justify-center font-bold text-gray-500"
+                  >
+                    MC
+                  </div>
                 </div>
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                <label
+                  class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
                   >Número de tarjeta</label
                 >
                 <input
                   type="text"
-                  placeholder="4557 •••• •••• 1234"
-                  maxlength="19"
+                  placeholder="0000 0000 0000 0000"
                   required
-                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                  class="w-full bg-[#f9fafb] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-200 focus:border-[#1d4ed8] transition-colors font-mono"
                 />
               </div>
 
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-xs font-bold text-gray-800 mb-1.5"
-                    >Vencimiento (MM/AA)</label
+                  <label
+                    class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
+                    >Vencimiento</label
                   >
                   <input
                     type="text"
-                    placeholder="08/29"
-                    maxlength="5"
+                    placeholder="MM/AA"
                     required
-                    class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                    class="w-full bg-[#f9fafb] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-200 focus:border-[#1d4ed8] transition-colors"
                   />
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-gray-800 mb-1.5"
-                    >CVV</label
+                  <label
+                    class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
+                    >CVC</label
                   >
                   <input
                     type="password"
                     placeholder="123"
-                    maxlength="4"
                     required
-                    class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                    class="w-full bg-[#f9fafb] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-200 focus:border-[#1d4ed8] transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-gray-800 mb-1.5"
+                <label
+                  class="block text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1.5"
                   >Nombre en la tarjeta</label
                 >
                 <input
                   type="text"
-                  th:value="${session.usuarioNombre != null ? session.usuarioNombre : ''}"
-                  placeholder="ANA GARCIA"
+                  placeholder="Como aparece en la tarjeta"
                   required
-                  class="w-full bg-[#f3f5f9] border border-gray-200 rounded-lg px-4 py-3 text-sm uppercase focus:outline-none focus:bg-white focus:border-[#1d4ed8]"
+                  class="w-full bg-[#f9fafb] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-200 focus:border-[#1d4ed8] transition-colors"
                 />
               </div>
             </div>
@@ -483,111 +735,113 @@
                 onclick="irAPaso(2)"
                 class="w-1/3 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-bold py-4 rounded-xl text-sm transition-colors"
               >
-                &larr; Volver
+                &larr; Envío
               </button>
               <button
                 type="submit"
                 id="btn-pagar-final"
-                class="w-2/3 bg-[#0f1115] hover:bg-black text-white font-bold py-4 rounded-xl text-sm transition-colors shadow-md"
+                class="w-2/3 bg-[#0f1115] hover:bg-black text-white font-bold py-4 rounded-xl text-sm transition-colors shadow-lg flex items-center justify-center gap-2"
               >
-                Pagar ahora
+                <i class="fas fa-lock text-xs text-gray-400"></i> Pagar ahora
               </button>
             </div>
           </form>
         </div>
+      </div>
 
-        <div class="lg:col-span-5">
-          <div
-            class="bg-white p-6 sm:p-7 rounded-2xl border border-gray-200 shadow-sm"
-          >
-            <h3 class="font-bold text-base text-gray-900 mb-5">
+      <div class="w-full lg:w-2/5 order-1 lg:order-2">
+        <div
+          class="bg-white rounded-2xl border border-gray-200 shadow-sm sticky top-24 overflow-hidden"
+        >
+          <div class="bg-gray-50 border-b border-gray-200 p-5">
+            <h3 class="font-black tracking-tight text-lg text-gray-900">
               Resumen del pedido
             </h3>
+          </div>
 
-            <div class="space-y-4 mb-6">
-              <div
-                th:each="item : ${items}"
-                class="flex items-start justify-between gap-3"
-              >
-                <div class="flex items-center gap-3.5">
-                  <div class="relative flex-shrink-0">
-                    <img
-                      th:src="${item.producto.imagen}"
-                      th:alt="${item.producto.nombre}"
-                      class="w-14 h-16 object-cover rounded-xl border border-gray-200 bg-gray-50"
-                    />
-                    <span
-                      th:text="${item.cantidad}"
-                      class="absolute -top-1.5 -right-1.5 bg-gray-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
-                    ></span>
+          <div class="p-6">
+            <div
+              class="max-h-80 overflow-y-auto pr-2 space-y-4 mb-6 custom-scrollbar"
+            >
+              <div th:each="item : ${items}" class="flex gap-4">
+                <div class="relative w-16 h-20 flex-shrink-0">
+                  <img
+                    th:if="${item.producto.imagen != null}"
+                    th:src="${item.producto.imagen}"
+                    class="w-full h-full object-cover rounded-lg border border-gray-200"
+                  />
+                  <div
+                    th:unless="${item.producto.imagen != null}"
+                    class="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200"
+                  >
+                    <i class="fas fa-tshirt text-gray-300"></i>
                   </div>
-                  <div>
-                    <h4
-                      class="font-bold text-xs sm:text-sm text-gray-900 leading-snug"
-                      th:text="${item.producto.nombre}"
-                    ></h4>
-                    <p class="text-[11px] text-gray-400 mt-0.5">
-                      <span
-                        class="nombre-color-item"
-                        th:data-color="${item.color}"
-                        >Color</span
-                      >
-                      · <span th:text="${item.talla}">M</span>
-                    </p>
-                  </div>
+                  <span
+                    class="absolute -top-2 -right-2 bg-gray-900 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white"
+                    th:text="${item.cantidad}"
+                    >1</span
+                  >
                 </div>
-                <span
-                  class="font-bold text-xs sm:text-sm text-gray-900 whitespace-nowrap"
-                  th:text="'S/ ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}"
-                ></span>
+                <div class="flex-grow flex flex-col justify-center">
+                  <h4
+                    class="font-bold text-sm text-gray-900 leading-tight mb-1"
+                    th:text="${item.producto.nombre}"
+                  ></h4>
+                  <p class="text-[11px] text-gray-500 font-medium">
+                    <span
+                      th:text="'Color · ' + (${item.color == 'bg-white' ? 'Blanco' : item.color == 'bg-black' ? 'Negro' : 'Elegido'})"
+                    ></span>
+                    <span class="mx-1">|</span>
+                    <span th:text="'Talla · ' + ${item.talla}"></span>
+                  </p>
+                </div>
+                <div class="flex flex-col justify-center items-end">
+                  <span
+                    class="font-bold text-sm text-gray-900"
+                    th:text="'S/ ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}"
+                  ></span>
+                </div>
               </div>
             </div>
 
-            <div
-              class="border-t border-gray-100 pt-4 space-y-2 text-xs sm:text-sm"
-            >
-              <div class="flex justify-between text-gray-500">
-                <span>Subtotal</span>
+            <div class="border-t border-gray-100 pt-5 space-y-3">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500 font-medium">Subtotal</span>
                 <span
-                  id="resumen-subtotal"
                   class="font-bold text-gray-900"
-                  th:data-subtotal="${session.carritoTotal != null ? session.carritoTotal : 0}"
-                  th:text="'S/ ' + ${#numbers.formatDecimal(session.carritoTotal != null ? session.carritoTotal : 0, 1, 2)}"
+                  id="resumen-subtotal"
+                  th:text="'S/ ' + ${#numbers.formatDecimal(session.carritoTotal, 1, 2)}"
                 ></span>
               </div>
-              <div class="flex justify-between text-gray-500">
-                <span>Envío</span>
-                <span id="resumen-envio" class="font-bold text-gray-900"
-                  >S/ 8.00</span
-                >
-              </div>
-              <div
-                id="fila-igv"
-                class="flex justify-between text-gray-500 hidden"
-              >
-                <span>IGV (18%)</span>
-                <span id="resumen-igv" class="font-bold text-gray-900"
+              <div id="fila-igv" class="flex justify-between text-sm hidden">
+                <span class="text-gray-500 font-medium">IGV (18%)</span>
+                <span class="font-bold text-gray-900" id="resumen-igv"
                   >S/ 0.00</span
                 >
               </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500 font-medium">Envío</span>
+                <span class="font-bold text-gray-900" id="resumen-envio"
+                  >S/ 8.00</span
+                >
+              </div>
             </div>
 
             <div
-              class="flex justify-between items-center border-t border-gray-100 mt-4 pt-4 mb-5"
+              class="border-t border-gray-200 mt-5 pt-5 flex justify-between items-end"
             >
-              <span class="font-bold text-base text-gray-900">Total</span>
+              <span class="font-black text-lg text-gray-900">Total</span>
               <span
+                class="font-black text-2xl text-[#1d4ed8]"
                 id="resumen-total"
-                class="font-black text-lg text-gray-900"
-                th:text="'S/ ' + ${#numbers.formatDecimal((session.carritoTotal != null ? session.carritoTotal : 0) + 8, 1, 2)}"
+                th:text="'S/ ' + ${#numbers.formatDecimal(session.carritoTotal + 8.0, 1, 2)}"
               ></span>
             </div>
 
             <div
-              class="bg-[#f8f9fc] border border-gray-200/70 rounded-xl py-3 px-4 flex items-center justify-center gap-2 text-xs text-gray-500"
+              class="mt-6 flex items-center justify-center gap-2 text-[10px] font-bold text-gray-400 bg-gray-50 py-2.5 rounded-lg border border-gray-100 uppercase tracking-wider"
             >
-              <i class="fas fa-lock text-emerald-600"></i>
-              <span>Transacción protegida · SSL 256-bit</span>
+              <i class="fas fa-lock"></i> Transacción protegida · SSL 256-bit
             </div>
           </div>
         </div>
@@ -596,61 +850,65 @@
 
     <div
       id="modal-exito"
-      class="hidden fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-[2px] px-4"
+      class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm px-4"
     >
       <div
-        class="bg-white rounded-2xl max-w-md w-full p-8 text-center shadow-2xl"
+        class="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-2xl text-center transform scale-100 transition-transform"
       >
         <div
-          class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4 text-2xl"
+          class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
         >
-          <i class="fas fa-check"></i>
+          <i class="fas fa-check text-4xl text-green-500"></i>
         </div>
-        <h3 class="text-2xl font-black tracking-tight mb-2">
-          ¡Compra confirmada!
-        </h3>
-        <p class="text-sm text-gray-500 mb-6">
-          Hemos recibido tu pedido correctamente. Te enviaremos el comprobante y
-          el seguimiento a tu correo electrónico.
+        <h3 class="text-3xl font-black tracking-tight mb-2">¡Pago exitoso!</h3>
+        <p class="text-gray-500 text-sm mb-8">
+          Tu pedido ha sido procesado correctamente. Recibirás un correo con los
+          detalles de tu compra.
         </p>
         <a
-          th:href="@{/catalog}"
-          class="block w-full bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-3.5 rounded-xl text-sm transition-colors shadow-md"
+          href="/pedidos"
+          class="block w-full bg-[#1d4ed8] hover:bg-blue-800 text-white font-bold py-4 rounded-xl transition-colors shadow-md"
+          >Ver mis pedidos</a
         >
-          Volver a la tienda
-        </a>
       </div>
     </div>
 
-    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:inline="javascript">
+      const subtotalGlobal = /*[[${session.carritoTotal}]]*/ 0;
+      let costoEnvioGlobal = 8.0;
 
-    <script>
-      let costoEnvioActual = 8;
-      let esFacturaActiva = false;
-
-      function traducirColor(clase) {
-        const limpia = (clase || "").trim().toLowerCase();
-        const colores = {
-          "bg-white": "Blanco",
-          "bg-black": "Negro",
-          "bg-gray-200": "Gris Claro",
-          "bg-gray-400": "Gris",
-          "bg-gray-500": "Gris Oscuro",
-          "bg-red-500": "Rojo",
-          "bg-[#ff0000]": "Rojo",
-          "bg-[#8b7355]": "Marrón",
-          "bg-[#6b705c]": "Verde Kaki",
-          "bg-[#1b263b]": "Azul Marino",
-          "bg-[#ddbea9]": "Beige",
-          "bg-[#fbff00]": "Amarillo",
-        };
-        return colores[limpia] || "Clásico";
+      function toggleDistritos() {
+        const lista = document.getElementById("distrito-lista");
+        const icono = document.getElementById("distrito-icono");
+        if (lista.classList.contains("hidden")) {
+          lista.classList.remove("hidden");
+          icono.style.transform = "rotate(180deg)";
+        } else {
+          lista.classList.add("hidden");
+          icono.style.transform = "rotate(0deg)";
+        }
       }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".nombre-color-item").forEach((el) => {
-          el.textContent = traducirColor(el.dataset.color);
-        });
+      function selecDistrito(distrito) {
+        document.getElementById("input-distrito").value = distrito;
+        const texto = document.getElementById("distrito-texto");
+        texto.textContent = distrito;
+        texto.classList.remove("text-gray-500");
+        texto.classList.add("text-gray-900");
+        document.getElementById("distrito-lista").classList.add("hidden");
+        document.getElementById("distrito-icono").style.transform =
+          "rotate(0deg)";
+      }
+
+      document.addEventListener("click", function (event) {
+        const container = document.getElementById(
+          "distrito-dropdown-container",
+        );
+        if (container && !container.contains(event.target)) {
+          document.getElementById("distrito-lista").classList.add("hidden");
+          document.getElementById("distrito-icono").style.transform =
+            "rotate(0deg)";
+        }
       });
 
       function seleccionarComprobante(tipo) {
@@ -661,25 +919,31 @@
         );
         const inputRazon = document.getElementById("input-razon-social");
         const filaIgv = document.getElementById("fila-igv");
+        document.getElementById("tipo-comprobante").value = tipo;
 
-        if (tipo === "BOLETA") {
-          btnBoleta.className =
-            "px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-bold bg-[#0f1115] text-white transition-colors";
+        if (tipo === "factura") {
           btnFactura.className =
-            "px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-medium text-gray-600 hover:text-gray-900 bg-white transition-colors";
-          contenedorRazon.classList.add("hidden");
-          inputRazon.removeAttribute("required");
-          esFacturaActiva = false;
-          filaIgv.classList.add("hidden");
-        } else {
-          btnFactura.className =
-            "px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-bold bg-[#0f1115] text-white transition-colors";
+            "w-full sm:w-auto px-6 sm:px-8 py-2.5 rounded-md text-sm font-bold bg-[#0f1115] text-white shadow-sm transition-all";
           btnBoleta.className =
-            "px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-medium text-gray-600 hover:text-gray-900 bg-white transition-colors";
+            "w-full sm:w-auto px-6 sm:px-8 py-2.5 rounded-md text-sm font-bold text-gray-600 hover:text-gray-900 transition-all";
           contenedorRazon.classList.remove("hidden");
-          inputRazon.setAttribute("required", "true");
-          esFacturaActiva = true;
+          inputRazon.required = true;
           filaIgv.classList.remove("hidden");
+
+          document.getElementById("radio-ruc").checked = true;
+          actualizarCamposDocumento();
+        } else {
+          btnBoleta.className =
+            "w-full sm:w-auto px-6 sm:px-8 py-2.5 rounded-md text-sm font-bold bg-[#0f1115] text-white shadow-sm transition-all";
+          btnFactura.className =
+            "w-full sm:w-auto px-6 sm:px-8 py-2.5 rounded-md text-sm font-bold text-gray-600 hover:text-gray-900 transition-all";
+          contenedorRazon.classList.add("hidden");
+          inputRazon.required = false;
+          inputRazon.value = "";
+          filaIgv.classList.add("hidden");
+
+          document.getElementById("radio-dni").checked = true;
+          actualizarCamposDocumento();
         }
         recalcularTotales();
       }
@@ -691,54 +955,51 @@
 
         if (esRuc) {
           labelDoc.textContent = "RUC (11 dígitos)";
-          inputDoc.placeholder = "20123456789";
+          inputDoc.pattern = "[0-9]{11}";
           inputDoc.maxLength = 11;
         } else {
           labelDoc.textContent = "DNI (8 dígitos)";
-          inputDoc.placeholder = "12345678";
+          inputDoc.pattern = "[0-9]{8}";
           inputDoc.maxLength = 8;
         }
+        inputDoc.value = "";
       }
 
-      function cambiarCostoEnvio(nuevoCosto, cardId) {
-        costoEnvioActual = nuevoCosto;
+      function cambiarCostoEnvio(radioInput, cardId) {
+        costoEnvioGlobal = parseFloat(radioInput.dataset.costo);
 
-        [
+        const cards = [
           "card-envio-estandar",
           "card-envio-express",
           "card-envio-tienda",
-        ].forEach((id) => {
+        ];
+        cards.forEach((id) => {
           const card = document.getElementById(id);
-          if (card) {
-            card.className =
-              "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer transition-all gap-3";
-          }
+          card.classList.remove("border-[#1d4ed8]");
+          card.classList.add("border-gray-200");
         });
 
         const cardSeleccionada = document.getElementById(cardId);
-        if (cardSeleccionada) {
-          cardSeleccionada.className =
-            "flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border-2 border-[#1d4ed8] bg-white cursor-pointer transition-all gap-3";
-        }
+        cardSeleccionada.classList.remove("border-gray-200");
+        cardSeleccionada.classList.add("border-[#1d4ed8]");
 
         document.getElementById("resumen-envio").textContent =
-          costoEnvioActual === 0
+          costoEnvioGlobal === 0
             ? "Gratis"
-            : "S/ " + costoEnvioActual.toFixed(2);
+            : "S/ " + costoEnvioGlobal.toFixed(2);
         recalcularTotales();
       }
 
       function recalcularTotales() {
-        const subtotalEl = document.getElementById("resumen-subtotal");
-        const subtotal = parseFloat(subtotalEl.dataset.subtotal) || 0;
+        const esFactura =
+          document.getElementById("tipo-comprobante").value === "factura";
+        let total = subtotalGlobal + costoEnvioGlobal;
 
-        let total = subtotal + costoEnvioActual;
-
-        if (esFacturaActiva) {
-          const igv = subtotal * 0.18;
+        if (esFactura) {
+          const baseImponible = subtotalGlobal / 1.18;
+          const igv = subtotalGlobal - baseImponible;
           document.getElementById("resumen-igv").textContent =
             "S/ " + igv.toFixed(2);
-          total += igv;
         }
 
         document.getElementById("resumen-total").textContent =
@@ -755,6 +1016,12 @@
               "Por favor, ingresa un número de celular válido de exactamente 9 dígitos.",
             );
             celularInput.focus();
+            return;
+          }
+
+          const distritoInput = document.getElementById("input-distrito");
+          if (!distritoInput.value) {
+            alert("Por favor, selecciona un distrito para la entrega.");
             return;
           }
         }
@@ -805,8 +1072,38 @@
         btn.disabled = true;
         btn.textContent = "Procesando...";
 
+        const envioInput = document.querySelector(
+          'input[name="metodoEnvio"]:checked',
+        );
+        let metodo = "Envío Estándar en Lima";
+        let costo = 8.0;
+
+        if (envioInput) {
+          metodo = envioInput.value;
+          costo = parseFloat(envioInput.dataset.costo);
+        }
+
+        let direccion = "";
+        const direccionInput = document.getElementById("input-direccion");
+        const distritoInput = document.getElementById("input-distrito");
+
+        if (direccionInput) {
+          direccion = direccionInput.value;
+          if (distritoInput && distritoInput.value) {
+            direccion += ", " + distritoInput.value;
+          }
+        }
+
+        const formData = new FormData();
+        formData.append("metodoEnvio", metodo);
+        formData.append("costoEnvio", costo);
+        formData.append("direccionEnvio", direccion);
+
         try {
-          const res = await fetch("/checkout/procesar", { method: "POST" });
+          const res = await fetch("/checkout/procesar", {
+            method: "POST",
+            body: formData,
+          });
 
           if (!res.ok) {
             throw new Error("Error en el servidor");
@@ -828,7 +1125,8 @@
           console.error(e);
           alert("Ocurrió un error de conexión. Inténtalo nuevamente.");
           btn.disabled = false;
-          btn.textContent = "Pagar ahora";
+          btn.innerHTML =
+            '<i class="fas fa-lock text-xs text-gray-400"></i> Pagar ahora';
         }
       }
     </script>
