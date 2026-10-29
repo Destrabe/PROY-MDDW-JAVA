@@ -158,6 +158,8 @@
                     id="input-doc"
                     placeholder="Número de documento"
                     required
+                    maxlength="8"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                     class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
                   />
                 </div>
@@ -172,6 +174,7 @@
                     required
                     pattern="[0-9]{9}"
                     maxlength="9"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                     class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
                   />
                 </div>
@@ -184,6 +187,7 @@
                   >
                   <input
                     type="text"
+                    id="input-nombres"
                     placeholder="Tus nombres"
                     th:value="${session.usuarioNombre != null ? session.usuarioNombre : ''}"
                     required
@@ -196,6 +200,7 @@
                   >
                   <input
                     type="text"
+                    id="input-apellidos"
                     placeholder="Tus apellidos completos"
                     required
                     class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
@@ -209,6 +214,7 @@
                 >
                 <input
                   type="email"
+                  id="input-correo"
                   placeholder="correo@ejemplo.com"
                   th:value="${session.usuarioEmail != null ? session.usuarioEmail : ''}"
                   required
@@ -520,6 +526,7 @@
                   >
                   <input
                     type="text"
+                    id="input-referencia"
                     placeholder="Ej. Frente al parque principal"
                     class="w-full bg-[#f3f4f6] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-transparent focus:border-[#1d4ed8] transition-colors"
                   />
@@ -644,7 +651,12 @@
             </div>
           </form>
 
-          <form id="form-pago" class="hidden" onsubmit="finalizarCompra(event)">
+          <form
+            id="form-pago"
+            class="hidden"
+            autocomplete="off"
+            onsubmit="finalizarCompra(event)"
+          >
             <h2 class="text-xl sm:text-2xl font-bold tracking-tight mb-6">
               Método de pago
             </h2>
@@ -682,7 +694,11 @@
                 >
                 <input
                   type="text"
+                  id="input-numero-tarjeta"
                   placeholder="0000 0000 0000 0000"
+                  maxlength="19"
+                  autocomplete="cc-number"
+                  oninput="this.value = this.value.replace(/[^0-9\s]/g, '')"
                   required
                   class="w-full bg-[#f9fafb] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-200 focus:border-[#1d4ed8] transition-colors font-mono"
                 />
@@ -696,7 +712,11 @@
                   >
                   <input
                     type="text"
+                    id="input-vencimiento"
                     placeholder="MM/AA"
+                    maxlength="5"
+                    autocomplete="cc-exp"
+                    oninput="this.value = this.value.replace(/[^0-9\/]/g, '')"
                     required
                     class="w-full bg-[#f9fafb] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-200 focus:border-[#1d4ed8] transition-colors"
                   />
@@ -707,8 +727,12 @@
                     >CVC</label
                   >
                   <input
-                    type="password"
+                    type="text"
+                    id="input-cvc"
                     placeholder="123"
+                    maxlength="4"
+                    autocomplete="cc-csc"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                     required
                     class="w-full bg-[#f9fafb] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-200 focus:border-[#1d4ed8] transition-colors"
                   />
@@ -722,7 +746,9 @@
                 >
                 <input
                   type="text"
+                  id="input-nombre-tarjeta"
                   placeholder="Como aparece en la tarjeta"
+                  autocomplete="cc-name"
                   required
                   class="w-full bg-[#f9fafb] text-gray-900 text-sm font-medium rounded-lg px-4 py-3 outline-none border border-gray-200 focus:border-[#1d4ed8] transition-colors"
                 />
@@ -776,22 +802,23 @@
                   >
                     <i class="fas fa-tshirt text-gray-300"></i>
                   </div>
-                  <!-- Se eliminó el badge flotante con el número de cantidad -->
+                  <span
+                    class="absolute -top-2 -right-2 bg-gray-900 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white"
+                    th:text="${item.cantidad}"
+                    >1</span
+                  >
                 </div>
                 <div class="flex-grow flex flex-col justify-center">
                   <h4
                     class="font-bold text-sm text-gray-900 leading-tight mb-1"
                     th:text="${item.producto.nombre}"
                   ></h4>
-                  <!-- Se actualizó el texto para incluir Cantidad junto a Color y Talla -->
                   <p class="text-[11px] text-gray-500 font-medium">
                     <span
                       th:text="'Color · ' + (${item.color == 'bg-white' ? 'Blanco' : item.color == 'bg-black' ? 'Negro' : 'Elegido'})"
                     ></span>
                     <span class="mx-1">|</span>
                     <span th:text="'Talla · ' + ${item.talla}"></span>
-                    <span class="mx-1">|</span>
-                    <span th:text="'Cantidad · ' + ${item.cantidad}"></span>
                   </p>
                 </div>
                 <div class="flex flex-col justify-center items-end">
@@ -1071,6 +1098,44 @@
         btn.disabled = true;
         btn.textContent = "Procesando...";
 
+        const formData = new FormData();
+
+        const isRuc = document.getElementById("radio-ruc").checked;
+        formData.append("tipoDocumento", isRuc ? "RUC" : "DNI");
+        formData.append(
+          "numeroDocumento",
+          document.getElementById("input-doc").value,
+        );
+        formData.append(
+          "celular",
+          document.getElementById("input-celular").value,
+        );
+        formData.append(
+          "nombres",
+          document.getElementById("input-nombres").value,
+        );
+        formData.append(
+          "apellidos",
+          document.getElementById("input-apellidos").value,
+        );
+        formData.append(
+          "correo",
+          document.getElementById("input-correo").value,
+        );
+
+        formData.append(
+          "direccion",
+          document.getElementById("input-direccion").value,
+        );
+        formData.append(
+          "distrito",
+          document.getElementById("input-distrito").value,
+        );
+        formData.append(
+          "referencia",
+          document.getElementById("input-referencia").value,
+        );
+
         const envioInput = document.querySelector(
           'input[name="metodoEnvio"]:checked',
         );
@@ -1082,21 +1147,21 @@
           costo = parseFloat(envioInput.dataset.costo);
         }
 
-        let direccion = "";
-        const direccionInput = document.getElementById("input-direccion");
-        const distritoInput = document.getElementById("input-distrito");
-
-        if (direccionInput) {
-          direccion = direccionInput.value;
-          if (distritoInput && distritoInput.value) {
-            direccion += ", " + distritoInput.value;
-          }
-        }
-
-        const formData = new FormData();
         formData.append("metodoEnvio", metodo);
         formData.append("costoEnvio", costo);
-        formData.append("direccionEnvio", direccion);
+
+        const numeroTarjeta =
+          document.getElementById("input-numero-tarjeta")?.value || "";
+        const vencimientoTarjeta =
+          document.getElementById("input-vencimiento")?.value || "";
+        const cvcTarjeta = document.getElementById("input-cvc")?.value || "";
+        const nombreTarjeta =
+          document.getElementById("input-nombre-tarjeta")?.value || "";
+
+        formData.append("numeroTarjeta", numeroTarjeta);
+        formData.append("vencimientoTarjeta", vencimientoTarjeta);
+        formData.append("cvcTarjeta", cvcTarjeta);
+        formData.append("nombreTarjeta", nombreTarjeta);
 
         try {
           const res = await fetch("/checkout/procesar", {
