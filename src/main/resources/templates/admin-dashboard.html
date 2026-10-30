@@ -479,7 +479,7 @@
                   </p>
                   <p
                     class="text-xs text-gray-500 mt-1"
-                    th:text="'Dirección: ' + ${pedido.direccionEnvio != null ? pedido.direccionEnvio : 'Pendiente'}"
+                    th:text="'Dirección: ' + (${pedido.direccion != null ? pedido.direccion : 'Pendiente'}) + (${pedido.distrito != null ? ', ' + pedido.distrito : ''})"
                   ></p>
                 </div>
                 <div
